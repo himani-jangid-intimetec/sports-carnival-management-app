@@ -1,19 +1,14 @@
 import React from 'react';
-import {
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../theme/colors';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Lock, Mail, Trophy } from 'lucide-react-native';
 import { useLoginViewModel } from '../viewModels/LoginViewModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import { useNavigation } from '@react-navigation/native';
+import ScreenWrapper from '../components/ScreenWrapper';
+import AppInput from '../components/AppInput';
+import AppButton from '../components/AppButton';
 
 const LoginScreen = () => {
   const { email, password, error, setEmail, setPassword, onLogin } =
@@ -23,8 +18,17 @@ const LoginScreen = () => {
 
   const navigation = useNavigation<NavigationProp>();
 
+  const handleLogin = () => {
+    const isValid = onLogin();
+
+    if (!isValid && error) {
+      Alert.alert('Login error', error);
+      return;
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <ScreenWrapper>
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <View style={styles.trophyContainer}>
@@ -43,51 +47,27 @@ const LoginScreen = () => {
           </Text>
 
           <Text style={styles.inputLabels}>Email</Text>
-          <View
-            style={
-              Platform.OS === 'ios'
-                ? styles.iosInputFieldContainer
-                : styles.androidInputFieldContainer
-            }
-          >
-            <Mail size={20} color={colors.textSecondary} />
-            <TextInput
-              placeholder="Enter your email"
-              placeholderTextColor={colors.textSecondary}
-              value={email}
-              onChangeText={setEmail}
-              style={styles.inputField}
-            />
-          </View>
+          <AppInput
+            icon={<Mail size={20} color={colors.textSecondary} />}
+            placeholder="Enter your email"
+            value={email}
+            onChangeText={setEmail}
+          />
 
           <Text style={styles.inputLabels}>Password</Text>
-          <View
-            style={
-              Platform.OS === 'ios'
-                ? styles.iosInputFieldContainer
-                : styles.androidInputFieldContainer
-            }
-          >
-            <Lock size={20} color={colors.textSecondary} />
-            <TextInput
-              placeholder="Enter your password"
-              placeholderTextColor={colors.textSecondary}
-              value={password}
-              onChangeText={setPassword}
-              style={styles.inputField}
-              secureTextEntry
-            />
-          </View>
+          <AppInput
+            icon={<Lock size={20} color={colors.textSecondary} />}
+            placeholder="Enter your password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
           <Pressable>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </Pressable>
 
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-          <Pressable style={styles.button} onPress={onLogin}>
-            <Text style={styles.buttonText}>Sign In</Text>
-          </Pressable>
+          <AppButton title="Sign In" onPress={handleLogin} />
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don&apos;t have an account?</Text>
@@ -97,34 +77,11 @@ const LoginScreen = () => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  androidInputFieldContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.inputField,
-    borderRadius: 10,
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 10,
-    padding: 5,
-    paddingLeft: 8,
-  },
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    color: colors.textPrimary,
-    marginVertical: 20,
-    padding: 10,
-  },
-  buttonText: {
-    color: colors.background,
-    fontSize: 15,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   cardHeadingSubText: {
     color: colors.textSecondary,
     fontSize: 16,
@@ -151,10 +108,6 @@ const styles = StyleSheet.create({
     marginTop: 35,
     paddingHorizontal: 40,
     paddingVertical: 20,
-  },
-  errorText: {
-    color: colors.error,
-    marginTop: 15,
   },
   footer: {
     alignItems: 'center',
@@ -194,30 +147,11 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: 'bold',
   },
-  inputField: {
-    color: colors.textPrimary,
-    flex: 1,
-    fontSize: 16,
-  },
   inputLabels: {
     color: colors.textPrimary,
     fontFamily: 'Inter-Regular',
     fontSize: 18,
     marginTop: 20,
-  },
-  iosInputFieldContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.inputField,
-    borderRadius: 10,
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 10,
-    padding: 10,
-    paddingLeft: 8,
-  },
-  safeArea: {
-    backgroundColor: colors.background,
-    flex: 1,
   },
   trophyContainer: {
     backgroundColor: colors.primary,

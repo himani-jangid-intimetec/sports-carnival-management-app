@@ -1,18 +1,19 @@
 import { useState } from 'react';
+import { isValidEmail } from '../utils/validation';
 
 export const useRegisterViewModel = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>('');
 
-  const validate = () => {
+  const onRegister = (): boolean => {
     if (!name.trim()) {
       setError('Name is required');
       return false;
     }
 
-    if (!email.includes('@')) {
+    if (isValidEmail(email)) {
       setError('Enter a valid email');
       return false;
     }
@@ -22,14 +23,8 @@ export const useRegisterViewModel = () => {
       return false;
     }
 
-    setError('');
+    setError(null);
     return true;
-  };
-
-  const onRegister = () => {
-    if (!validate()) {
-      return;
-    }
   };
 
   return {

@@ -13,4 +13,6 @@ export const colors = {
 
   inputField: '#28303d', // Input Field
   inputText: '#6b7d97', // Input Field Text
+
+  participantBackgroud: '#11b989',
 } as const;
