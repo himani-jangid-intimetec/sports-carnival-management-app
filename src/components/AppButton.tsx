@@ -2,13 +2,13 @@ import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { colors } from '../theme/colors';
 
-type Props = {
+type ButtonProps = {
   title: string;
   onPress: () => void;
   disabled?: boolean;
 };
 
-const AppButton = ({ title, onPress, disabled }: Props) => {
+const AppButton = ({ title, onPress, disabled }: ButtonProps) => {
   return (
     <Pressable
       style={({ pressed }) => [

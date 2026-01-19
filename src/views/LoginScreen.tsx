@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../theme/colors';
 import { Lock, Mail, Trophy } from 'lucide-react-native';
@@ -11,7 +11,7 @@ import AppInput from '../components/AppInput';
 import AppButton from '../components/AppButton';
 
 const LoginScreen = () => {
-  const { email, password, error, setEmail, setPassword, onLogin } =
+  const { email, password, emailError, setEmail, setPassword, onLogin, validateEmail, isFormValid } =
     useLoginViewModel();
 
   type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
@@ -21,8 +21,7 @@ const LoginScreen = () => {
   const handleLogin = () => {
     const isValid = onLogin();
 
-    if (!isValid && error) {
-      Alert.alert('Login error', error);
+    if (!isValid) {
       return;
     }
   };
@@ -51,8 +50,15 @@ const LoginScreen = () => {
             icon={<Mail size={20} color={colors.textSecondary} />}
             placeholder="Enter your email"
             value={email}
+            onBlur={validateEmail}
             onChangeText={setEmail}
           />
+
+          {emailError ? (
+            <Text style={styles.errorText}>
+                {emailError}
+            </Text>
+            ) : null}
 
           <Text style={styles.inputLabels}>Password</Text>
           <AppInput
@@ -63,11 +69,11 @@ const LoginScreen = () => {
             secureTextEntry
           />
 
-          <Pressable>
+          <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </Pressable>
 
-          <AppButton title="Sign In" onPress={handleLogin} />
+          <AppButton title="Sign In" onPress={handleLogin} disabled={!isFormValid}/>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don&apos;t have an account?</Text>
@@ -109,6 +115,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 20,
   },
+  errorText: {
+    color: colors.error,
+    marginTop: 4,
+  },
   footer: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -137,7 +147,7 @@ const styles = StyleSheet.create({
   },
   headingSubText: {
     color: colors.textSecondary,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter_24pt-Regular',
     fontSize: 16,
     marginTop: 3,
   },
@@ -149,7 +159,7 @@ const styles = StyleSheet.create({
   },
   inputLabels: {
     color: colors.textPrimary,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter_24pt-Regular',
     fontSize: 18,
     marginTop: 20,
   },

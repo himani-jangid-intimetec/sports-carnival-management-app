@@ -1,32 +1,60 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { isValidEmail } from '../utils/validation';
 
 export const useLoginViewModel = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>('');
+
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validateEmail = () => {
+    if (!email.trim()) {
+      setEmailError('Email is required');
+    } else if (!isValidEmail(email)) {
+      setEmailError('Enter a valid email');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const validatePassword = () => {
+    if (!password.trim()) {
+      setPasswordError('Password is required');
+    } else {
+      setPasswordError('');
+    }
+  };
 
   const onLogin = (): boolean => {
-    if (!email || !password) {
-      setError('Email and password are required');
-      return false;
-    }
+    validateEmail();
+    validatePassword();
 
-    if (!isValidEmail(email)) {
-      setError('Enter a valid email');
-      return false;
-    }
-
-    setError(null);
-    return true;
+    return (
+      email.length > 0 &&
+      password.length > 0 &&
+      isValidEmail(email)
+    );
   };
+
+  const isFormValid = useMemo(() => {
+    return (
+      email.length > 0 &&
+      password.length > 0 &&
+      isValidEmail(email)
+    );
+  }, [email, password]);
 
   return {
     email,
     password,
-    error,
-    onLogin,
     setEmail,
     setPassword,
+    emailError,
+    passwordError,
+    validateEmail,
+    validatePassword,
+    onLogin,
+    isFormValid,
   };
 };

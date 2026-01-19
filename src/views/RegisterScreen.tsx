@@ -20,6 +20,13 @@ const RegisterScreen = () => {
     setEmail,
     setPassword,
     onRegister,
+    isFormValid,
+    validateName,
+    validateEmail,
+    validatePassword,
+    emailError,
+    nameError,
+    passwordError
   } = useRegisterViewModel();
 
   type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
@@ -63,6 +70,8 @@ const RegisterScreen = () => {
               placeholder="Enter your full name"
               value={name}
               onChangeText={setName}
+              onBlur={validateName}
+              error={nameError}
             />
           </View>
 
@@ -73,6 +82,8 @@ const RegisterScreen = () => {
               placeholder="Enter your email"
               value={email}
               onChangeText={setEmail}
+              onBlur={validateEmail}
+              error={emailError}
             />
           </View>
 
@@ -84,10 +95,12 @@ const RegisterScreen = () => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              onBlur={validatePassword}
+              error={passwordError}
             />
           </View>
 
-          <AppButton onPress={handleRegister} title="Create Account" />
+          <AppButton onPress={handleRegister} title="Create Account" disabled={!isFormValid}/>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Already have an account?</Text>
@@ -151,7 +164,7 @@ const styles = StyleSheet.create({
   },
   headingSubText: {
     color: colors.textSecondary,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter_24pt-Regular',
     fontSize: 16,
     marginTop: 3,
   },
@@ -163,7 +176,7 @@ const styles = StyleSheet.create({
   },
   inputLabels: {
     color: colors.textPrimary,
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Inter_24pt-Regular',
     fontSize: 18,
     marginTop: 20,
   },

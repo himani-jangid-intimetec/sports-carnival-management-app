@@ -1,16 +1,28 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '../theme/colors';
 
-type Props = {
+type ScreenProps = {
   children: React.ReactNode;
 };
 
-const ScreenWrapper = ({ children }: Props) => {
+const ScreenWrapper = ({ children }: ScreenProps) => {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>{children}</View>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
+        >
+            <ScrollView
+              contentContainerStyle={styles.scrollContent}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+            >
+                {children}
+            </ScrollView>
+        </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -23,6 +35,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     flex: 1,
   },
+  scrollContent: {
+    flexGrow: 1
+  }
 });
 
 export default ScreenWrapper;

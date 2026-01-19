@@ -1,13 +1,15 @@
 import React from 'react';
-import { Platform, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { colors } from '../theme/colors';
 
-type Props = {
+type EntryInputProps = {
   icon?: React.ReactNode;
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
+  onBlur?: () => void;
+  error?: string;
 };
 
 const AppInput = ({
@@ -16,18 +18,25 @@ const AppInput = ({
   value,
   onChangeText,
   secureTextEntry,
-}: Props) => {
+  onBlur,
+  error,
+}: EntryInputProps) => {
   return (
-    <View style={styles.container}>
-      {icon}
-      <TextInput
-        placeholder={placeholder}
-        placeholderTextColor={colors.textSecondary}
-        value={value}
-        secureTextEntry={secureTextEntry}
-        onChangeText={onChangeText}
-        style={styles.input}
-      />
+    <View>
+        <View style={[styles.container, error && styles.errorBorder]}>
+        {icon}
+        <TextInput
+            placeholder={placeholder}
+            placeholderTextColor={colors.textSecondary}
+            value={value}
+            secureTextEntry={secureTextEntry}
+            onChangeText={onChangeText}
+            onBlur={onBlur}
+            style={styles.input}
+        />
+        </View>
+
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 };
@@ -42,6 +51,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: Platform.OS === 'ios' ? 10 : 3,
     paddingLeft: 8,
+  },
+  errorBorder: {
+    borderColor: colors.error,
+    borderWidth: 1,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: 14,
+    marginTop: 4,
   },
   input: {
     color: colors.textPrimary,

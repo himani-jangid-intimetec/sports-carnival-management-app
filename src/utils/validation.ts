@@ -1,3 +1,8 @@
 export const isValidEmail = (email: string): boolean => {
-  return /\S+@\S+\.\S+/.test(email);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
+
+export const isValidName = (name: string): boolean => {
+    return /^[A-Za-z\s]+$/.test(name);
+}
