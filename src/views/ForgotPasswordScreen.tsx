@@ -1,6 +1,6 @@
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
-import { ForgotPasswordViewModel } from '../viewModels/ForgotPasswordViewModel';
+import { useForgotPasswordViewModel } from '../viewModels/ForgotPasswordViewModel';
 import { Lock, Mail, Trophy } from 'lucide-react-native';
 import AppInput from '../components/AppInput';
 import { colors } from '../theme/colors';
@@ -9,15 +9,20 @@ import AppButton from '../components/AppButton';
 const ForgotPasswordScreen = () => {
   const {
     email,
-    setEmail,
     newPassword,
     confirmPassword,
-    isButtonDisabled,
-    onSubmit,
+    emailError,
+    passwordError,
+    confirmPasswordError,
+    setEmail,
     setNewPassword,
     setConfirmPassword,
     validateEmail,
-  } = ForgotPasswordViewModel();
+    validatePassword,
+    validateConfirmPassword,
+    onSubmit,
+    isFormValid,
+  } = useForgotPasswordViewModel();
 
   const handleSubmit = () => {
     const success = onSubmit();
@@ -35,7 +40,7 @@ const ForgotPasswordScreen = () => {
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <View style={styles.trophyContainer}>
-            <Trophy size={40} color={colors.primaryText} />
+            <Trophy size={40} />
           </View>
           <Text style={styles.headingText}>Reset Password</Text>
         </View>
@@ -51,6 +56,7 @@ const ForgotPasswordScreen = () => {
           value={email}
           onChangeText={setEmail}
           onBlur={validateEmail}
+          error={emailError}
         />
 
         <Text style={styles.inputLabel}>New Password</Text>
@@ -59,7 +65,9 @@ const ForgotPasswordScreen = () => {
           placeholder="Enter new password"
           value={newPassword}
           onChangeText={setNewPassword}
+          onBlur={validatePassword}
           secureTextEntry
+          error={passwordError}
         />
 
         <Text style={styles.inputLabel}>Confirm New Password</Text>
@@ -68,13 +76,15 @@ const ForgotPasswordScreen = () => {
           placeholder="Confirm new password"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
+          onBlur={validateConfirmPassword}
           secureTextEntry
+          error={confirmPasswordError}
         />
 
         <AppButton
           title="Update Password"
           onPress={handleSubmit}
-          disabled={isButtonDisabled}
+          disabled={!isFormValid}
         />
       </View>
     </ScreenWrapper>

@@ -11,7 +11,7 @@ import AppInput from '../components/AppInput';
 import AppButton from '../components/AppButton';
 
 const LoginScreen = () => {
-  const { email, password, emailError, setEmail, setPassword, onLogin, validateEmail, isFormValid } =
+  const { email, password, emailError, setEmail, setPassword, onLogin, validateEmail, isFormValid, passwordError } =
     useLoginViewModel();
 
   type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
@@ -52,13 +52,8 @@ const LoginScreen = () => {
             value={email}
             onBlur={validateEmail}
             onChangeText={setEmail}
+            error={emailError}
           />
-
-          {emailError ? (
-            <Text style={styles.errorText}>
-                {emailError}
-            </Text>
-            ) : null}
 
           <Text style={styles.inputLabels}>Password</Text>
           <AppInput
@@ -67,6 +62,7 @@ const LoginScreen = () => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            error={passwordError}
           />
 
           <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
