@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fonts } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   cardHeadingSubText: {
@@ -21,7 +22,7 @@ export const styles = StyleSheet.create({
     padding: 20,
   },
   entryContainer: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.cardBackgroud,
     borderColor: colors.border,
     borderRadius: 10,
     borderWidth: 1,
@@ -57,19 +58,19 @@ export const styles = StyleSheet.create({
   },
   headingSubText: {
     color: colors.textSecondary,
-    fontFamily: 'Inter_24pt-Regular',
+    fontFamily: fonts.primary,
     fontSize: 16,
     marginTop: 3,
   },
   headingText: {
     color: colors.textPrimary,
-    fontFamily: 'Outfit-SemiBold',
+    fontFamily: fonts.heading,
     fontSize: 35,
     fontWeight: 'bold',
   },
   inputLabels: {
     color: colors.textPrimary,
-    fontFamily: 'Inter_24pt-Regular',
+    fontFamily: fonts.primary,
     fontSize: 18,
     marginTop: 20,
   },

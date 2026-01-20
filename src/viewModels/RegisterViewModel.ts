@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
   isValidEmail,
   isValidName,
@@ -40,16 +40,13 @@ export const useRegisterViewModel = () => {
     return true;
   };
 
-  const isFormValid = useMemo(() => {
-    return (
-      name.length > 0 &&
-      isValidName(name) &&
-      email.length > 0 &&
-      isValidEmail(email) &&
-      password.length > 0 &&
-      isValidPassword(password)
-    );
-  }, [name, email, password]);
+  const isFormValid =
+    name.length > 0 &&
+    isValidName(name) &&
+    email.length > 0 &&
+    isValidEmail(email) &&
+    password.length > 0 &&
+    isValidPassword(password);
 
   const validateName = () => {
     if (!name.trim()) {

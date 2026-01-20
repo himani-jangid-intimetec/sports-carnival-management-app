@@ -28,7 +28,7 @@ const RoleCard = ({
     >
       {isSelected && (
         <View style={styles.checkIcon}>
-          <Check size={18} color={colors.background} />
+          <Check size={18} color={colors.appBackground} />
         </View>
       )}
       <View>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { isValidEmail, isValidPassword } from '../utils/validation';
 import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
@@ -36,14 +36,11 @@ export const useLoginViewModel = () => {
     return email.length > 0 && password.length > 0 && isValidEmail(email);
   };
 
-  const isFormValid = useMemo(() => {
-    return (
-      email.length > 0 &&
-      password.length > 0 &&
-      isValidEmail(email) &&
-      isValidPassword(password)
-    );
-  }, [email, password]);
+  const isFormValid =
+    email.length > 0 &&
+    password.length > 0 &&
+    isValidEmail(email) &&
+    isValidPassword(password);
 
   return {
     email,

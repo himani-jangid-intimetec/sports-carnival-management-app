@@ -1,10 +1,10 @@
 export const colors = {
-  background: '#0B1220',
-  surface: '#111827', 
+  appBackground: '#0B1220',
+  cardBackgroud: '#111827',
   textPrimary: '#F9FAFB',
-  textSecondary: '#9CA3AF', 
+  textSecondary: '#9CA3AF',
 
-  primary: '#F97316', 
+  primary: '#F97316',
   primaryText: '#0B1220',
 
   border: '#1F2937',

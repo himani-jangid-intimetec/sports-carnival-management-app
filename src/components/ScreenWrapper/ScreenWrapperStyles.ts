@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   safeArea: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.appBackground,
     flex: 1,
   },
   scrollContent: {

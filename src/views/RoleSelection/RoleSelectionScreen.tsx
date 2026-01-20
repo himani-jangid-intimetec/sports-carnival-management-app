@@ -20,7 +20,7 @@ const RoleSelectionScreen = () => {
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <View style={styles.trophyContainer}>
-            <Trophy size={40} color={colors.background} />
+            <Trophy size={40} color={colors.appBackground} />
           </View>
           <View>
             <Text style={styles.headingText}>SportsCarnival</Text>

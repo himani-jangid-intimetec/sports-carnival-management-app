@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fonts } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   container: {
@@ -14,13 +15,13 @@ export const styles = StyleSheet.create({
   },
   headingSubText: {
     color: colors.textSecondary,
-    fontFamily: 'Inter-Regular',
+    fontFamily: fonts.primary,
     fontSize: 16,
     marginTop: 3,
   },
   headingText: {
     color: colors.textPrimary,
-    fontFamily: 'Outfit-SemiBold',
+    fontFamily: fonts.heading,
     fontSize: 35,
     fontWeight: 'bold',
   },

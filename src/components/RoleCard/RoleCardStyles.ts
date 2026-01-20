@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     marginRight: 6,
   },
   card: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.cardBackgroud,
     borderColor: colors.border,
     borderRadius: 12,
     borderWidth: 1,

@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     opacity: 0.85,
   },
   text: {
-    color: colors.background,
+    color: colors.appBackground,
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
