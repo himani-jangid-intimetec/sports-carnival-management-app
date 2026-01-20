@@ -5,6 +5,7 @@ import { colors } from '../theme/colors';
 import AppButton from '../components/AppButton/AppButton';
 import ScreenWrapper from '../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../components/AppInput/AppInput';
+import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
 const ForgotPasswordScreen = () => {
   const {
@@ -29,8 +30,8 @@ const ForgotPasswordScreen = () => {
 
     if (success) {
       Alert.alert(
-        'Password updated',
-        'Your password has been successfully updated.',
+        VALIDATION_MESSAGES.PASSWORD_UPDATED,
+        VALIDATION_MESSAGES.PASSWORD_UPDATED_DESCRIPTION,
       );
     }
   };

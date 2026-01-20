@@ -9,6 +9,7 @@ import { AuthStackParamList } from '../navigation/AuthNavigator';
 import ScreenWrapper from '../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../components/AppInput/AppInput';
 import AppButton from '../components/AppButton/AppButton';
+import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
 const RegisterScreen = () => {
   const {
@@ -37,7 +38,7 @@ const RegisterScreen = () => {
     const isValid = onRegister();
 
     if (!isValid && error) {
-      Alert.alert('Login error', error);
+      Alert.alert(VALIDATION_MESSAGES.LOGIN_ERROR, error);
       return;
     }
 
