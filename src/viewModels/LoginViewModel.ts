@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { isValidEmail } from '../utils/validation';
+import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
 export const useLoginViewModel = () => {
   const [email, setEmail] = useState('');
@@ -10,9 +11,9 @@ export const useLoginViewModel = () => {
 
   const validateEmail = () => {
     if (!email.trim()) {
-      setEmailError('Email is required');
+      setEmailError(VALIDATION_MESSAGES.REQUIRED_EMAIL);
     } else if (!isValidEmail(email)) {
-      setEmailError('Enter a valid email');
+      setEmailError(VALIDATION_MESSAGES.INVALID_EMAIL);
     } else {
       setEmailError('');
     }
@@ -20,7 +21,7 @@ export const useLoginViewModel = () => {
 
   const validatePassword = () => {
     if (!password.trim()) {
-      setPasswordError('Password is required');
+      setPasswordError(VALIDATION_MESSAGES.REQUIRED_PASSWORD);
     } else {
       setPasswordError('');
     }
@@ -30,19 +31,11 @@ export const useLoginViewModel = () => {
     validateEmail();
     validatePassword();
 
-    return (
-      email.length > 0 &&
-      password.length > 0 &&
-      isValidEmail(email)
-    );
+    return email.length > 0 && password.length > 0 && isValidEmail(email);
   };
 
   const isFormValid = useMemo(() => {
-    return (
-      email.length > 0 &&
-      password.length > 0 &&
-      isValidEmail(email)
-    );
+    return email.length > 0 && password.length > 0 && isValidEmail(email);
   }, [email, password]);
 
   return {

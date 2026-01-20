@@ -6,9 +6,9 @@ import { useRegisterViewModel } from '../viewModels/RegisterViewModel';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
-import ScreenWrapper from '../components/ScreenWrapper';
-import AppInput from '../components/AppInput';
-import AppButton from '../components/AppButton';
+import ScreenWrapper from '../components/ScreenWrapper/ScreenWrapper';
+import AppInput from '../components/AppInput/AppInput';
+import AppButton from '../components/AppButton/AppButton';
 
 const RegisterScreen = () => {
   const {
@@ -26,7 +26,7 @@ const RegisterScreen = () => {
     validatePassword,
     emailError,
     nameError,
-    passwordError
+    passwordError,
   } = useRegisterViewModel();
 
   type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
@@ -100,7 +100,11 @@ const RegisterScreen = () => {
             />
           </View>
 
-          <AppButton onPress={handleRegister} title="Create Account" disabled={!isFormValid}/>
+          <AppButton
+            onPress={handleRegister}
+            title="Create Account"
+            disabled={!isFormValid}
+          />
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Already have an account?</Text>

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import ScreenWrapper from '../components/ScreenWrapper';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 import { roles, RoleType } from '../constants/roles';
 import { roleIcons } from '../utils/roleIcons';
-import RoleCard from '../components/RoleCard';
-import AppButton from '../components/AppButton';
+import ScreenWrapper from '../components/ScreenWrapper/ScreenWrapper';
+import RoleCard from '../components/RoleCard/RoleCard';
+import AppButton from '../components/AppButton/AppButton';
 
 const RoleSelectionScreen = () => {
   const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);

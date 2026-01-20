@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { isValidEmail } from '../utils/validation';
+import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
 export const useForgotPasswordViewModel = () => {
   const [email, setEmail] = useState('');
@@ -12,9 +13,9 @@ export const useForgotPasswordViewModel = () => {
 
   const validateEmail = () => {
     if (!email.trim()) {
-      setEmailError('Email is required');
+      setEmailError(VALIDATION_MESSAGES.REQUIRED_EMAIL);
     } else if (!isValidEmail(email)) {
-      setEmailError('Enter a valid email');
+      setEmailError(VALIDATION_MESSAGES.INVALID_EMAIL);
     } else {
       setEmailError('');
     }
@@ -22,9 +23,9 @@ export const useForgotPasswordViewModel = () => {
 
   const validatePassword = () => {
     if (!newPassword) {
-      setPasswordError('Password is required');
+      setPasswordError(VALIDATION_MESSAGES.REQUIRED_PASSWORD);
     } else if (newPassword.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
+      setPasswordError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
     } else {
       setPasswordError('');
     }
@@ -32,9 +33,9 @@ export const useForgotPasswordViewModel = () => {
 
   const validateConfirmPassword = () => {
     if (!confirmPassword) {
-      setConfirmPasswordError('Please confirm your password');
+      setConfirmPasswordError(VALIDATION_MESSAGES.CONFIRM_PASSWORD);
     } else if (confirmPassword !== newPassword) {
-      setConfirmPasswordError('Passwords do not match');
+      setConfirmPasswordError(VALIDATION_MESSAGES.PASSWORD_MISMATCH);
     } else {
       setConfirmPasswordError('');
     }

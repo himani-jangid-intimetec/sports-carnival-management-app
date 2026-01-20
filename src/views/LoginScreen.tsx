@@ -1,18 +1,27 @@
-import React, { useEffect } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../theme/colors';
 import { Lock, Mail, Trophy } from 'lucide-react-native';
 import { useLoginViewModel } from '../viewModels/LoginViewModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import { useNavigation } from '@react-navigation/native';
-import ScreenWrapper from '../components/ScreenWrapper';
-import AppInput from '../components/AppInput';
-import AppButton from '../components/AppButton';
+import ScreenWrapper from '../components/ScreenWrapper/ScreenWrapper';
+import AppInput from '../components/AppInput/AppInput';
+import AppButton from '../components/AppButton/AppButton';
 
 const LoginScreen = () => {
-  const { email, password, emailError, setEmail, setPassword, onLogin, validateEmail, isFormValid, passwordError } =
-    useLoginViewModel();
+  const {
+    email,
+    password,
+    emailError,
+    setEmail,
+    setPassword,
+    onLogin,
+    validateEmail,
+    isFormValid,
+    passwordError,
+  } = useLoginViewModel();
 
   type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
 
@@ -69,7 +78,11 @@ const LoginScreen = () => {
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </Pressable>
 
-          <AppButton title="Sign In" onPress={handleLogin} disabled={!isFormValid}/>
+          <AppButton
+            title="Sign In"
+            onPress={handleLogin}
+            disabled={!isFormValid}
+          />
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don&apos;t have an account?</Text>
@@ -110,10 +123,6 @@ const styles = StyleSheet.create({
     marginTop: 35,
     paddingHorizontal: 40,
     paddingVertical: 20,
-  },
-  errorText: {
-    color: colors.error,
-    marginTop: 4,
   },
   footer: {
     alignItems: 'center',

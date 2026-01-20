@@ -1,10 +1,10 @@
 import { Alert, StyleSheet, Text, View } from 'react-native';
-import ScreenWrapper from '../components/ScreenWrapper';
 import { useForgotPasswordViewModel } from '../viewModels/ForgotPasswordViewModel';
 import { Lock, Mail, Trophy } from 'lucide-react-native';
-import AppInput from '../components/AppInput';
 import { colors } from '../theme/colors';
-import AppButton from '../components/AppButton';
+import AppButton from '../components/AppButton/AppButton';
+import ScreenWrapper from '../components/ScreenWrapper/ScreenWrapper';
+import AppInput from '../components/AppInput/AppInput';
 
 const ForgotPasswordScreen = () => {
   const {

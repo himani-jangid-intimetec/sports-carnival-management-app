@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { isValidEmail, isValidName } from '../utils/validation';
+import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
 export const useRegisterViewModel = () => {
   const [name, setName] = useState('');
@@ -10,25 +11,24 @@ export const useRegisterViewModel = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-
-  const onRegister = ():boolean => {
+  const onRegister = (): boolean => {
     if (!name.trim()) {
-      setError('Name is required');
+      setError(VALIDATION_MESSAGES.REQUIRED_NAME);
       return false;
     }
 
     if (!isValidEmail(email)) {
-      setError('Enter a valid email');
+      setError(VALIDATION_MESSAGES.REQUIRED_EMAIL);
       return false;
     }
 
     if (!isValidName(name)) {
-        setError('Name should contain only alphabets');
-        return false;
+      setError(VALIDATION_MESSAGES.NAME_ALPHA_ONLY);
+      return false;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
       return false;
     }
 
@@ -38,39 +38,39 @@ export const useRegisterViewModel = () => {
 
   const isFormValid = useMemo(() => {
     return (
-        name.length > 0 && 
-        isValidName(name) &&
-        email.length > 0 &&
-        isValidEmail(email) &&
-        password.length > 0
+      name.length > 0 &&
+      isValidName(name) &&
+      email.length > 0 &&
+      isValidEmail(email) &&
+      password.length > 0
     );
   }, [name, email, password]);
 
   const validateName = () => {
     if (!name.trim()) {
-        setNameError('Name is required');
+      setNameError(VALIDATION_MESSAGES.REQUIRED_NAME);
     } else if (!isValidName(name)) {
-        setNameError('Name should contain only alphabets');
+      setNameError(VALIDATION_MESSAGES.NAME_ALPHA_ONLY);
     } else {
-        setNameError('');
+      setNameError('');
     }
   };
 
   const validateEmail = () => {
     if (!email.trim()) {
-        setEmailError('Email is required');
+      setEmailError(VALIDATION_MESSAGES.REQUIRED_EMAIL);
     } else if (!isValidEmail(email)) {
-        setEmailError('Enter a valid email');
+      setEmailError(VALIDATION_MESSAGES.INVALID_EMAIL);
     } else {
-        setEmailError('');
+      setEmailError('');
     }
   };
 
   const validatePassword = () => {
     if (password.length < 6) {
-        setPasswordError('Password must be at least 6 characters');
+      setPasswordError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
     } else {
-        setPasswordError('');
+      setPasswordError('');
     }
   };
 
@@ -89,6 +89,6 @@ export const useRegisterViewModel = () => {
     validatePassword,
     nameError,
     passwordError,
-    emailError
+    emailError,
   };
 };
