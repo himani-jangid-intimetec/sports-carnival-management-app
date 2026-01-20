@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, Text } from 'react-native';
-import { styles } from './AppButton.styles';
+import { styles } from './AppButtonStyles';
 
 type ButtonProps = {
   title: string;

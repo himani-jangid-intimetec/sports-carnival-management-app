@@ -1,7 +1,7 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { styles } from './ScreenWrapper.styles';
+import { styles } from './ScreenWrapperStyles';
 
 type ScreenProps = {
   children: React.ReactNode;

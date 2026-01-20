@@ -1,14 +1,15 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors } from '../theme/colors';
+import { Pressable, Text, View } from 'react-native';
+import { colors } from '../../theme/colors';
 import { Lock, Mail, Trophy } from 'lucide-react-native';
-import { useLoginViewModel } from '../viewModels/LoginViewModel';
+import { useLoginViewModel } from '../../viewModels/LoginViewModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../navigation/AuthNavigator';
+import { AuthStackParamList } from '../../navigation/AuthNavigator';
 import { useNavigation } from '@react-navigation/native';
-import ScreenWrapper from '../components/ScreenWrapper/ScreenWrapper';
-import AppInput from '../components/AppInput/AppInput';
-import AppButton from '../components/AppButton/AppButton';
+import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
+import AppInput from '../../components/AppInput/AppInput';
+import AppButton from '../../components/AppButton/AppButton';
+import { styles } from './LoginScreenStyles';
 
 const LoginScreen = () => {
   const {
@@ -95,84 +96,5 @@ const LoginScreen = () => {
     </ScreenWrapper>
   );
 };
-
-const styles = StyleSheet.create({
-  cardHeadingSubText: {
-    color: colors.textSecondary,
-    fontSize: 16,
-    marginTop: 5,
-    textAlign: 'center',
-  },
-  cardHeadingText: {
-    color: colors.textPrimary,
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    marginTop: 30,
-    padding: 20,
-  },
-  entryContainer: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderRadius: 10,
-    borderWidth: 1,
-    marginTop: 35,
-    paddingHorizontal: 40,
-    paddingVertical: 20,
-  },
-  footer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 4,
-    justifyContent: 'center',
-  },
-  footerButtonText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  footerText: {
-    color: colors.textSecondary,
-    fontSize: 16,
-  },
-  forgotPasswordText: {
-    color: colors.primary,
-    fontSize: 16,
-    marginTop: 15,
-    textAlign: 'right',
-  },
-  headingContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 15,
-  },
-  headingSubText: {
-    color: colors.textSecondary,
-    fontFamily: 'Inter_24pt-Regular',
-    fontSize: 16,
-    marginTop: 3,
-  },
-  headingText: {
-    color: colors.textPrimary,
-    fontFamily: 'Outfit-SemiBold',
-    fontSize: 35,
-    fontWeight: 'bold',
-  },
-  inputLabels: {
-    color: colors.textPrimary,
-    fontFamily: 'Inter_24pt-Regular',
-    fontSize: 18,
-    marginTop: 20,
-  },
-  trophyContainer: {
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    padding: 12,
-  },
-});
 
 export default LoginScreen;

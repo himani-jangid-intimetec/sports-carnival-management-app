@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
-import { styles } from './RoleCard.styles';
+import { styles } from './RoleCardStyles';
 
 type RoleCardProps = {
   icon: React.ReactNode;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { colors } from '../../theme/colors';
-import { styles } from './AppInput.styles';
+import { styles } from './AppInputStyles';
 
 type EntryInputProps = {
   icon?: React.ReactNode;
