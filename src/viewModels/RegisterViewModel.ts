@@ -1,5 +1,9 @@
 import { useMemo, useState } from 'react';
-import { isValidEmail, isValidName } from '../utils/validation';
+import {
+  isValidEmail,
+  isValidName,
+  isValidPassword,
+} from '../utils/validation';
 import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
 export const useRegisterViewModel = () => {
@@ -27,7 +31,7 @@ export const useRegisterViewModel = () => {
       return false;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       setError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
       return false;
     }
@@ -42,7 +46,8 @@ export const useRegisterViewModel = () => {
       isValidName(name) &&
       email.length > 0 &&
       isValidEmail(email) &&
-      password.length > 0
+      password.length > 0 &&
+      isValidPassword(password)
     );
   }, [name, email, password]);
 
@@ -67,8 +72,10 @@ export const useRegisterViewModel = () => {
   };
 
   const validatePassword = () => {
-    if (password.length < 6) {
+    if (password.length < 8) {
       setPasswordError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
+    } else if (!isValidPassword(password)) {
+      setPasswordError(VALIDATION_MESSAGES.INVALID_PASSWORD);
     } else {
       setPasswordError('');
     }

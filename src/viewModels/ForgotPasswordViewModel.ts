@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { isValidEmail } from '../utils/validation';
+import { isValidEmail, isValidPassword } from '../utils/validation';
 import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
 export const useForgotPasswordViewModel = () => {
@@ -24,8 +24,10 @@ export const useForgotPasswordViewModel = () => {
   const validatePassword = () => {
     if (!newPassword) {
       setPasswordError(VALIDATION_MESSAGES.REQUIRED_PASSWORD);
-    } else if (newPassword.length < 6) {
+    } else if (newPassword.length < 8) {
       setPasswordError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
+    } else if (!isValidPassword(newPassword)) {
+      setPasswordError(VALIDATION_MESSAGES.INVALID_PASSWORD);
     } else {
       setPasswordError('');
     }
@@ -36,6 +38,8 @@ export const useForgotPasswordViewModel = () => {
       setConfirmPasswordError(VALIDATION_MESSAGES.CONFIRM_PASSWORD);
     } else if (confirmPassword !== newPassword) {
       setConfirmPasswordError(VALIDATION_MESSAGES.PASSWORD_MISMATCH);
+    } else if (!isValidPassword(confirmPassword)) {
+      setConfirmPasswordError(VALIDATION_MESSAGES.INVALID_PASSWORD);
     } else {
       setConfirmPasswordError('');
     }
@@ -57,8 +61,11 @@ export const useForgotPasswordViewModel = () => {
     return (
       email.length > 0 &&
       isValidEmail(email) &&
-      newPassword.length >= 6 &&
-      confirmPassword === newPassword
+      newPassword.length >= 8 &&
+      confirmPassword === newPassword &&
+      isValidEmail(email) &&
+      isValidPassword(newPassword) &&
+      isValidPassword(confirmPassword)
     );
   }, [email, newPassword, confirmPassword]);
 

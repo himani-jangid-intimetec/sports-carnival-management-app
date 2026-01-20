@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { isValidEmail } from '../utils/validation';
+import { isValidEmail, isValidPassword } from '../utils/validation';
 import { VALIDATION_MESSAGES } from '../constants/validationMessages';
 
 export const useLoginViewModel = () => {
@@ -22,6 +22,8 @@ export const useLoginViewModel = () => {
   const validatePassword = () => {
     if (!password.trim()) {
       setPasswordError(VALIDATION_MESSAGES.REQUIRED_PASSWORD);
+    } else if (!isValidPassword(password)) {
+      setPasswordError(VALIDATION_MESSAGES.INVALID_PASSWORD);
     } else {
       setPasswordError('');
     }
@@ -35,7 +37,12 @@ export const useLoginViewModel = () => {
   };
 
   const isFormValid = useMemo(() => {
-    return email.length > 0 && password.length > 0 && isValidEmail(email);
+    return (
+      email.length > 0 &&
+      password.length > 0 &&
+      isValidEmail(email) &&
+      isValidPassword(password)
+    );
   }, [email, password]);
 
   return {

@@ -22,6 +22,7 @@ const LoginScreen = () => {
     validateEmail,
     isFormValid,
     passwordError,
+    validatePassword,
   } = useLoginViewModel();
 
   type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
@@ -73,6 +74,7 @@ const LoginScreen = () => {
             onChangeText={setPassword}
             secureTextEntry
             error={passwordError}
+            onBlur={validatePassword}
           />
 
           <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
