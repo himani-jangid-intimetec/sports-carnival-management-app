@@ -1,4 +1,4 @@
-export const VALIDATION_MESSAGES = {
+export const validationMessages = {
   INVALID_EMAIL: 'Enter a valid email',
   REQUIRED_EMAIL: 'Email is required',
   PASSWORD_MIN_LENGTH: 'Password must be at least 8 characters',

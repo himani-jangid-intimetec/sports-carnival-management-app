@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { isValidEmail, isValidPassword } from '../utils/validation';
-import { VALIDATION_MESSAGES } from '../constants/validationMessages';
+import { validationMessages } from '../constants/validationMessages';
 
 export const useForgotPasswordViewModel = () => {
   const [email, setEmail] = useState('');
@@ -13,9 +13,9 @@ export const useForgotPasswordViewModel = () => {
 
   const validateEmail = () => {
     if (!email.trim()) {
-      setEmailError(VALIDATION_MESSAGES.REQUIRED_EMAIL);
+      setEmailError(validationMessages.REQUIRED_EMAIL);
     } else if (!isValidEmail(email)) {
-      setEmailError(VALIDATION_MESSAGES.INVALID_EMAIL);
+      setEmailError(validationMessages.INVALID_EMAIL);
     } else {
       setEmailError('');
     }
@@ -23,11 +23,11 @@ export const useForgotPasswordViewModel = () => {
 
   const validatePassword = () => {
     if (!newPassword) {
-      setPasswordError(VALIDATION_MESSAGES.REQUIRED_PASSWORD);
+      setPasswordError(validationMessages.REQUIRED_PASSWORD);
     } else if (newPassword.length < 8) {
-      setPasswordError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
+      setPasswordError(validationMessages.PASSWORD_MIN_LENGTH);
     } else if (!isValidPassword(newPassword)) {
-      setPasswordError(VALIDATION_MESSAGES.INVALID_PASSWORD);
+      setPasswordError(validationMessages.INVALID_PASSWORD);
     } else {
       setPasswordError('');
     }
@@ -35,11 +35,11 @@ export const useForgotPasswordViewModel = () => {
 
   const validateConfirmPassword = () => {
     if (!confirmPassword) {
-      setConfirmPasswordError(VALIDATION_MESSAGES.CONFIRM_PASSWORD);
+      setConfirmPasswordError(validationMessages.CONFIRM_PASSWORD);
     } else if (confirmPassword !== newPassword) {
-      setConfirmPasswordError(VALIDATION_MESSAGES.PASSWORD_MISMATCH);
+      setConfirmPasswordError(validationMessages.PASSWORD_MISMATCH);
     } else if (!isValidPassword(confirmPassword)) {
-      setConfirmPasswordError(VALIDATION_MESSAGES.INVALID_PASSWORD);
+      setConfirmPasswordError(validationMessages.INVALID_PASSWORD);
     } else {
       setConfirmPasswordError('');
     }
@@ -57,17 +57,14 @@ export const useForgotPasswordViewModel = () => {
     return true;
   };
 
-  const isFormValid = useMemo(() => {
-    return (
-      email.length > 0 &&
-      isValidEmail(email) &&
-      newPassword.length >= 8 &&
-      confirmPassword === newPassword &&
-      isValidEmail(email) &&
-      isValidPassword(newPassword) &&
-      isValidPassword(confirmPassword)
-    );
-  }, [email, newPassword, confirmPassword]);
+  const isFormValid =
+    email.length > 0 &&
+    isValidEmail(email) &&
+    newPassword.length >= 8 &&
+    confirmPassword === newPassword &&
+    isValidEmail(email) &&
+    isValidPassword(newPassword) &&
+    isValidPassword(confirmPassword);
 
   return {
     email,

@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
   },
   headingSubText: {
     color: colors.textSecondary,
-    fontFamily: fonts.primary,
+    fontFamily: fonts.subHeading,
     fontSize: 16,
     marginTop: 3,
   },

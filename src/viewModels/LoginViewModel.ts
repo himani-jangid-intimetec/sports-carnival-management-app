@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { isValidEmail, isValidPassword } from '../utils/validation';
-import { VALIDATION_MESSAGES } from '../constants/validationMessages';
+import { validationMessages } from '../constants/validationMessages';
 
 export const useLoginViewModel = () => {
   const [email, setEmail] = useState('');
@@ -11,9 +11,9 @@ export const useLoginViewModel = () => {
 
   const validateEmail = () => {
     if (!email.trim()) {
-      setEmailError(VALIDATION_MESSAGES.REQUIRED_EMAIL);
+      setEmailError(validationMessages.REQUIRED_EMAIL);
     } else if (!isValidEmail(email)) {
-      setEmailError(VALIDATION_MESSAGES.INVALID_EMAIL);
+      setEmailError(validationMessages.INVALID_EMAIL);
     } else {
       setEmailError('');
     }
@@ -21,9 +21,9 @@ export const useLoginViewModel = () => {
 
   const validatePassword = () => {
     if (!password.trim()) {
-      setPasswordError(VALIDATION_MESSAGES.REQUIRED_PASSWORD);
+      setPasswordError(validationMessages.REQUIRED_PASSWORD);
     } else if (!isValidPassword(password)) {
-      setPasswordError(VALIDATION_MESSAGES.INVALID_PASSWORD);
+      setPasswordError(validationMessages.INVALID_PASSWORD);
     } else {
       setPasswordError('');
     }

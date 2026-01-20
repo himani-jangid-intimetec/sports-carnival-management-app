@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
   },
   headingSubText: {
     color: colors.textSecondary,
-    fontFamily: fonts.primary,
+    fontFamily: fonts.subHeading,
     fontSize: 16,
     marginTop: 3,
   },
@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
   },
   inputLabels: {
     color: colors.textPrimary,
-    fontFamily: fonts.primary,
+    fontFamily: fonts.subHeading,
     fontSize: 18,
     marginTop: 20,
   },

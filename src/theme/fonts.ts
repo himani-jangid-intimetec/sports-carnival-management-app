@@ -1,5 +1,4 @@
 export const fonts = {
-  primary: 'Inter_24pt-Regular',
-
+  subHeading: 'Inter_24pt-Regular',
   heading: 'Outfit-SemiBold',
 };

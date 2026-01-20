@@ -5,8 +5,9 @@ import { colors } from '../../theme/colors';
 import AppButton from '../../components/AppButton/AppButton';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
-import { VALIDATION_MESSAGES } from '../../constants/validationMessages';
+import { validationMessages } from '../../constants/validationMessages';
 import { styles } from './ForgotPasswordScreenStyles';
+import { APP_STRINGS } from '../../constants/AppStrings';
 
 const ForgotPasswordScreen = () => {
   const {
@@ -31,8 +32,8 @@ const ForgotPasswordScreen = () => {
 
     if (success) {
       Alert.alert(
-        VALIDATION_MESSAGES.PASSWORD_UPDATED,
-        VALIDATION_MESSAGES.PASSWORD_UPDATED_DESCRIPTION,
+        validationMessages.PASSWORD_UPDATED,
+        validationMessages.PASSWORD_UPDATED_DESCRIPTION,
       );
     }
   };
@@ -44,27 +45,29 @@ const ForgotPasswordScreen = () => {
           <View style={styles.trophyContainer}>
             <Trophy size={40} />
           </View>
-          <Text style={styles.headingText}>Reset Password</Text>
+          <Text style={styles.headingText}>
+            {APP_STRINGS.auth.resetPassword}
+          </Text>
         </View>
 
         <Text style={styles.subText}>
-          Create a new password for your account
+          {APP_STRINGS.auth.createNewPasswordTagline}
         </Text>
 
-        <Text style={styles.inputLabel}>Email</Text>
+        <Text style={styles.inputLabel}>{APP_STRINGS.labels.email}</Text>
         <AppInput
           icon={<Mail size={20} color={colors.textSecondary} />}
-          placeholder="Enter your email"
+          placeholder={APP_STRINGS.placeHolders.email}
           value={email}
           onChangeText={setEmail}
           onBlur={validateEmail}
           error={emailError}
         />
 
-        <Text style={styles.inputLabel}>New Password</Text>
+        <Text style={styles.inputLabel}>{APP_STRINGS.labels.newPassword}</Text>
         <AppInput
           icon={<Lock size={20} color={colors.textSecondary} />}
-          placeholder="Enter new password"
+          placeholder={APP_STRINGS.placeHolders.newPassword}
           value={newPassword}
           onChangeText={setNewPassword}
           onBlur={validatePassword}
@@ -72,10 +75,12 @@ const ForgotPasswordScreen = () => {
           error={passwordError}
         />
 
-        <Text style={styles.inputLabel}>Confirm New Password</Text>
+        <Text style={styles.inputLabel}>
+          {APP_STRINGS.labels.confirmPassword}
+        </Text>
         <AppInput
           icon={<Lock size={20} color={colors.textSecondary} />}
-          placeholder="Confirm new password"
+          placeholder={APP_STRINGS.placeHolders.confirmNewPassword}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           onBlur={validateConfirmPassword}
@@ -84,7 +89,7 @@ const ForgotPasswordScreen = () => {
         />
 
         <AppButton
-          title="Update Password"
+          title={APP_STRINGS.buttons.updatePassword}
           onPress={handleSubmit}
           disabled={!isFormValid}
         />

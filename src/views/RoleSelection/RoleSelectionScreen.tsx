@@ -8,6 +8,7 @@ import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import RoleCard from '../../components/RoleCard/RoleCard';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './RoleSelectionScreenStyles';
+import { APP_STRINGS } from '../../constants/AppStrings';
 
 const RoleSelectionScreen = () => {
   const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);
@@ -23,15 +24,18 @@ const RoleSelectionScreen = () => {
             <Trophy size={40} color={colors.appBackground} />
           </View>
           <View>
-            <Text style={styles.headingText}>SportsCarnival</Text>
-            <Text style={styles.headingSubText}>Choose your role</Text>
+            <Text style={styles.headingText}>{APP_STRINGS.app.name}</Text>
+            <Text style={styles.headingSubText}>
+              {APP_STRINGS.roleSelection.chooseRole}
+            </Text>
           </View>
         </View>
 
-        <Text style={styles.subHeadingText}>How will you participate?</Text>
+        <Text style={styles.subHeadingText}>
+          {APP_STRINGS.roleSelection.heading}
+        </Text>
         <Text style={styles.subHeadingSubText}>
-          Select your role to customize your experience. You can change this
-          later in the settings.
+          {APP_STRINGS.roleSelection.subHeading}
         </Text>
 
         <FlatList

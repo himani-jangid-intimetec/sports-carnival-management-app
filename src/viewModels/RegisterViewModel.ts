@@ -4,7 +4,7 @@ import {
   isValidName,
   isValidPassword,
 } from '../utils/validation';
-import { VALIDATION_MESSAGES } from '../constants/validationMessages';
+import { validationMessages } from '../constants/validationMessages';
 
 export const useRegisterViewModel = () => {
   const [name, setName] = useState('');
@@ -17,22 +17,22 @@ export const useRegisterViewModel = () => {
 
   const onRegister = (): boolean => {
     if (!name.trim()) {
-      setError(VALIDATION_MESSAGES.REQUIRED_NAME);
+      setError(validationMessages.REQUIRED_NAME);
       return false;
     }
 
     if (!isValidEmail(email)) {
-      setError(VALIDATION_MESSAGES.REQUIRED_EMAIL);
+      setError(validationMessages.REQUIRED_EMAIL);
       return false;
     }
 
     if (!isValidName(name)) {
-      setError(VALIDATION_MESSAGES.NAME_ALPHA_ONLY);
+      setError(validationMessages.NAME_ALPHA_ONLY);
       return false;
     }
 
     if (password.length < 8) {
-      setError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
+      setError(validationMessages.PASSWORD_MIN_LENGTH);
       return false;
     }
 
@@ -50,9 +50,9 @@ export const useRegisterViewModel = () => {
 
   const validateName = () => {
     if (!name.trim()) {
-      setNameError(VALIDATION_MESSAGES.REQUIRED_NAME);
+      setNameError(validationMessages.REQUIRED_NAME);
     } else if (!isValidName(name)) {
-      setNameError(VALIDATION_MESSAGES.NAME_ALPHA_ONLY);
+      setNameError(validationMessages.NAME_ALPHA_ONLY);
     } else {
       setNameError('');
     }
@@ -60,9 +60,9 @@ export const useRegisterViewModel = () => {
 
   const validateEmail = () => {
     if (!email.trim()) {
-      setEmailError(VALIDATION_MESSAGES.REQUIRED_EMAIL);
+      setEmailError(validationMessages.REQUIRED_EMAIL);
     } else if (!isValidEmail(email)) {
-      setEmailError(VALIDATION_MESSAGES.INVALID_EMAIL);
+      setEmailError(validationMessages.INVALID_EMAIL);
     } else {
       setEmailError('');
     }
@@ -70,9 +70,9 @@ export const useRegisterViewModel = () => {
 
   const validatePassword = () => {
     if (password.length < 8) {
-      setPasswordError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
+      setPasswordError(validationMessages.PASSWORD_MIN_LENGTH);
     } else if (!isValidPassword(password)) {
-      setPasswordError(VALIDATION_MESSAGES.INVALID_PASSWORD);
+      setPasswordError(validationMessages.INVALID_PASSWORD);
     } else {
       setPasswordError('');
     }

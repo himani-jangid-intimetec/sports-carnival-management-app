@@ -10,6 +10,7 @@ import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './LoginScreenStyles';
+import { APP_STRINGS } from '../../constants/AppStrings';
 
 const LoginScreen = () => {
   const {
@@ -45,31 +46,35 @@ const LoginScreen = () => {
             <Trophy size={40} />
           </View>
           <View>
-            <Text style={styles.headingText}>SportsCarnival</Text>
-            <Text style={styles.headingSubText}>Manage your events</Text>
+            <Text style={styles.headingText}>{APP_STRINGS.app.name}</Text>
+            <Text style={styles.headingSubText}>
+              {APP_STRINGS.app.loginTagline}
+            </Text>
           </View>
         </View>
 
         <View style={styles.entryContainer}>
-          <Text style={styles.cardHeadingText}>Welcome Back</Text>
+          <Text style={styles.cardHeadingText}>
+            {APP_STRINGS.auth.welcomeBack}
+          </Text>
           <Text style={styles.cardHeadingSubText}>
-            Sign in to continue to your account
+            {APP_STRINGS.auth.signInSubtitle}
           </Text>
 
-          <Text style={styles.inputLabels}>Email</Text>
+          <Text style={styles.inputLabels}>{APP_STRINGS.labels.email}</Text>
           <AppInput
             icon={<Mail size={20} color={colors.textSecondary} />}
-            placeholder="Enter your email"
+            placeholder={APP_STRINGS.placeHolders.email}
             value={email}
             onBlur={validateEmail}
             onChangeText={setEmail}
             error={emailError}
           />
 
-          <Text style={styles.inputLabels}>Password</Text>
+          <Text style={styles.inputLabels}>{APP_STRINGS.labels.password}</Text>
           <AppInput
             icon={<Lock size={20} color={colors.textSecondary} />}
-            placeholder="Enter your password"
+            placeholder={APP_STRINGS.placeHolders.password}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -78,19 +83,25 @@ const LoginScreen = () => {
           />
 
           <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            <Text style={styles.forgotPasswordText}>
+              {APP_STRINGS.buttons.forgotPassword}
+            </Text>
           </Pressable>
 
           <AppButton
-            title="Sign In"
+            title={APP_STRINGS.buttons.signIn}
             onPress={handleLogin}
             disabled={!isFormValid}
           />
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Don&apos;t have an account?</Text>
+            <Text style={styles.footerText}>
+              {APP_STRINGS.footer.noAccount}
+            </Text>
             <Pressable onPress={() => navigation.navigate('Register')}>
-              <Text style={styles.footerButtonText}>Sign up</Text>
+              <Text style={styles.footerButtonText}>
+                {APP_STRINGS.buttons.signUp}
+              </Text>
             </Pressable>
           </View>
         </View>

@@ -27,6 +27,7 @@ export const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: 16,
     marginTop: 20,
+    textAlign: 'center',
   },
   trophyContainer: {
     backgroundColor: colors.primary,
