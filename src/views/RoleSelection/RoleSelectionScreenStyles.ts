@@ -43,6 +43,7 @@ export const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginTop: 25,
+    textAlign: 'center',
   },
   trophyContainer: {
     backgroundColor: colors.primary,

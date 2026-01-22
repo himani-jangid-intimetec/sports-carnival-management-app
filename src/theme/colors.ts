@@ -15,4 +15,7 @@ export const colors = {
   inputText: '#6b7d97',
 
   participantBackgroud: '#11b989',
+
+  usersIconBackground: '#0ea2e8',
+  matchesIconBackgound: '#ffc007',
 } as const;

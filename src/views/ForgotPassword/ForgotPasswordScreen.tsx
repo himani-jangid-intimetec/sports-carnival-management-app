@@ -39,7 +39,7 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <ScreenWrapper>
+    <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <View style={styles.trophyContainer}>

@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.appBackground,
     flex: 1,
   },
-  scrollContent: {
-    flexGrow: 1,
+  scrollViewContent: {
+    paddingBottom: 24,
   },
 });

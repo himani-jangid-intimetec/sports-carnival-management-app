@@ -6,28 +6,35 @@ import { styles } from './ScreenWrapperStyles';
 type ScreenProps = {
   children: React.ReactNode;
   scrollable?: boolean;
+  withBottomSafeArea?: boolean;
 };
 
-const ScreenWrapper = ({ children, scrollable }: ScreenProps) => {
+const ScreenWrapper = ({
+  children,
+  scrollable,
+  withBottomSafeArea = false,
+}: ScreenProps) => {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
-      >
-        {scrollable ? (
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={withBottomSafeArea ? ['top', 'bottom'] : ['top']}
+    >
+      {scrollable ? (
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
           <ScrollView
-            contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollViewContent}
           >
             {children}
           </ScrollView>
-        ) : (
-          <View style={styles.scrollContent}>{children}</View>
-        )}
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      ) : (
+        <View style={styles.container}>{children}</View>
+      )}
     </SafeAreaView>
   );
 };

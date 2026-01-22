@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { KeyboardTypeOptions, Text, TextInput, View } from 'react-native';
 import { colors } from '../../theme/colors';
 import { styles } from './AppInputStyles';
 
@@ -11,6 +11,7 @@ type EntryInputProps = {
   secureTextEntry?: boolean;
   onBlur?: () => void;
   error?: string;
+  keyboardType?: KeyboardTypeOptions;
 };
 
 const AppInput = ({
@@ -21,6 +22,7 @@ const AppInput = ({
   secureTextEntry,
   onBlur,
   error,
+  keyboardType,
 }: EntryInputProps) => {
   return (
     <View>
@@ -34,6 +36,7 @@ const AppInput = ({
           onChangeText={onChangeText}
           onBlur={onBlur}
           style={styles.input}
+          keyboardType={keyboardType}
         />
       </View>
 

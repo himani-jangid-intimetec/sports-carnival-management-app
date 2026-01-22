@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Trophy } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { roles, RoleType } from '../../constants/roles';
@@ -9,12 +10,43 @@ import RoleCard from '../../components/RoleCard/RoleCard';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './RoleSelectionScreenStyles';
 import { APP_STRINGS } from '../../constants/AppStrings';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 
 const RoleSelectionScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);
 
   const selectedRoleTitle =
     roles.find((role) => role.key === selectedRole)?.title ?? '...';
+
+  const handleContinue = () => {
+    if (!selectedRole) return;
+
+    switch (selectedRole) {
+      case 'admin':
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'AdminTabs' }],
+        });
+        break;
+
+      case 'organizer':
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'OrganizerTabs' }],
+        });
+        break;
+
+      case 'participant':
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'ParticipantTabs' }],
+        });
+        break;
+    }
+  };
 
   return (
     <ScreenWrapper>
@@ -74,9 +106,7 @@ const RoleSelectionScreen = () => {
         <AppButton
           title={`Continue as ${selectedRoleTitle}`}
           disabled={!selectedRole}
-          onPress={() => {
-            if (!selectedRole) return;
-          }}
+          onPress={handleContinue}
         />
       </View>
     </ScreenWrapper>
