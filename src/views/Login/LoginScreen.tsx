@@ -1,7 +1,7 @@
-import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
-import { Lock, Mail, Trophy } from 'lucide-react-native';
+import { Eye, EyeOff, Lock, Mail, Trophy } from 'lucide-react-native';
 import { useLoginViewModel } from '../../viewModels/LoginViewModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
@@ -37,6 +37,8 @@ const LoginScreen = () => {
       return;
     }
   };
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <ScreenWrapper scrollable={true}>
@@ -77,9 +79,21 @@ const LoginScreen = () => {
             placeholder={APP_STRINGS.placeHolders.password}
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={!showPassword}
             error={passwordError}
             onBlur={validatePassword}
+            optionalEyeIcon={
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={styles.eyeIcon}
+              >
+                {showPassword ? (
+                  <EyeOff size={20} color={colors.textSecondary} />
+                ) : (
+                  <Eye size={20} color={colors.textSecondary} />
+                )}
+              </TouchableOpacity>
+            }
           />
 
           <Pressable onPress={() => navigation.navigate('ForgotPassword')}>

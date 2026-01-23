@@ -12,6 +12,7 @@ type EntryInputProps = {
   onBlur?: () => void;
   error?: string;
   keyboardType?: KeyboardTypeOptions;
+  optionalEyeIcon?: React.ReactNode;
 };
 
 const AppInput = ({
@@ -23,6 +24,7 @@ const AppInput = ({
   onBlur,
   error,
   keyboardType,
+  optionalEyeIcon,
 }: EntryInputProps) => {
   return (
     <View>
@@ -38,6 +40,7 @@ const AppInput = ({
           style={styles.input}
           keyboardType={keyboardType}
         />
+        {optionalEyeIcon}
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}

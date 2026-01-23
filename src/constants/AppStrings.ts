@@ -21,7 +21,7 @@ export const APP_STRINGS = {
   },
   labels: {
     email: 'Email',
-    name: 'Full Name',
+    name: 'Name',
     newPassword: 'New Password',
     password: 'Password',
     confirmPassword: 'Confirm New Password',

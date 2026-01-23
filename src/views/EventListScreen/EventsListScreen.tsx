@@ -20,17 +20,6 @@ type EventListScreenProps = {
 };
 
 const EventsListScreen = ({ role }: EventListScreenProps) => {
-  const getHeaderTitle = () => {
-    switch (role) {
-      case 'admin':
-        return APP_STRINGS.eventScreen.allEvents;
-      case 'organizer':
-        return APP_STRINGS.eventScreen.myEvents;
-      case 'participant':
-        return APP_STRINGS.eventScreen.allEvents;
-    }
-  };
-
   const { events, deleteEvent } = useEventStore();
 
   const [activeTab, setActiveTab] = useState('ALL');
@@ -64,7 +53,7 @@ const EventsListScreen = ({ role }: EventListScreenProps) => {
                 : styles.heading
             }
           >
-            {getHeaderTitle()}
+            {APP_STRINGS.eventScreen.allEvents}
           </Text>
 
           {role === 'admin' || role === 'organizer' ? (

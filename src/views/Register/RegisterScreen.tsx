@@ -1,7 +1,7 @@
-import React from 'react';
-import { Alert, Pressable, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
-import { Lock, Mail, Trophy, User } from 'lucide-react-native';
+import { Eye, EyeOff, Lock, Mail, Trophy, User } from 'lucide-react-native';
 import { useRegisterViewModel } from '../../viewModels/RegisterViewModel';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -47,6 +47,8 @@ const RegisterScreen = () => {
     navigation.navigate('RoleSelection');
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
@@ -86,7 +88,7 @@ const RegisterScreen = () => {
             <Text style={styles.inputLabels}>{APP_STRINGS.labels.email}</Text>
             <AppInput
               icon={<Mail size={20} color={colors.textSecondary} />}
-              placeholder="Enter your email"
+              placeholder={APP_STRINGS.placeHolders.email}
               value={email}
               onChangeText={setEmail}
               onBlur={validateEmail}
@@ -103,9 +105,21 @@ const RegisterScreen = () => {
               placeholder={APP_STRINGS.placeHolders.createPassword}
               value={password}
               onChangeText={setPassword}
-              secureTextEntry
+              secureTextEntry={!showPassword}
               onBlur={validatePassword}
               error={passwordError}
+              optionalEyeIcon={
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color={colors.textSecondary} />
+                  ) : (
+                    <Eye size={20} color={colors.textSecondary} />
+                  )}
+                </TouchableOpacity>
+              }
             />
           </View>
 
