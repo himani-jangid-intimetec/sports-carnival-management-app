@@ -29,4 +29,19 @@ export const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   },
+
+  headingParticipant: {
+    color: colors.textPrimary,
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginVertical: 20,
+  },
+
+  noEventStyle: {
+    color: colors.textPrimary,
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginVertical: 20,
+    textAlign: 'center',
+  },
 });

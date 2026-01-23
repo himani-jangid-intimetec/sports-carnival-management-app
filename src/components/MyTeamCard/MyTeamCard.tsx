@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { styles } from './MyTeamCardStyles';
-import { APP_STRINGS } from '../../constants/AppStrings';
+import { APP_STRINGS } from '../../constants/appStrings';
 import { Medal, Trophy } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 
@@ -70,7 +70,9 @@ const MyTeamCard = ({
           </View>
         </View>
 
-        <Text style={styles.winRateText}>{winRate} Win Rate</Text>
+        <Text style={styles.winRateText}>
+          {winRate} {APP_STRINGS.eventScreen.winRate}
+        </Text>
       </View>
     </View>
   );

@@ -9,7 +9,7 @@ import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import RoleCard from '../../components/RoleCard/RoleCard';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './RoleSelectionScreenStyles';
-import { APP_STRINGS } from '../../constants/AppStrings';
+import { APP_STRINGS } from '../../constants/appStrings';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 
@@ -71,6 +71,7 @@ const RoleSelectionScreen = () => {
         </Text>
 
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={roles}
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => {

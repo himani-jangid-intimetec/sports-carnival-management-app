@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
-import { APP_STRINGS } from '../../constants/AppStrings';
+import { APP_STRINGS } from '../../constants/appStrings';
 import { styles } from './AdminHomeScreenStyles';
 import AnalyticsCard from '../../components/AnalyticsCard/AnalyticsCard';
 import {
@@ -22,7 +22,6 @@ const AdminHomeScreen = () => {
   return (
     <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
-        <Text style={styles.tagline}>{APP_STRINGS.adminScreens.heading}</Text>
         <Text style={styles.greeting}>{APP_STRINGS.adminScreens.greeting}</Text>
 
         <View style={styles.analyticsGrid}>

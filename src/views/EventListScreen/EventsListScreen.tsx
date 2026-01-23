@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { RoleType } from '../../constants/roles';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
-import { MOCK_EVENTS } from '../../constants/mockEvents';
 import EventCard from '../../components/EventCard/EventCard';
 import { styles } from './EventsListScreenStyles';
 import EventStatusTabs from '../../components/EventStatusTabs/EventStatusTabs';
@@ -13,6 +12,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import AppButton from '../../components/AppButton/AppButton';
+import { APP_STRINGS } from '../../constants/appStrings';
+import { useEventStore } from '../../store/EventStore';
 
 type EventListScreenProps = {
   role: RoleType;
@@ -22,17 +23,17 @@ const EventsListScreen = ({ role }: EventListScreenProps) => {
   const getHeaderTitle = () => {
     switch (role) {
       case 'admin':
-        return 'All Events';
+        return APP_STRINGS.eventScreen.allEvents;
       case 'organizer':
-        return 'My Events';
+        return APP_STRINGS.eventScreen.myEvents;
       case 'participant':
-        return 'All Events';
+        return APP_STRINGS.eventScreen.allEvents;
     }
   };
 
-  const [activeTab, setActiveTab] = useState('ALL');
+  const { events, deleteEvent } = useEventStore();
 
-  const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
+  const [activeTab, setActiveTab] = useState('ALL');
 
   const filteredEvents = useMemo(() => {
     if (activeTab === 'ALL') return events;
@@ -52,36 +53,27 @@ const EventsListScreen = ({ role }: EventListScreenProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const onEditEvent = (updatedEvent: Event) => {
-    setEvents((prev) =>
-      prev.map((event) =>
-        event.id === updatedEvent.id ? updatedEvent : event,
-      ),
-    );
-  };
-
-  const onCreateEvent = (newEvent: Event) => {
-    setEvents((prev) => [...prev, newEvent]);
-  };
-
-  const onDeleteEvent = (name: string) => {
-    setEvents((prev) => prev.filter((e) => e.name !== name));
-  };
-
   return (
     <ScreenWrapper scrollable={false}>
       <View style={styles.container}>
         <View style={styles.headerContainer}>
-          <Text style={styles.heading}>{getHeaderTitle()}</Text>
+          <Text
+            style={
+              role === 'participant'
+                ? styles.headingParticipant
+                : styles.heading
+            }
+          >
+            {getHeaderTitle()}
+          </Text>
 
           {role === 'admin' || role === 'organizer' ? (
             <AppButton
-              title="Create Event"
+              title={APP_STRINGS.eventScreen.creatEvent}
               onPress={() => {
                 setShowModal(false);
                 navigation.navigate('EventForm', {
                   mode: 'create',
-                  onSubmit: onCreateEvent,
                 });
               }}
             />
@@ -90,21 +82,27 @@ const EventsListScreen = ({ role }: EventListScreenProps) => {
 
         <EventStatusTabs activeTab={activeTab} onChange={setActiveTab} />
 
-        <FlatList
-          data={filteredEvents}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <EventCard
-              event={item}
-              role={role}
-              onPress={() => onEventPress(item)}
-            />
-          )}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: tabBarHeight + 65,
-          }}
-        />
+        {filteredEvents.length === 0 ? (
+          <Text style={styles.noEventStyle}>
+            {APP_STRINGS.eventScreen.noEventFound}
+          </Text>
+        ) : (
+          <FlatList
+            data={filteredEvents}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <EventCard
+                event={item}
+                role={role}
+                onPress={() => onEventPress(item)}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: tabBarHeight + 65,
+            }}
+          />
+        )}
 
         <EventDetailsModal
           visible={showModal}
@@ -116,12 +114,11 @@ const EventsListScreen = ({ role }: EventListScreenProps) => {
             navigation.navigate('EventForm', {
               mode: 'edit',
               event: selectedEvent!,
-              onSubmit: onEditEvent,
             });
           }}
           onDelete={() => {
             setShowModal(false);
-            onDeleteEvent(selectedEvent!.name);
+            deleteEvent(selectedEvent!.id);
           }}
           onRegister={() => {
             setShowModal(false);

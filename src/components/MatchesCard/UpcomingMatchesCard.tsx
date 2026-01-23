@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Calendar, MapPin, Users } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
-import { styles } from './UpcomingMatchesStyles';
+import { styles } from './UpcomingMatchesCardStyles';
+import { APP_STRINGS } from '../../constants/appStrings';
 
 type UpcomingMatchesCardProps = {
   sport: string;
@@ -44,7 +45,9 @@ const UpcomingMatchesCard = ({
               status === 'LIVE' ? styles.liveText : styles.registrationText,
             ]}
           >
-            {status === 'LIVE' ? 'Live' : 'Registration Open'}
+            {status === 'LIVE'
+              ? APP_STRINGS.eventScreen.live
+              : APP_STRINGS.eventScreen.registrationOpen}
           </Text>
         </View>
       </View>

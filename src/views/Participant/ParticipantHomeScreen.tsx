@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
-import { APP_STRINGS } from '../../constants/AppStrings';
+import { APP_STRINGS } from '../../constants/appStrings';
 import AnalyticsCard from '../../components/AnalyticsCard/AnalyticsCard';
 import {
   Calendar,
@@ -20,9 +20,6 @@ const ParticipantHomeScreen = () => {
   return (
     <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
-        <Text style={styles.tagline}>
-          {APP_STRINGS.participantScreens.heading}
-        </Text>
         <Text style={styles.greeting}>
           {APP_STRINGS.participantScreens.greeting}
         </Text>

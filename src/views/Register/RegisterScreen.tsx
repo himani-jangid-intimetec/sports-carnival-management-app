@@ -11,7 +11,7 @@ import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
 import { validationMessages } from '../../constants/validationMessages';
 import { styles } from './RegisterScreenStyles';
-import { APP_STRINGS } from '../../constants/AppStrings';
+import { APP_STRINGS } from '../../constants/appStrings';
 
 const RegisterScreen = () => {
   const {

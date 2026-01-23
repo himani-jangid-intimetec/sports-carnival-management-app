@@ -1,12 +1,15 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import AuthNavigator from './src/navigation/AuthNavigator';
+import AppNavigator from './src/navigation/AppNavigator';
+import { EventProvider } from './src/store/EventStore';
 
 function App() {
   return (
-    <NavigationContainer>
-      <AuthNavigator />
-    </NavigationContainer>
+    <EventProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </EventProvider>
   );
 }
 

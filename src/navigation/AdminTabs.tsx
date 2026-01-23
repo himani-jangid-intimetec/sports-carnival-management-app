@@ -19,7 +19,6 @@ const AdminTabs = () => {
           height: 80,
           paddingVertical: 10,
           backgroundColor: colors.cardBackgroud,
-          borderTopColor: colors.border,
           paddingTop: 10,
         },
         tabBarLabelStyle: {

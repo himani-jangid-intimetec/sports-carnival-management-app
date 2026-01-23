@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Event } from '../models/Event';
+import { validationMessages } from '../constants/validationMessages';
 
 type Mode = 'create' | 'edit';
 
-type Params = {
+type EventFormParams = {
   mode: Mode;
   event?: Event;
-  onSubmit: (event: Event) => void;
 };
 
 type EventFormErrors = {
@@ -19,7 +19,7 @@ type EventFormErrors = {
   totalTeams?: string;
 };
 
-export const useEventFormViewModel = ({ mode, event, onSubmit }: Params) => {
+export const useEventFormViewModel = ({ mode, event }: EventFormParams) => {
   const isEdit = mode === 'edit' && !!event;
 
   const [name, setName] = useState(isEdit ? event!.name : '');
@@ -39,25 +39,25 @@ export const useEventFormViewModel = ({ mode, event, onSubmit }: Params) => {
   const validate = () => {
     const newErrors: EventFormErrors = {};
 
-    if (!name.trim()) newErrors.name = 'Event name is required';
-    if (!sport.trim()) newErrors.sport = 'Sport is required';
-    if (!format) newErrors.format = 'Format is required';
-    if (!date.trim()) newErrors.date = 'Date is required';
-    if (!time.trim()) newErrors.time = 'Time is required';
-    if (!venue.trim()) newErrors.venue = 'Venue is required';
+    if (!name.trim()) newErrors.name = validationMessages.REQUIRED_EVENT_NAME;
+    if (!sport.trim()) newErrors.sport = validationMessages.REQUIRED_SPORT;
+    if (!format) newErrors.format = validationMessages.REQUIRED_FORMAT;
+    if (!date.trim()) newErrors.date = validationMessages.REQUIRED_DATE;
+    if (!time.trim()) newErrors.time = validationMessages.REQUIRED_TIME;
+    if (!venue.trim()) newErrors.venue = validationMessages.REQUIRED_VENUE;
 
     if (!totalTeams || Number(totalTeams) <= 0) {
-      newErrors.totalTeams = 'Enter valid team count';
+      newErrors.totalTeams = validationMessages.INVALID_TEAM_COUNT;
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const submit = () => {
-    if (!validate()) return false;
+  const submit = (): Event | null => {
+    if (!validate()) return null;
 
-    const updatedEvent: Event = {
+    return {
       id: event?.id ?? Date.now().toString(),
       name,
       sport,
@@ -70,9 +70,6 @@ export const useEventFormViewModel = ({ mode, event, onSubmit }: Params) => {
       status: event?.status ?? 'UPCOMING',
       registeredTeams: event?.registeredTeams ?? 0,
     };
-
-    onSubmit(updatedEvent);
-    return true;
   };
 
   return {

@@ -4,7 +4,7 @@ import { styles } from './AnalyticsCardStyles';
 
 type AnalyticsCardProps = {
   icon: React.ReactNode;
-  data: number;
+  data: number | string;
   title: string;
 };
 

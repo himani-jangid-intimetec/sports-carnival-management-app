@@ -27,6 +27,11 @@ const EventCard = ({ event, onPress }: EventCardProps) => {
     }
   };
 
+  const progress =
+    event.totalTeams > 0 ? event.registeredTeams / event.totalTeams : 0;
+
+  const progressWidth = `${Math.min(progress * 100, 100)}%` as `${number}%`;
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -66,9 +71,7 @@ const EventCard = ({ event, onPress }: EventCardProps) => {
                 style={[
                   styles.progressFill,
                   {
-                    width: `${
-                      (event.registeredTeams / event.totalTeams) * 100
-                    }%`,
+                    width: progressWidth,
                     backgroundColor: getProgressColor(),
                   },
                 ]}

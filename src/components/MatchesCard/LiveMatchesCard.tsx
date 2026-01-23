@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { styles } from './LiveMatchesCardStyles';
+import { APP_STRINGS } from '../../constants/appStrings';
 
 type LiveMatchesCardProps = {
   gameName: string;
@@ -52,7 +53,7 @@ const LiveMatchesCard = ({
         </View>
 
         <View style={styles.teamContainer}>
-          <Text style={styles.textStyle}>VS</Text>
+          <Text style={styles.textStyle}>{APP_STRINGS.eventScreen.vs}</Text>
           {status === 'Live' ? (
             <Text style={styles.statusStyle}>{status}</Text>
           ) : (

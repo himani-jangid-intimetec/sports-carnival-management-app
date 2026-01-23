@@ -11,13 +11,17 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.error,
     borderRadius: 10,
-    marginBottom: 10,
     padding: 14,
+    paddingHorizontal: 30,
   },
 
   dangerText: {
     color: colors.textPrimary,
     fontWeight: '600',
+  },
+
+  details: {
+    marginTop: 10,
   },
 
   editText: {
@@ -33,8 +37,9 @@ export const styles = StyleSheet.create({
   },
 
   meta: {
-    color: colors.textSecondary,
-    marginBottom: 6,
+    color: colors.textPrimary,
+    fontSize: 20,
+    marginVertical: 10,
   },
 
   overlay: {
@@ -43,7 +48,7 @@ export const styles = StyleSheet.create({
   },
 
   primaryBtn: {
-    alignItems: 'center',
+    alignSelf: 'center',
     backgroundColor: colors.primary,
     borderRadius: 10,
     padding: 14,
@@ -54,6 +59,20 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  row: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    gap: 10,
+    marginVertical: 5,
+  },
+
+  rowActions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+
   secondaryBtn: {
     alignItems: 'center',
     backgroundColor: colors.primary,
@@ -61,6 +80,13 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     padding: 14,
+    paddingHorizontal: 30,
+  },
+
+  secondaryText: {
+    color: colors.appBackground,
+    fontSize: 14,
+    fontWeight: '600',
   },
 
   sheet: {
@@ -73,9 +99,48 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
 
+  statusText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  status_COMPLETED: {
+    backgroundColor: colors.error + '20',
+    borderRadius: 20,
+    color: colors.error,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+
+  status_LIVE: {
+    backgroundColor: colors.participantBackgroud + '20',
+    borderRadius: 20,
+    color: colors.participantBackgroud,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+
+  status_OPEN: {
+    backgroundColor: colors.matchesIconBackgound + '20',
+    borderRadius: 20,
+    color: colors.matchesIconBackgound,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+
+  status_UPCOMING: {
+    backgroundColor: colors.usersIconBackground + '20',
+    borderRadius: 20,
+    color: colors.usersIconBackground,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+
   title: {
     color: colors.textPrimary,
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+    textAlign: 'center',
   },
 });
