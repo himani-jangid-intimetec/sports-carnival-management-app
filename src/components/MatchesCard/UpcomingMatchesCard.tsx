@@ -5,6 +5,8 @@ import { colors } from '../../theme/colors';
 import { styles } from './UpcomingMatchesCardStyles';
 import { APP_STRINGS } from '../../constants/appStrings';
 
+type UpcomingMatchStatus = 'UPCOMING' | 'REGISTRATION_OPEN';
+
 type UpcomingMatchesCardProps = {
   sport: string;
   title: string;
@@ -12,7 +14,7 @@ type UpcomingMatchesCardProps = {
   location: string;
   currentTeams: number;
   maxTeams: number;
-  status: 'LIVE' | 'REGISTRATION_OPEN';
+  status: UpcomingMatchStatus;
   sportIcon: React.ReactNode;
 };
 
@@ -36,17 +38,17 @@ const UpcomingMatchesCard = ({
         <View
           style={[
             styles.statusBadge,
-            status === 'LIVE' ? styles.liveBadge : styles.registrationBadge,
+            status === 'UPCOMING' ? styles.liveBadge : styles.registrationBadge,
           ]}
         >
           <Text
             style={[
               styles.statusText,
-              status === 'LIVE' ? styles.liveText : styles.registrationText,
+              status === 'UPCOMING' ? styles.liveText : styles.registrationText,
             ]}
           >
-            {status === 'LIVE'
-              ? APP_STRINGS.eventScreen.live
+            {status === 'UPCOMING'
+              ? APP_STRINGS.eventScreen.upcoming
               : APP_STRINGS.eventScreen.registrationOpen}
           </Text>
         </View>

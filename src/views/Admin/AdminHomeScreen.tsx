@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import { APP_STRINGS } from '../../constants/appStrings';
 import { styles } from './AdminHomeScreenStyles';
@@ -6,6 +6,7 @@ import AnalyticsCard from '../../components/AnalyticsCard/AnalyticsCard';
 import {
   Calendar,
   Clock,
+  LogOut,
   MapPin,
   Plus,
   Settings,
@@ -17,12 +18,37 @@ import {
 import { colors } from '../../theme/colors';
 import ActionCard from '../../components/ActionsCard/ActionCard';
 import LiveMatchesCard from '../../components/MatchesCard/LiveMatchesCard';
+import { useAuthStore } from '../../store/AuthStore';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
+import { MOCK_MATCHES } from '../../constants/mockMatches';
 
 const AdminHomeScreen = () => {
+  const { logout } = useAuthStore();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const handleLogout = async () => {
+    await logout();
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Auth', params: { screen: 'Login' } }],
+    });
+  };
   return (
     <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
-        <Text style={styles.greeting}>{APP_STRINGS.adminScreens.greeting}</Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.greeting}>
+            {APP_STRINGS.adminScreens.greeting}
+          </Text>
+
+          <TouchableOpacity onPress={handleLogout}>
+            <LogOut size={22} color={colors.error} />
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.analyticsGrid}>
           <View style={styles.row}>
@@ -82,93 +108,39 @@ const AdminHomeScreen = () => {
 
         <View>
           <Text style={styles.heading}>
-            {APP_STRINGS.adminScreens.liveMatches}
+            {APP_STRINGS.eventScreen.todaysMatches}
           </Text>
 
-          <LiveMatchesCard
-            gameName="Football"
-            firstTeam="Thunder Hawks"
-            secondTeam="Storm Riders"
-            status="Live"
-            firstTeamPoints={2}
-            secondTeamPoints={1}
-            venue="Court A"
-            venueIcon={<MapPin color={colors.textSecondary} />}
-            statusIcon={<Clock color={colors.textSecondary} />}
-            firstTeamLogo={
-              <View>
-                <Text>TH</Text>
-              </View>
-            }
-            secondTeamLogo={
-              <View>
-                <Text>SR</Text>
-              </View>
-            }
-          />
-          <LiveMatchesCard
-            gameName="Football"
-            firstTeam="Thunder Hawks"
-            secondTeam="Storm Riders"
-            status="Upcoming"
-            firstTeamPoints={2}
-            secondTeamPoints={1}
-            venue="Court A"
-            venueIcon={<MapPin color={colors.textSecondary} />}
-            statusIcon={<Clock color={colors.textSecondary} />}
-            firstTeamLogo={
-              <View>
-                <Text>TH</Text>
-              </View>
-            }
-            secondTeamLogo={
-              <View>
-                <Text>SR</Text>
-              </View>
-            }
-          />
-          <LiveMatchesCard
-            gameName="Football"
-            firstTeam="Thunder Hawks"
-            secondTeam="Storm Riders"
-            status="Live"
-            firstTeamPoints={2}
-            secondTeamPoints={1}
-            venue="Court A"
-            venueIcon={<MapPin color={colors.textSecondary} />}
-            statusIcon={<Clock color={colors.textSecondary} />}
-            firstTeamLogo={
-              <View>
-                <Text>TH</Text>
-              </View>
-            }
-            secondTeamLogo={
-              <View>
-                <Text>SR</Text>
-              </View>
-            }
-          />
-          <LiveMatchesCard
-            gameName="Football"
-            firstTeam="Thunder Hawks"
-            secondTeam="Storm Riders"
-            status="Live"
-            firstTeamPoints={2}
-            secondTeamPoints={1}
-            venue="Court A"
-            venueIcon={<MapPin color={colors.textSecondary} />}
-            statusIcon={<Clock color={colors.textSecondary} />}
-            firstTeamLogo={
-              <View>
-                <Text>TH</Text>
-              </View>
-            }
-            secondTeamLogo={
-              <View>
-                <Text>SR</Text>
-              </View>
-            }
-          />
+          {MOCK_MATCHES.map((match) => (
+            <LiveMatchesCard
+              key={match.id}
+              gameName={match.gameName}
+              firstTeam={match.firstTeam}
+              secondTeam={match.secondTeam}
+              status={match.status}
+              firstTeamPoints={match.firstTeamPoints}
+              secondTeamPoints={match.secondTeamPoints}
+              venue={match.venue}
+              venueIcon={<MapPin color={colors.textSecondary} />}
+              statusIcon={<Clock color={colors.textSecondary} />}
+              firstTeamLogo={
+                <View>
+                  <Text>
+                    {match.firstTeam[0]}
+                    {match.firstTeam[1].toUpperCase()}
+                  </Text>
+                </View>
+              }
+              secondTeamLogo={
+                <View>
+                  <Text>
+                    {match.secondTeam[0]}
+                    {match.secondTeam[1].toUpperCase()}
+                  </Text>
+                </View>
+              }
+            />
+          ))}
         </View>
       </View>
     </ScreenWrapper>

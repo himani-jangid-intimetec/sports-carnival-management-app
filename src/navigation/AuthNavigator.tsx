@@ -8,7 +8,11 @@ import ForgotPasswordScreen from '../views/ForgotPassword/ForgotPasswordScreen';
 export type AuthStackParamList = {
   Login: undefined;
   Register: undefined;
-  RoleSelection: undefined;
+  RoleSelection: {
+    name: string;
+    email: string;
+    password: string;
+  };
   ForgotPassword: undefined;
 };
 

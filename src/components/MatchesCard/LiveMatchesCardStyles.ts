@@ -31,6 +31,19 @@ export const styles = StyleSheet.create({
   footerText: {
     color: colors.textSecondary,
   },
+  gameStatus: {
+    fontWeight: 'bold',
+  },
+  gameStatusCompleted: {
+    backgroundColor: colors.error + '20',
+    borderColor: colors.error,
+    borderRadius: 14,
+    borderWidth: 1,
+    color: colors.error,
+    fontWeight: 'bold',
+    paddingHorizontal: 14,
+    paddingVertical: 4,
+  },
   gameStatusLive: {
     backgroundColor: colors.participantBackgroud + '20',
     borderColor: colors.participantBackgroud,
@@ -55,6 +68,10 @@ export const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontWeight: 'bold',
     textTransform: 'uppercase',
+  },
+  leadingScore: {
+    color: colors.participantBackgroud,
+    fontWeight: 'bold',
   },
   logoContainer: {
     backgroundColor: colors.primary,

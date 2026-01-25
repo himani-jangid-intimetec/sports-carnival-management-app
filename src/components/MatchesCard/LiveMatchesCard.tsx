@@ -30,16 +30,24 @@ const LiveMatchesCard = ({
   statusIcon,
   venueIcon,
 }: LiveMatchesCardProps) => {
+  const isFirstTeamLeading = firstTeamPoints > secondTeamPoints;
+  const isSecondTeamLeading = secondTeamPoints > firstTeamPoints;
+
+  const isLive = status === 'Live';
+  const isUpcoming = status === 'Upcoming';
+  const isCompleted = status === 'Completed';
+
   return (
     <View style={styles.container}>
       <View style={styles.detailContainer}>
         <Text style={styles.gameTitle}>{gameName}</Text>
         <Text
-          style={
-            status === 'Live'
-              ? styles.gameStatusLive
-              : styles.gameStatusUpcoming
-          }
+          style={[
+            styles.gameStatus,
+            isLive && styles.gameStatusLive,
+            isUpcoming && styles.gameStatusUpcoming,
+            isCompleted && styles.gameStatusCompleted,
+          ]}
         >
           {status}
         </Text>
@@ -49,7 +57,14 @@ const LiveMatchesCard = ({
         <View style={styles.teamContainer}>
           <View style={styles.logoContainer}>{firstTeamLogo}</View>
           <Text style={styles.teamName}>{firstTeam}</Text>
-          <Text style={styles.pointsStyle}>{firstTeamPoints}</Text>
+          <Text
+            style={[
+              styles.pointsStyle,
+              isFirstTeamLeading && styles.leadingScore,
+            ]}
+          >
+            {firstTeamPoints}
+          </Text>
         </View>
 
         <View style={styles.teamContainer}>
@@ -64,7 +79,14 @@ const LiveMatchesCard = ({
         <View style={styles.teamContainer}>
           <View style={styles.logoContainer}>{secondTeamLogo}</View>
           <Text style={styles.teamName}>{secondTeam}</Text>
-          <Text style={styles.pointsStyle}>{secondTeamPoints}</Text>
+          <Text
+            style={[
+              styles.pointsStyle,
+              isSecondTeamLeading && styles.leadingScore,
+            ]}
+          >
+            {secondTeamPoints}
+          </Text>
         </View>
       </View>
 

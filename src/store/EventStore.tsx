@@ -22,12 +22,14 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateEvent = (updatedEvent: Event) => {
     setEvents((prev) =>
-      prev.map((e) => (e.id === updatedEvent.id ? updatedEvent : e)),
+      prev.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event,
+      ),
     );
   };
 
   const deleteEvent = (eventId: string) => {
-    setEvents((prev) => prev.filter((e) => e.id !== eventId));
+    setEvents((prev) => prev.filter((event) => event.id !== eventId));
   };
 
   return (

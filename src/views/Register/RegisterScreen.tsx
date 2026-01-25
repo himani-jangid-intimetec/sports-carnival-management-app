@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
 import { Eye, EyeOff, Lock, Mail, Trophy, User } from 'lucide-react-native';
 import { useRegisterViewModel } from '../../viewModels/RegisterViewModel';
@@ -9,7 +9,6 @@ import { AuthStackParamList } from '../../navigation/AuthNavigator';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
-import { validationMessages } from '../../constants/validationMessages';
 import { styles } from './RegisterScreenStyles';
 import { APP_STRINGS } from '../../constants/appStrings';
 
@@ -18,7 +17,6 @@ const RegisterScreen = () => {
     name,
     email,
     password,
-    error,
     setName,
     setEmail,
     setPassword,
@@ -36,15 +34,15 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation<NavigationProp>();
 
-  const handleRegister = () => {
-    const isValid = onRegister();
+  const handleRegister = async () => {
+    const success = await onRegister();
+    if (!success) return;
 
-    if (!isValid && error) {
-      Alert.alert(validationMessages.LOGIN_ERROR, error);
-      return;
-    }
-
-    navigation.navigate('RoleSelection');
+    navigation.navigate('RoleSelection', {
+      name,
+      email,
+      password,
+    });
   };
 
   const [showPassword, setShowPassword] = useState(false);

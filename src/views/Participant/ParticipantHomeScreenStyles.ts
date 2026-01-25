@@ -31,6 +31,11 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     paddingTop: 5,
   },
+  headerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   heading: {
     color: colors.textPrimary,
     fontSize: 24,

@@ -1,10 +1,11 @@
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import { APP_STRINGS } from '../../constants/appStrings';
 import AnalyticsCard from '../../components/AnalyticsCard/AnalyticsCard';
 import {
   Calendar,
   Clock,
+  LogOut,
   MapPin,
   TrendingUp,
   Trophy,
@@ -15,14 +16,37 @@ import LiveMatchesCard from '../../components/MatchesCard/LiveMatchesCard';
 import UpcomingMatchesCard from '../../components/MatchesCard/UpcomingMatchesCard';
 import { styles } from './ParticipantHomeScreenStyles';
 import MyTeamCard from '../../components/MyTeamCard/MyTeamCard';
+import { useAuthStore } from '../../store/AuthStore';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
+import { MOCK_MATCHES, UPCOMING_MATCHES } from '../../constants/mockMatches';
 
 const ParticipantHomeScreen = () => {
+  const { logout } = useAuthStore();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const handleLogout = async () => {
+    await logout();
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Auth', params: { screen: 'Login' } }],
+    });
+  };
   return (
     <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
-        <Text style={styles.greeting}>
-          {APP_STRINGS.participantScreens.greeting}
-        </Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.greeting}>
+            {APP_STRINGS.participantScreens.greeting}
+          </Text>
+
+          <TouchableOpacity onPress={handleLogout}>
+            <LogOut size={22} color={colors.error} />
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.analyticsGrid}>
           <View style={styles.row}>
@@ -74,51 +98,39 @@ const ParticipantHomeScreen = () => {
 
         <View>
           <Text style={styles.heading}>
-            {APP_STRINGS.adminScreens.liveMatches}
+            {APP_STRINGS.eventScreen.todaysMatches}
           </Text>
 
-          <LiveMatchesCard
-            gameName="Football"
-            firstTeam="Thunder Hawks"
-            secondTeam="Storm Riders"
-            status="Live"
-            firstTeamPoints={2}
-            secondTeamPoints={1}
-            venue="Court A"
-            venueIcon={<MapPin color={colors.textSecondary} />}
-            statusIcon={<Clock color={colors.textSecondary} />}
-            firstTeamLogo={
-              <View>
-                <Text>TH</Text>
-              </View>
-            }
-            secondTeamLogo={
-              <View>
-                <Text>SR</Text>
-              </View>
-            }
-          />
-          <LiveMatchesCard
-            gameName="Football"
-            firstTeam="Thunder Hawks"
-            secondTeam="Storm Riders"
-            status="Upcoming"
-            firstTeamPoints={2}
-            secondTeamPoints={1}
-            venue="Court A"
-            venueIcon={<MapPin color={colors.textSecondary} />}
-            statusIcon={<Clock color={colors.textSecondary} />}
-            firstTeamLogo={
-              <View>
-                <Text>TH</Text>
-              </View>
-            }
-            secondTeamLogo={
-              <View>
-                <Text>SR</Text>
-              </View>
-            }
-          />
+          {MOCK_MATCHES.map((match) => (
+            <LiveMatchesCard
+              key={match.id}
+              gameName={match.gameName}
+              firstTeam={match.firstTeam}
+              secondTeam={match.secondTeam}
+              status={match.status}
+              firstTeamPoints={match.firstTeamPoints}
+              secondTeamPoints={match.secondTeamPoints}
+              venue={match.venue}
+              venueIcon={<MapPin color={colors.textSecondary} />}
+              statusIcon={<Clock color={colors.textSecondary} />}
+              firstTeamLogo={
+                <View>
+                  <Text>
+                    {match.firstTeam[0]}
+                    {match.firstTeam[1].toUpperCase()}
+                  </Text>
+                </View>
+              }
+              secondTeamLogo={
+                <View>
+                  <Text>
+                    {match.secondTeam[0]}
+                    {match.secondTeam[1].toUpperCase()}
+                  </Text>
+                </View>
+              }
+            />
+          ))}
         </View>
 
         <View>
@@ -126,27 +138,13 @@ const ParticipantHomeScreen = () => {
             {APP_STRINGS.organizerScreens.upcomingMatches}
           </Text>
 
-          <UpcomingMatchesCard
-            sport="Football"
-            title="Inter-College Football Championship"
-            date="Jan 20, 2026"
-            location="Central Stadium"
-            currentTeams={12}
-            maxTeams={16}
-            status="REGISTRATION_OPEN"
-            sportIcon={<Trophy size={64} color={colors.textSecondary} />}
-          />
-
-          <UpcomingMatchesCard
-            sport="Carrom"
-            title="Inter-College Carrom Championship"
-            date="Jan 30, 2026"
-            location="Central Stadium"
-            currentTeams={5}
-            maxTeams={10}
-            status="LIVE"
-            sportIcon={<Trophy size={64} color={colors.textSecondary} />}
-          />
+          {UPCOMING_MATCHES.map((match) => (
+            <UpcomingMatchesCard
+              key={match.title}
+              {...match}
+              sportIcon={<Trophy size={64} color={colors.textSecondary} />}
+            />
+          ))}
         </View>
       </View>
     </ScreenWrapper>

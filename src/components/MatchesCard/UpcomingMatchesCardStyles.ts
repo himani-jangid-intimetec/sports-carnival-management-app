@@ -35,13 +35,13 @@ export const styles = StyleSheet.create({
   },
 
   liveBadge: {
-    backgroundColor: colors.participantBackgroud + '20',
-    borderColor: colors.participantBackgroud,
+    backgroundColor: colors.usersIconBackground + '20',
+    borderColor: colors.usersIconBackground,
     borderWidth: 1,
   },
 
   liveText: {
-    color: colors.participantBackgroud,
+    color: colors.usersIconBackground,
     fontWeight: '600',
   },
 
@@ -83,7 +83,7 @@ export const styles = StyleSheet.create({
   },
 
   sportText: {
-    color: colors.textPrimary,
+    color: colors.textSecondary,
     fontWeight: '700',
     textTransform: 'uppercase',
   },

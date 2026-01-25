@@ -5,38 +5,69 @@ import {
   isValidPassword,
 } from '../utils/validation';
 import { validationMessages } from '../constants/validationMessages';
+import { useAuthStore } from '../store/AuthStore';
+import { StoredUser } from '../utils/authStorage';
 
 export const useRegisterViewModel = () => {
+  const { register } = useAuthStore();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>('');
+
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const onRegister = (): boolean => {
+  const validateName = () => {
     if (!name.trim()) {
-      setError(validationMessages.REQUIRED_NAME);
+      setNameError(validationMessages.REQUIRED_NAME);
+      return false;
+    } else if (!isValidName(name)) {
+      setNameError(validationMessages.NAME_ALPHA_ONLY);
       return false;
     }
+    setNameError('');
+    return true;
+  };
 
-    if (!isValidEmail(email)) {
-      setError(validationMessages.REQUIRED_EMAIL);
+  const validateEmail = () => {
+    if (!email.trim()) {
+      setEmailError(validationMessages.REQUIRED_EMAIL);
+      return false;
+    } else if (!isValidEmail(email)) {
+      setEmailError(validationMessages.INVALID_EMAIL);
       return false;
     }
+    setEmailError('');
+    return true;
+  };
 
-    if (!isValidName(name)) {
-      setError(validationMessages.NAME_ALPHA_ONLY);
+  const validatePassword = () => {
+    if (!password.trim()) {
+      setPasswordError(validationMessages.REQUIRED_PASSWORD);
+      return false;
+    } else if (!isValidPassword(password)) {
+      setPasswordError(validationMessages.INVALID_PASSWORD);
       return false;
     }
+    setPasswordError('');
+    return true;
+  };
 
-    if (password.length < 8) {
-      setError(validationMessages.PASSWORD_MIN_LENGTH);
-      return false;
-    }
+  const onRegister = async (): Promise<boolean> => {
+    const valid = validateName() && validateEmail() && validatePassword();
 
-    setError(null);
+    if (!valid) return false;
+
+    const newUser: StoredUser = {
+      name,
+      email,
+      password,
+      role: 'participant',
+    };
+
+    await register(newUser);
     return true;
   };
 
@@ -48,51 +79,20 @@ export const useRegisterViewModel = () => {
     password.length > 0 &&
     isValidPassword(password);
 
-  const validateName = () => {
-    if (!name.trim()) {
-      setNameError(validationMessages.REQUIRED_NAME);
-    } else if (!isValidName(name)) {
-      setNameError(validationMessages.NAME_ALPHA_ONLY);
-    } else {
-      setNameError('');
-    }
-  };
-
-  const validateEmail = () => {
-    if (!email.trim()) {
-      setEmailError(validationMessages.REQUIRED_EMAIL);
-    } else if (!isValidEmail(email)) {
-      setEmailError(validationMessages.INVALID_EMAIL);
-    } else {
-      setEmailError('');
-    }
-  };
-
-  const validatePassword = () => {
-    if (password.length < 8) {
-      setPasswordError(validationMessages.PASSWORD_MIN_LENGTH);
-    } else if (!isValidPassword(password)) {
-      setPasswordError(validationMessages.INVALID_PASSWORD);
-    } else {
-      setPasswordError('');
-    }
-  };
-
   return {
     name,
     email,
-    error,
     password,
     setName,
     setEmail,
     setPassword,
-    onRegister,
-    isFormValid,
+    nameError,
+    emailError,
+    passwordError,
     validateName,
     validateEmail,
     validatePassword,
-    nameError,
-    passwordError,
-    emailError,
+    onRegister,
+    isFormValid,
   };
 };

@@ -1,15 +1,16 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import AuthNavigator from './AuthNavigator';
+import AuthNavigator, { AuthStackParamList } from './AuthNavigator';
 import AdminTabs from './AdminTabs';
 import OrganizerTabs from './OrganizerTabs';
 import ParticipantTabs from './ParticipantTabs';
 import EventFormScreen from '../views/EventFormScreen/EventFormScreen';
 import { Event } from '../models/Event';
+import { NavigatorScreenParams } from '@react-navigation/native';
 
 export type RootStackParamList = {
-  Auth: undefined;
+  Auth: NavigatorScreenParams<AuthStackParamList>;
   AdminTabs: undefined;
   OrganizerTabs: undefined;
   ParticipantTabs: undefined;

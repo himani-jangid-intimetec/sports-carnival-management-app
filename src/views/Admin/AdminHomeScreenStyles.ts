@@ -28,6 +28,11 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: 5,
   },
+  headerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   heading: {
     color: colors.textPrimary,
     fontSize: 24,
