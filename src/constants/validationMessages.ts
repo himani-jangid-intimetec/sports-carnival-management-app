@@ -19,4 +19,5 @@ export const validationMessages = {
   REQUIRED_TIME: 'Time is required',
   REQUIRED_VENUE: 'Venue is required',
   INVALID_TEAM_COUNT: 'Enter a valid team count',
+  INVALID_CREDENTIALS: 'Enter your correct credentials',
 };

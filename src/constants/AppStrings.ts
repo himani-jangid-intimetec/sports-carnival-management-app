@@ -104,5 +104,6 @@ export const APP_STRINGS = {
     vs: 'VS',
     registrationOpen: 'Registration Open',
     winRate: 'Win Rate',
+    todaysMatches: "Today's Matches",
   },
 };
