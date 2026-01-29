@@ -12,4 +12,12 @@ export const validationMessages = {
   PASSWORD_UPDATED_DESCRIPTION: 'Your password has been successfully updated',
   INVALID_PASSWORD:
     'Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.',
+  REQUIRED_EVENT_NAME: 'Event name is required',
+  REQUIRED_SPORT: 'Sport is required',
+  REQUIRED_FORMAT: 'Format is required',
+  REQUIRED_DATE: 'Date is required',
+  REQUIRED_TIME: 'Time is required',
+  REQUIRED_VENUE: 'Venue is required',
+  INVALID_TEAM_COUNT: 'Enter a valid team count',
+  INVALID_CREDENTIALS: 'Enter your correct credentials',
 };

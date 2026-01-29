@@ -1,7 +1,7 @@
-import React from 'react';
-import { Alert, Pressable, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
-import { Lock, Mail, Trophy, User } from 'lucide-react-native';
+import { Eye, EyeOff, Lock, Mail, Trophy, User } from 'lucide-react-native';
 import { useRegisterViewModel } from '../../viewModels/RegisterViewModel';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,16 +9,14 @@ import { AuthStackParamList } from '../../navigation/AuthNavigator';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
-import { validationMessages } from '../../constants/validationMessages';
 import { styles } from './RegisterScreenStyles';
-import { APP_STRINGS } from '../../constants/AppStrings';
+import { APP_STRINGS } from '../../constants/appStrings';
 
 const RegisterScreen = () => {
   const {
     name,
     email,
     password,
-    error,
     setName,
     setEmail,
     setPassword,
@@ -36,19 +34,21 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation<NavigationProp>();
 
-  const handleRegister = () => {
-    const isValid = onRegister();
+  const handleRegister = async () => {
+    const success = await onRegister();
+    if (!success) return;
 
-    if (!isValid && error) {
-      Alert.alert(validationMessages.LOGIN_ERROR, error);
-      return;
-    }
-
-    navigation.navigate('RoleSelection');
+    navigation.navigate('RoleSelection', {
+      name,
+      email,
+      password,
+    });
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <ScreenWrapper>
+    <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <View style={styles.trophyContainer}>
@@ -86,7 +86,7 @@ const RegisterScreen = () => {
             <Text style={styles.inputLabels}>{APP_STRINGS.labels.email}</Text>
             <AppInput
               icon={<Mail size={20} color={colors.textSecondary} />}
-              placeholder="Enter your email"
+              placeholder={APP_STRINGS.placeHolders.email}
               value={email}
               onChangeText={setEmail}
               onBlur={validateEmail}
@@ -103,9 +103,21 @@ const RegisterScreen = () => {
               placeholder={APP_STRINGS.placeHolders.createPassword}
               value={password}
               onChangeText={setPassword}
-              secureTextEntry
+              secureTextEntry={!showPassword}
               onBlur={validatePassword}
               error={passwordError}
+              optionalEyeIcon={
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color={colors.textSecondary} />
+                  ) : (
+                    <Eye size={20} color={colors.textSecondary} />
+                  )}
+                </TouchableOpacity>
+              }
             />
           </View>
 

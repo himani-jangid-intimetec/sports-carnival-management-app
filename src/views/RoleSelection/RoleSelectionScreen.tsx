@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Trophy } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { roles, RoleType } from '../../constants/roles';
@@ -8,13 +9,69 @@ import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import RoleCard from '../../components/RoleCard/RoleCard';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './RoleSelectionScreenStyles';
-import { APP_STRINGS } from '../../constants/AppStrings';
+import { APP_STRINGS } from '../../constants/appStrings';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
+import { useAuthStore } from '../../store/AuthStore';
+import { StoredUser } from '../../utils/authStorage';
+
+type RouteParams = {
+  key: string;
+  name: 'RoleSelection';
+  params: {
+    name: string;
+    email: string;
+    password: string;
+  };
+};
 
 const RoleSelectionScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteParams>();
+  const { register } = useAuthStore();
+  const { name, email, password } = route.params;
+
   const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);
 
   const selectedRoleTitle =
     roles.find((role) => role.key === selectedRole)?.title ?? '...';
+
+  const handleContinue = async () => {
+    if (!selectedRole) return;
+
+    const newUser: StoredUser = {
+      name,
+      email,
+      password,
+      role: selectedRole,
+    };
+
+    await register(newUser);
+
+    switch (selectedRole) {
+      case 'admin':
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'AdminTabs' }],
+        });
+        break;
+
+      case 'organizer':
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'OrganizerTabs' }],
+        });
+        break;
+
+      case 'participant':
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'ParticipantTabs' }],
+        });
+        break;
+    }
+  };
 
   return (
     <ScreenWrapper>
@@ -39,6 +96,7 @@ const RoleSelectionScreen = () => {
         </Text>
 
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={roles}
           keyExtractor={(item) => item.key}
           renderItem={({ item }) => {
@@ -74,9 +132,7 @@ const RoleSelectionScreen = () => {
         <AppButton
           title={`Continue as ${selectedRoleTitle}`}
           disabled={!selectedRole}
-          onPress={() => {
-            if (!selectedRole) return;
-          }}
+          onPress={handleContinue}
         />
       </View>
     </ScreenWrapper>
