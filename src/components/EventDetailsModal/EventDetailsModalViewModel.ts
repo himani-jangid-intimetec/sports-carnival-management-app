@@ -7,7 +7,7 @@ export const useEventDetailsViewModel = (eventId: string) => {
   const { events } = useEventStore();
 
   const event: Event | undefined = useMemo(() => {
-    return events.find((e) => e.id === eventId);
+    return events.find((event) => event.id === eventId);
   }, [events, eventId]);
 
   const registrationEnded = useMemo(() => {

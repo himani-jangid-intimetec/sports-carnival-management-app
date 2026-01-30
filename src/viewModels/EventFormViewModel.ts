@@ -43,7 +43,7 @@ export const useEventFormViewModel = ({
   const hideTimePicker = () => setTimePickerVisible(false);
 
   const handleConfirmDate = (date: Date) => {
-    const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
+    const formattedDate = date.toISOString().split('T')[0];
     setDate(formattedDate);
     hideDatePicker();
   };

@@ -23,6 +23,7 @@ type Props = {
   onDelete: () => void;
   onCreateTeams?: () => void;
   onCreateFixtures?: () => void;
+  onRegister: (name: string, gender: 'Male' | 'Female') => void;
   getRoundName: (round: number, totalTeams: number) => string;
 };
 
@@ -47,7 +48,7 @@ const EventDetailsModal = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const event: Event | null = useMemo(
-    () => events.find((e) => e.id === eventId) ?? null,
+    () => events.find((event) => event.id === eventId) ?? null,
     [events, eventId],
   );
 
@@ -259,7 +260,6 @@ const EventDetailsModal = ({
             )}
           </View>
 
-          {/* FOOTER */}
           <View style={styles.footer}>
             {role === 'participant' && (
               <AppButton
