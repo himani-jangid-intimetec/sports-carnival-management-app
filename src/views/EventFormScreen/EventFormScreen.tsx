@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import { styles } from './EventFormScreenStyles';
 import { APP_STRINGS } from '../../constants/appStrings';
@@ -10,7 +10,7 @@ import { RootStackParamList } from '../../navigation/AppNavigator';
 import { ArrowLeft } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { useEventFormViewModel } from '../../viewModels/EventFormViewModel';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 type EventFormScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -58,7 +58,7 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
             <AppInput
               placeholder={APP_STRINGS.eventScreen.sportName}
               value={viewModel.sport}
-              onChangeText={viewModel.setSport}
+              onChangeText={viewModel.onSportChange}
               error={viewModel.errors.sport}
             />
           </View>
@@ -74,6 +74,7 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
                 viewModel.setFormat(view as '1v1' | '2v2')
               }
               error={viewModel.errors.format}
+              editable={viewModel.sport.toLowerCase() !== 'chess'}
             />
           </View>
         </View>
@@ -83,56 +84,42 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
             <Text style={styles.inputLabels}>
               {APP_STRINGS.eventScreen.date}
             </Text>
-            <Pressable onPress={viewModel.openDatePicker}>
+            <TouchableOpacity onPress={viewModel.showDatePicker}>
               <AppInput
-                placeholder="Select date"
+                placeholder={APP_STRINGS.eventScreen.date}
                 value={viewModel.date}
-                error={viewModel.errors.date}
                 editable={false}
                 onChangeText={() => {}}
               />
-            </Pressable>
+            </TouchableOpacity>
+
+            <DateTimePickerModal
+              isVisible={viewModel.isDatePickerVisible}
+              mode="date"
+              onConfirm={viewModel.handleConfirmDate}
+              onCancel={viewModel.hideDatePicker}
+            />
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabels}>
               {APP_STRINGS.eventScreen.time}
             </Text>
-            <Pressable onPress={viewModel.openTimePicker}>
+            <TouchableOpacity onPress={viewModel.showTimePicker}>
               <AppInput
-                placeholder="Select time"
+                placeholder={APP_STRINGS.eventScreen.time}
                 value={viewModel.time}
-                error={viewModel.errors.time}
                 editable={false}
                 onChangeText={() => {}}
               />
-            </Pressable>
-          </View>
-        </View>
+            </TouchableOpacity>
 
-        <View style={styles.inputRow}>
-          <View style={[styles.inputContainer, styles.dateTime]}>
-            {viewModel.showDatePicker && (
-              <DateTimePicker
-                value={viewModel.pickerDate}
-                mode="date"
-                display="default"
-                onChange={viewModel.onDateChange}
-                themeVariant="dark"
-              />
-            )}
-          </View>
-
-          <View style={[styles.inputContainer, styles.dateTime]}>
-            {viewModel.showTimePicker && (
-              <DateTimePicker
-                value={viewModel.pickerDate}
-                mode="time"
-                display="default"
-                onChange={viewModel.onTimeChange}
-                themeVariant="dark"
-              />
-            )}
+            <DateTimePickerModal
+              isVisible={viewModel.isTimePickerVisible}
+              mode="time"
+              onConfirm={viewModel.handleConfirmTime}
+              onCancel={viewModel.hideTimePicker}
+            />
           </View>
         </View>
 

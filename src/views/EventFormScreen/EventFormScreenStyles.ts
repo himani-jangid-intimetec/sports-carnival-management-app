@@ -30,6 +30,17 @@ export const styles = StyleSheet.create({
     top: 3,
   },
 
+  input: {
+    backgroundColor: colors.appBackground,
+    borderColor: colors.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    color: colors.textPrimary,
+    fontSize: 14,
+    height: 48,
+    paddingHorizontal: 12,
+  },
+
   inputContainer: {
     flex: 2,
   },

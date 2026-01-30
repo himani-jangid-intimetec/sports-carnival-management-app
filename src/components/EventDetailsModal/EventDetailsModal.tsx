@@ -10,6 +10,9 @@ import MyTeamCard from '../MyTeamCard/MyTeamCard';
 import LiveMatchesCard from '../MatchesCard/LiveMatchesCard';
 import { useEventStore } from '../../store/EventStore';
 import { Event } from '../../models/Event';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 
 type Props = {
   visible: boolean;
@@ -18,7 +21,6 @@ type Props = {
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
-  onRegister: (name: string, gender: 'Male' | 'Female') => void;
   onCreateTeams?: () => void;
   onCreateFixtures?: () => void;
   getRoundName: (round: number, totalTeams: number) => string;
@@ -34,13 +36,15 @@ const EventDetailsModal = ({
   onClose,
   onEdit,
   onDelete,
-  onRegister,
   onCreateTeams,
   onCreateFixtures,
   getRoundName,
 }: Props) => {
   const { events } = useEventStore();
   const [activeTab, setActiveTab] = useState<TabType>('ABOUT');
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const event: Event | null = useMemo(
     () => events.find((e) => e.id === eventId) ?? null,
@@ -110,7 +114,7 @@ const EventDetailsModal = ({
                 <Text style={styles.sectionTitle}>
                   {APP_STRINGS.eventScreen.rulesAndRegulations}
                 </Text>
-                {event.rules && event.rules.length > 0 ? (
+                {event.rules?.length ? (
                   event.rules.map((rule, index) => (
                     <Text key={index} style={styles.text}>
                       {index + 1}. {rule}
@@ -126,7 +130,7 @@ const EventDetailsModal = ({
 
             {activeTab === 'TEAMS' && (
               <>
-                {event.teams && event.teams.length > 0 ? (
+                {event.teams?.length ? (
                   <FlatList
                     data={event.teams}
                     keyExtractor={(item) => item.id}
@@ -135,7 +139,7 @@ const EventDetailsModal = ({
                       <MyTeamCard
                         logo={<Users color={colors.appBackground} />}
                         name={item.name}
-                        members={item.players}
+                        members={item.players.map((player) => player.name)}
                         sport={event.sport}
                         wins={0}
                         losses={0}
@@ -176,7 +180,7 @@ const EventDetailsModal = ({
                   </Text>
                 )}
 
-                {event.fixtures && event.fixtures.length > 0 ? (
+                {event.fixtures?.length ? (
                   <FlatList
                     data={event.fixtures}
                     keyExtractor={(item) => item.id}
@@ -255,6 +259,7 @@ const EventDetailsModal = ({
             )}
           </View>
 
+          {/* FOOTER */}
           <View style={styles.footer}>
             {role === 'participant' && (
               <AppButton
@@ -264,7 +269,10 @@ const EventDetailsModal = ({
                     : APP_STRINGS.eventScreen.registrationClosed
                 }
                 disabled={!canRegister}
-                onPress={() => onRegister('Test', 'Male')}
+                onPress={() => {
+                  if (!eventId) return;
+                  navigation.navigate('EventRegister', { eventId });
+                }}
               />
             )}
 

@@ -12,15 +12,15 @@ export type GenderType = 'Male' | 'Female';
 export interface Team {
   id: string;
   name: string;
-  players: string[];
+  players: Registration[];
   gender: GenderType;
 }
 
-export type Registration = {
+interface Registration {
   id: string;
   name: string;
   gender: 'Male' | 'Female';
-};
+}
 
 export type MatchStatus = 'UPCOMING' | 'LIVE' | 'COMPLETED';
 

@@ -146,5 +146,10 @@ export const APP_STRINGS = {
     semiFinal: 'Semi-Final',
     quarterFinal: 'Quarter-Final',
     notEnoughCompletedMatches: 'Not Enough Completed Matches',
+    noEnoughRegistrations: 'No Enough Registrations',
+    eventFull: 'Event Full',
+    noMoreSlots: 'No more slots available',
+    registered: 'Registered',
+    registrationSuccessfull: 'You have registered successfully',
   },
 };

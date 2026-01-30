@@ -4,7 +4,6 @@ import { validationMessages } from '../constants/validationMessages';
 import { useEventStore } from '../store/EventStore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 type Mode = 'create' | 'edit';
 
@@ -33,6 +32,30 @@ export const useEventFormViewModel = ({
   navigation,
 }: EventFormParams) => {
   const { createEvent, updateEvent } = useEventStore();
+
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [isTimePickerVisible, setTimePickerVisible] = useState(false);
+
+  const showDatePicker = () => setDatePickerVisible(true);
+  const showTimePicker = () => setTimePickerVisible(true);
+
+  const hideDatePicker = () => setDatePickerVisible(false);
+  const hideTimePicker = () => setTimePickerVisible(false);
+
+  const handleConfirmDate = (date: Date) => {
+    const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
+    setDate(formattedDate);
+    hideDatePicker();
+  };
+
+  const handleConfirmTime = (time: Date) => {
+    const formattedTime = time.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    setTime(formattedTime);
+    hideTimePicker();
+  };
 
   const isEdit = mode === 'edit' && !!event;
 
@@ -66,31 +89,12 @@ export const useEventFormViewModel = ({
   );
 
   const [errors, setErrors] = useState<EventFormErrors>({});
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [pickerDate, setPickerDate] = useState(new Date());
 
-  const openDatePicker = () => setShowDatePicker(true);
-  const openTimePicker = () => setShowTimePicker(true);
+  const onSportChange = (value: string) => {
+    setSport(value);
 
-  const onDateChange = (event: DateTimePickerEvent, selected?: Date) => {
-    setShowDatePicker(false);
-    if (event.type === 'set' && selected) {
-      setPickerDate(selected);
-      setDate(selected.toISOString().split('T')[0]);
-    }
-  };
-
-  const onTimeChange = (event: DateTimePickerEvent, selected?: Date) => {
-    setShowTimePicker(false);
-    if (event.type === 'set' && selected) {
-      setPickerDate(selected);
-      const hours = selected.getHours();
-      const minutes = selected.getMinutes();
-      const formatted = `${hours.toString().padStart(2, '0')}:${minutes
-        .toString()
-        .padStart(2, '0')}`;
-      setTime(formatted);
+    if (value.toLowerCase() === 'chess') {
+      setFormat('1v1');
     }
   };
 
@@ -100,6 +104,9 @@ export const useEventFormViewModel = ({
     if (!name.trim()) newErrors.name = validationMessages.REQUIRED_EVENT_NAME;
     if (!sport.trim()) newErrors.sport = validationMessages.REQUIRED_SPORT;
     if (!format) newErrors.format = validationMessages.REQUIRED_FORMAT;
+    if (sport.toLowerCase() === 'chess' && format == '2v2') {
+      newErrors.format = validationMessages.INVALID_CHESS_FORMAT;
+    }
     if (!date.trim()) newErrors.date = validationMessages.REQUIRED_DATE;
     if (!time.trim()) newErrors.time = validationMessages.REQUIRED_TIME;
     if (!venue.trim()) newErrors.venue = validationMessages.REQUIRED_VENUE;
@@ -180,6 +187,8 @@ export const useEventFormViewModel = ({
     firstPrize,
     secondPrize,
     thirdPrize,
+    isDatePickerVisible,
+    isTimePickerVisible,
 
     setName,
     setSport,
@@ -193,14 +202,13 @@ export const useEventFormViewModel = ({
     setFirstPrize,
     setSecondPrize,
     setThirdPrize,
-
-    openDatePicker,
-    openTimePicker,
+    onSportChange,
     showDatePicker,
     showTimePicker,
-    pickerDate,
-    onDateChange,
-    onTimeChange,
+    handleConfirmDate,
+    handleConfirmTime,
+    hideDatePicker,
+    hideTimePicker,
 
     errors,
     onSubmit,

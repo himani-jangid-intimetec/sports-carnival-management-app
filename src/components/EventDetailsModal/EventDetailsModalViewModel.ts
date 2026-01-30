@@ -1,54 +1,53 @@
 import { useMemo } from 'react';
 import { useEventStore } from '../../store/EventStore';
 import { APP_STRINGS } from '../../constants/appStrings';
+import { Event } from '../../models/Event';
 
 export const useEventDetailsViewModel = (eventId: string) => {
   const { events } = useEventStore();
 
-  const event = useMemo(() => {
-    return events.find((event) => event.id === eventId);
+  const event: Event | undefined = useMemo(() => {
+    return events.find((e) => e.id === eventId);
   }, [events, eventId]);
 
-  if (!event) {
-    throw new Error(APP_STRINGS.eventScreen.noEventFound);
-  }
-
   const registrationEnded = useMemo(() => {
-    if (!event.registrationDeadline) return false;
+    if (!event || !event.registrationDeadline) return false;
     return new Date(event.registrationDeadline) < new Date();
-  }, [event.registrationDeadline]);
+  }, [event]);
 
-  const isCompleted = event.status === 'COMPLETED';
+  const isCompleted = event?.status === 'COMPLETED';
 
   const canRegister = useMemo(() => {
+    if (!event) return false;
+
     return (
       !registrationEnded &&
       !isCompleted &&
       event.registeredTeams < event.totalTeams
     );
-  }, [registrationEnded, isCompleted, event.registeredTeams, event.totalTeams]);
+  }, [event, registrationEnded, isCompleted]);
 
   const canCreateTeams = useMemo(() => {
+    if (!event) return false;
     return !event.teamsCreated && !isCompleted;
-  }, [event.teamsCreated, isCompleted]);
+  }, [event, isCompleted]);
 
   const canCreateFixtures = useMemo(() => {
+    if (!event) return false;
     return event.teamsCreated && !event.fixturesCreated && !isCompleted;
-  }, [event.teamsCreated, event.fixturesCreated, isCompleted]);
+  }, [event, isCompleted]);
 
   const statusText = useMemo(() => {
+    if (!event) return '';
+
     if (isCompleted) return APP_STRINGS.eventScreen.eventCompleted;
     if (!registrationEnded) return APP_STRINGS.eventScreen.registrationOpen;
     if (event.teamsCreated && event.fixturesCreated)
       return APP_STRINGS.eventScreen.fixturesReady;
     if (event.teamsCreated) return APP_STRINGS.eventScreen.teamsCreated;
+
     return APP_STRINGS.eventScreen.registrationClosed;
-  }, [
-    isCompleted,
-    registrationEnded,
-    event.teamsCreated,
-    event.fixturesCreated,
-  ]);
+  }, [event, isCompleted, registrationEnded]);
 
   const getRoundName = (round: number, totalTeams: number) => {
     const totalRounds = Math.log2(totalTeams);

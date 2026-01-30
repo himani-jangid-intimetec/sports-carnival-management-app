@@ -3,7 +3,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Alert } from 'react-native';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { Event, Fixture } from '../models/Event';
+import { Event, Fixture, Team } from '../models/Event';
 import { useEventStore } from '../store/EventStore';
 import { APP_STRINGS } from '../constants/appStrings';
 
@@ -58,6 +58,14 @@ export const useEventsListViewModel = (
   const onRegister = (name: string, gender: 'Male' | 'Female') => {
     if (!selectedEvent) return;
 
+    if (selectedEvent.registeredTeams >= selectedEvent.totalTeams) {
+      Alert.alert(
+        APP_STRINGS.eventScreen.eventFull,
+        APP_STRINGS.eventScreen.noMoreSlots,
+      );
+      return;
+    }
+
     const updatedEvent: Event = {
       ...selectedEvent,
       registrations: [
@@ -72,89 +80,85 @@ export const useEventsListViewModel = (
     };
 
     updateEvent(updatedEvent);
+
+    Alert.alert(
+      APP_STRINGS.eventScreen.registered,
+      APP_STRINGS.eventScreen.registrationSuccessfull,
+    );
   };
 
   const handleCreateTeams = () => {
     if (!selectedEvent) return;
 
-    const playersPerTeam = selectedEvent.format === '2v2' ? 2 : 1;
+    let playersPerTeam = selectedEvent.format === '2v2' ? 2 : 1;
 
-    const males = selectedEvent.registrations.filter(
-      (participant) => participant.gender === 'Male',
-    );
-    const females = selectedEvent.registrations.filter(
-      (participant) => participant.gender === 'Female',
-    );
+    if (selectedEvent.sport.toLowerCase() === 'chess') {
+      playersPerTeam = 1;
+    }
 
-    const buildTeams = (players: typeof selectedEvent.registrations) => {
-      const shuffled = [...players].sort(() => Math.random() - 0.5);
-      const teams = [];
+    const registrations = [...selectedEvent.registrations];
 
-      for (let index = 0; index < shuffled.length; index += playersPerTeam) {
-        const chunk = shuffled.slice(index, index + playersPerTeam);
-        if (chunk.length < playersPerTeam) break;
+    if (registrations.length < playersPerTeam * selectedEvent.totalTeams) {
+      Alert.alert(APP_STRINGS.eventScreen.noEnoughRegistrations);
+      return;
+    }
 
-        teams.push({
-          id: `team-${Date.now()}-${index}`,
-          name: `Team ${teams.length + 1}`,
-          players: chunk.map((player) => player.name),
-          gender: chunk[0].gender,
-        });
-      }
+    const shuffled = registrations.sort(() => Math.random() - 0.5);
 
-      return teams;
-    };
+    const teams: Team[] = [];
 
-    const maleTeams = buildTeams(males);
-    const femaleTeams = buildTeams(females);
+    for (let index = 0; index < selectedEvent.totalTeams; index++) {
+      const teamPlayers = shuffled.slice(
+        index * playersPerTeam,
+        index * playersPerTeam + playersPerTeam,
+      );
 
-    const allTeams = [...maleTeams, ...femaleTeams];
+      teams.push({
+        id: (index + 1).toString(),
+        name: `Team ${index + 1}`,
+        players: teamPlayers,
+        gender: teamPlayers[0].gender,
+      });
+    }
 
-    const updatedEvent: Event = {
+    updateEvent({
       ...selectedEvent,
-      teams: allTeams,
+      teams,
       teamsCreated: true,
-    };
-
-    updateEvent(updatedEvent);
+    });
   };
 
   const handleCreateFixtures = () => {
     if (!selectedEvent) return;
 
-    if (!selectedEvent.teamsCreated || !selectedEvent.teams.length) {
+    if (!selectedEvent.teamsCreated || selectedEvent.teams.length < 2) {
       Alert.alert(APP_STRINGS.eventScreen.createTeamFirst);
       return;
     }
 
     const fixtures: Fixture[] = [];
+    const teams = selectedEvent.teams;
 
-    for (let index = 0; index < selectedEvent.teams.length; index++) {
-      for (
-        let iterator = index + 1;
-        iterator < selectedEvent.teams.length;
-        iterator++
-      ) {
-        fixtures.push({
-          id: `fix-${Date.now()}-${index}-${iterator}`,
-          teamA: selectedEvent.teams[index].name,
-          teamB: selectedEvent.teams[iterator].name,
-          scoreA: 0,
-          scoreB: 0,
-          time: new Date().toISOString(),
-          round: 1,
-          status: 'UPCOMING',
-        });
-      }
+    for (let index = 0; index < teams.length; index += 2) {
+      if (!teams[index + 1]) break;
+
+      fixtures.push({
+        id: `fix-${Date.now()}-${index}`,
+        teamA: teams[index].name,
+        teamB: teams[index + 1].name,
+        scoreA: 0,
+        scoreB: 0,
+        round: 1,
+        time: new Date().toISOString(),
+        status: 'UPCOMING',
+      });
     }
 
-    const updatedEvent: Event = {
+    updateEvent({
       ...selectedEvent,
       fixtures,
       fixturesCreated: true,
-    };
-
-    updateEvent(updatedEvent);
+    });
   };
 
   const completeMatch = (fixtureId: string) => {
@@ -186,8 +190,13 @@ export const useEventsListViewModel = (
   const createNextRound = () => {
     if (!selectedEvent) return;
 
+    const lastRound = Math.max(
+      ...selectedEvent.fixtures.map((fixture) => fixture.round),
+    );
+
     const completed = selectedEvent.fixtures.filter(
-      (f) => f.status === 'COMPLETED' && f.round === 1,
+      (fixture) =>
+        fixture.round === lastRound && fixture.status === 'COMPLETED',
     );
 
     if (completed.length < 2) {
@@ -208,26 +217,24 @@ export const useEventsListViewModel = (
         teamB: winners[index + 1],
         scoreA: 0,
         scoreB: 0,
+        round: lastRound + 1,
         time: new Date().toISOString(),
-        round: 2,
         status: 'UPCOMING',
       });
     }
 
-    const updatedEvent: Event = {
+    updateEvent({
       ...selectedEvent,
       fixtures: [...selectedEvent.fixtures, ...nextRoundFixtures],
-    };
-
-    updateEvent(updatedEvent);
+    });
   };
 
   const getRoundName = (round: number, totalTeams: number) => {
     const totalRounds = Math.log2(totalTeams);
 
-    if (round === totalRounds) return APP_STRINGS.eventScreen.final;
-    if (round === totalRounds - 1) return APP_STRINGS.eventScreen.semiFinal;
-    if (round === totalRounds - 2) return APP_STRINGS.eventScreen.quarterFinal;
+    if (round === totalRounds) return 'Final';
+    if (round === totalRounds - 1) return 'Semi Final';
+    if (round === totalRounds - 2) return 'Quarter Final';
 
     return `Round ${round}`;
   };
