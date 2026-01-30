@@ -8,12 +8,22 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 
+  headerRow: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+
   heading: {
     color: colors.textPrimary,
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
     textAlign: 'center',
+  },
+
+  iconContainer: {
+    left: 0,
+    position: 'absolute',
+    top: 3,
   },
 
   inputContainer: {

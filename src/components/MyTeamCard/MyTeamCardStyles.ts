@@ -8,17 +8,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  captainText: {
-    color: colors.textSecondary,
-    fontSize: 15,
-    marginTop: 4,
-  },
-
   container: {
     backgroundColor: colors.cardBackgroud,
     borderColor: colors.border,
     borderRadius: 18,
     borderWidth: 1,
+    marginBottom: 20,
     padding: 20,
   },
 
@@ -26,6 +21,12 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.border,
     height: 1,
     marginVertical: 16,
+  },
+
+  headerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   logoContainer: {
@@ -43,39 +44,38 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  metaRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 10,
-  },
-
-  playerCount: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 6,
-  },
-
-  playerText: {
-    color: colors.textPrimary,
+  memberText: {
+    color: colors.textSecondary,
     fontSize: 15,
-    fontWeight: '600',
+    marginTop: 2,
+  },
+
+  memberTextMuted: {
+    color: colors.textSecondary,
+    fontSize: 14,
+    fontStyle: 'italic',
+    marginTop: 4,
+  },
+
+  membersContainer: {
+    marginTop: 8,
   },
 
   sportBadge: {
     backgroundColor: colors.cardBackgroud,
     borderRadius: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
   },
 
   sportText: {
     backgroundColor: colors.inputField,
-    borderRadius: 13,
+    borderRadius: 12,
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '500',
-    padding: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
 
   statsDetails: {

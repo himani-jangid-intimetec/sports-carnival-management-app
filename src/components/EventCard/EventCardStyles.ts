@@ -120,6 +120,14 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  status_CANCELLED: {
+    backgroundColor: colors.error + '20',
+    borderRadius: 20,
+    color: colors.error,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+
   status_COMPLETED: {
     backgroundColor: colors.error + '20',
     borderRadius: 20,

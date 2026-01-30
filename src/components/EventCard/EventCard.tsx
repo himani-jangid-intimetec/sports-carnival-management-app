@@ -24,6 +24,8 @@ const EventCard = ({ event, onPress }: EventCardProps) => {
         return colors.matchesIconBackgound;
       case 'UPCOMING':
         return colors.usersIconBackground;
+      case 'CANCELLED':
+        return colors.error;
     }
   };
 

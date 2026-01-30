@@ -33,9 +33,9 @@ const LiveMatchesCard = ({
   const isFirstTeamLeading = firstTeamPoints > secondTeamPoints;
   const isSecondTeamLeading = secondTeamPoints > firstTeamPoints;
 
-  const isLive = status === 'Live';
-  const isUpcoming = status === 'Upcoming';
-  const isCompleted = status === 'Completed';
+  const isLive = status === 'LIVE';
+  const isUpcoming = status === 'UPCOMING';
+  const isCompleted = status === 'COMPLETED';
 
   return (
     <View style={styles.container}>

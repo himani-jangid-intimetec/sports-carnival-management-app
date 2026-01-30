@@ -20,4 +20,9 @@ export const validationMessages = {
   REQUIRED_VENUE: 'Venue is required',
   INVALID_TEAM_COUNT: 'Enter a valid team count',
   INVALID_CREDENTIALS: 'Enter your correct credentials',
+  REQUIRED_CAPTAIN: 'Captain is required',
+  REQUIRED_REGISTRATION_DEADLINE: 'Registration Deadline is required',
+  REQUIRED_DESCRIPTION: 'Description is required',
+  REQUIRED_RULES: 'Rules are required',
+  REQUIRED_PRIZES: 'Prizes are required',
 };

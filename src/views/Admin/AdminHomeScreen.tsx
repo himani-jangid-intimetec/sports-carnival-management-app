@@ -18,25 +18,18 @@ import {
 import { colors } from '../../theme/colors';
 import ActionCard from '../../components/ActionsCard/ActionCard';
 import LiveMatchesCard from '../../components/MatchesCard/LiveMatchesCard';
-import { useAuthStore } from '../../store/AuthStore';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { MOCK_MATCHES } from '../../constants/mockMatches';
+import { useAdminHomeViewModel } from '../../viewModels/AdminHomeScreenViewModel';
 
 const AdminHomeScreen = () => {
-  const { logout } = useAuthStore();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const handleLogout = async () => {
-    await logout();
+  const { onLogoutPress, onAddEvent } = useAdminHomeViewModel(navigation);
 
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Auth', params: { screen: 'Login' } }],
-    });
-  };
   return (
     <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
@@ -45,7 +38,7 @@ const AdminHomeScreen = () => {
             {APP_STRINGS.adminScreens.greeting}
           </Text>
 
-          <TouchableOpacity onPress={handleLogout}>
+          <TouchableOpacity onPress={onLogoutPress}>
             <LogOut size={22} color={colors.error} />
           </TouchableOpacity>
         </View>
@@ -89,6 +82,7 @@ const AdminHomeScreen = () => {
               <ActionCard
                 icon={<Plus size={20} color={colors.primary} />}
                 title={APP_STRINGS.adminScreens.addEvent}
+                onPress={onAddEvent}
               />
             </View>
             <View style={styles.actionCardWrapper}>

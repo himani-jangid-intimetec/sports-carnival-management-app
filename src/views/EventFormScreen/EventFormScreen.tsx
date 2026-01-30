@@ -1,14 +1,15 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import { styles } from './EventFormScreenStyles';
 import { APP_STRINGS } from '../../constants/appStrings';
 import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
-import { useEventFormViewModel } from '../../viewModels/EventFromViewModel';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { useEventStore } from '../../store/EventStore';
+import { ArrowLeft } from 'lucide-react-native';
+import { colors } from '../../theme/colors';
+import { useEventFormViewModel } from '../../viewModels/EventFormViewModel';
 
 type EventFormScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -18,31 +19,25 @@ type EventFormScreenProps = NativeStackScreenProps<
 const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
   const { mode, event } = route.params;
 
-  const viewModel = useEventFormViewModel({ mode, event });
-  const { createEvent, updateEvent } = useEventStore();
-
-  const handleSubmit = () => {
-    const updatedEvent = viewModel.submit();
-
-    if (!updatedEvent) return;
-
-    if (mode === 'edit') {
-      updateEvent(updatedEvent);
-    } else {
-      createEvent(updatedEvent);
-    }
-
-    navigation.goBack();
-  };
+  const viewModel = useEventFormViewModel({
+    mode,
+    event,
+    navigation,
+  });
 
   return (
     <ScreenWrapper scrollable withBottomSafeArea>
       <View style={styles.container}>
-        <Text style={styles.heading}>
-          {viewModel.isEdit
-            ? APP_STRINGS.eventScreen.editEvent
-            : APP_STRINGS.eventScreen.creatEvent}
-        </Text>
+        <View style={styles.headerRow}>
+          <Pressable style={styles.iconContainer} onPress={viewModel.onBack}>
+            <ArrowLeft size={25} color={colors.textPrimary} />
+          </Pressable>
+          <Text style={styles.heading}>
+            {viewModel.isEdit
+              ? APP_STRINGS.eventScreen.editEvent
+              : APP_STRINGS.eventScreen.createEvent}
+          </Text>
+        </View>
 
         <Text style={styles.inputLabels}>
           {APP_STRINGS.eventScreen.eventName}
@@ -133,13 +128,73 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
           </View>
         </View>
 
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabels}>
+            {APP_STRINGS.eventScreen.description}
+          </Text>
+          <AppInput
+            placeholder={APP_STRINGS.eventScreen.description}
+            value={viewModel.description}
+            onChangeText={viewModel.setDescription}
+            error={viewModel.errors.description}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabels}>
+            {APP_STRINGS.eventScreen.rulesAndRegulations}
+          </Text>
+          <AppInput
+            placeholder={APP_STRINGS.placeHolders.rules}
+            value={viewModel.rulesText}
+            onChangeText={viewModel.setRulesText}
+            error={viewModel.errors.rules}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabels}>
+            {APP_STRINGS.eventScreen.prizeForFirst}
+          </Text>
+          <AppInput
+            placeholder={APP_STRINGS.placeHolders.prizeForFirst}
+            value={viewModel.firstPrize}
+            onChangeText={viewModel.setFirstPrize}
+            error={viewModel.errors.totalTeams}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabels}>
+            {APP_STRINGS.eventScreen.prizeForSecond}
+          </Text>
+          <AppInput
+            placeholder={APP_STRINGS.placeHolders.prizeForSecond}
+            value={viewModel.secondPrize}
+            onChangeText={viewModel.setSecondPrize}
+            error={viewModel.errors.totalTeams}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabels}>
+            {APP_STRINGS.eventScreen.prizeForThird}
+          </Text>
+          <AppInput
+            placeholder={APP_STRINGS.placeHolders.prizeForThird}
+            value={viewModel.thirdPrize}
+            onChangeText={viewModel.setThirdPrize}
+            error={viewModel.errors.totalTeams}
+          />
+        </View>
+
         <AppButton
           title={
             viewModel.isEdit
               ? APP_STRINGS.eventScreen.saveChanges
-              : APP_STRINGS.eventScreen.creatEvent
+              : APP_STRINGS.eventScreen.createEvent
           }
-          onPress={handleSubmit}
+          onPress={viewModel.onSubmit}
         />
       </View>
     </ScreenWrapper>

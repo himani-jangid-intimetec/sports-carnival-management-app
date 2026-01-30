@@ -1,105 +1,292 @@
-import React from 'react';
-import { Alert, Modal, Pressable, Text, View } from 'react-native';
-import { Calendar, Clock, MapPin, Users, X } from 'lucide-react-native';
-import { Event } from '../../models/Event';
-import { colors } from '../../theme/colors';
+import React, { useState, useMemo } from 'react';
+import { Modal, Text, View, Pressable, FlatList } from 'react-native';
+import { RoleType } from '../../constants/roles';
+import AppButton from '../AppButton/AppButton';
 import { styles } from './EventDetailsModalStyles';
 import { APP_STRINGS } from '../../constants/appStrings';
+import { Calendar, MapPin, User, Users, X } from 'lucide-react-native';
+import { colors } from '../../theme/colors';
+import MyTeamCard from '../MyTeamCard/MyTeamCard';
+import LiveMatchesCard from '../MatchesCard/LiveMatchesCard';
+import { useEventStore } from '../../store/EventStore';
+import { Event } from '../../models/Event';
 
-type EventDetailsProps = {
+type Props = {
   visible: boolean;
-  event: Event | null;
-  role: 'admin' | 'organizer' | 'participant';
+  eventId: string | null;
+  role: RoleType;
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
-  onRegister: () => void;
+  onRegister: (name: string, gender: 'Male' | 'Female') => void;
+  onCreateTeams?: () => void;
+  onCreateFixtures?: () => void;
+  getRoundName: (round: number, totalTeams: number) => string;
 };
+
+const TABS = ['ABOUT', 'TEAMS', 'SCHEDULES', 'PRIZES'] as const;
+type TabType = (typeof TABS)[number];
 
 const EventDetailsModal = ({
   visible,
-  event,
+  eventId,
   role,
   onClose,
   onEdit,
   onDelete,
   onRegister,
-}: EventDetailsProps) => {
+  onCreateTeams,
+  onCreateFixtures,
+  getRoundName,
+}: Props) => {
+  const { events } = useEventStore();
+  const [activeTab, setActiveTab] = useState<TabType>('ABOUT');
+
+  const event: Event | null = useMemo(
+    () => events.find((e) => e.id === eventId) ?? null,
+    [events, eventId],
+  );
+
   if (!event) return null;
 
-  const handleDelete = () => {
-    Alert.alert(
-      APP_STRINGS.eventScreen.deleteEvent,
-      APP_STRINGS.eventScreen.deleteEventConfirmation,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: onDelete },
-      ],
-    );
-  };
+  const isAdminOrOrganizer = role === 'admin' || role === 'organizer';
+  const canRegister =
+    role === 'participant' &&
+    event.status === 'OPEN' &&
+    event.registeredTeams < event.totalTeams;
 
   return (
-    <Modal transparent animationType="slide" visible={visible}>
-      <Pressable style={styles.overlay} onPress={onClose} />
-
-      <View style={styles.sheet}>
-        <View style={styles.header}>
-          <Text style={[styles.statusText, styles[`status_${event.status}`]]}>
-            {event.status}
-          </Text>
-          <Pressable onPress={onClose}>
-            <X size={28} color={colors.textPrimary} />
-          </Pressable>
-        </View>
-
-        <Text style={styles.title}>{event.name}</Text>
-
-        <View style={styles.details}>
-          <View style={styles.row}>
-            <Calendar size={30} color={colors.usersIconBackground} />
-            <Text style={styles.meta}>{event.date}</Text>
-          </View>
-          <View style={styles.row}>
-            <Clock size={30} color={colors.participantBackgroud} />
-            <Text style={styles.meta}>{event.time}</Text>
-          </View>
-          <View style={styles.row}>
-            <MapPin size={30} color={colors.matchesIconBackgound} />
-            <Text style={styles.meta}>{event.venue}</Text>
-          </View>
-          <View style={styles.row}>
-            <Users size={30} color={colors.primary} />
-            <Text style={styles.meta}>
-              {event.registeredTeams} / {event.totalTeams}
-              {APP_STRINGS.eventScreen.teamsRegistered}
+    <Modal visible={visible} animationType="slide" transparent>
+      <View style={styles.overlay}>
+        <View style={styles.modalContainer}>
+          <View style={styles.header}>
+            <Text style={[styles.statusText, styles[`status_${event.status}`]]}>
+              {event.status}
             </Text>
-          </View>
-        </View>
-
-        <View style={styles.actions}>
-          {role === 'participant' && (
-            <Pressable style={styles.primaryBtn} onPress={onRegister}>
-              <Text style={styles.primaryText}>
-                {APP_STRINGS.eventScreen.register}
-              </Text>
+            <Pressable onPress={onClose}>
+              <X size={20} color={colors.textSecondary} />
             </Pressable>
-          )}
+          </View>
 
-          {(role === 'admin' || role === 'organizer') && (
-            <View style={styles.rowActions}>
-              <Pressable style={styles.secondaryBtn} onPress={onEdit}>
-                <Text style={styles.secondaryText}>
-                  {APP_STRINGS.eventScreen.edit}
+          <Text style={styles.title}>{event.name}</Text>
+
+          <View style={styles.tabRow}>
+            {TABS.map((tab) => (
+              <Pressable
+                key={tab}
+                onPress={() => setActiveTab(tab)}
+                style={[
+                  styles.tabButton,
+                  activeTab === tab && styles.activeTab,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === tab && styles.activeTabText,
+                  ]}
+                >
+                  {tab}
                 </Text>
               </Pressable>
+            ))}
+          </View>
 
-              <Pressable style={styles.dangerBtn} onPress={handleDelete}>
-                <Text style={styles.dangerText}>
-                  {APP_STRINGS.eventScreen.delete}
+          <View style={styles.content}>
+            {activeTab === 'ABOUT' && (
+              <View>
+                <Text style={styles.sectionTitle}>
+                  {APP_STRINGS.eventScreen.format}
                 </Text>
-              </Pressable>
-            </View>
-          )}
+                <Text style={styles.text}>{event.format}</Text>
+
+                <Text style={styles.sectionTitle}>
+                  {APP_STRINGS.eventScreen.description}
+                </Text>
+                <Text style={styles.text}>
+                  {event.description ?? APP_STRINGS.eventScreen.noDescription}
+                </Text>
+
+                <Text style={styles.sectionTitle}>
+                  {APP_STRINGS.eventScreen.rulesAndRegulations}
+                </Text>
+                {event.rules && event.rules.length > 0 ? (
+                  event.rules.map((rule, index) => (
+                    <Text key={index} style={styles.text}>
+                      {index + 1}. {rule}
+                    </Text>
+                  ))
+                ) : (
+                  <Text style={styles.text}>
+                    {APP_STRINGS.eventScreen.standardRules}
+                  </Text>
+                )}
+              </View>
+            )}
+
+            {activeTab === 'TEAMS' && (
+              <>
+                {event.teams && event.teams.length > 0 ? (
+                  <FlatList
+                    data={event.teams}
+                    keyExtractor={(item) => item.id}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                      <MyTeamCard
+                        logo={<Users color={colors.appBackground} />}
+                        name={item.name}
+                        members={item.players}
+                        sport={event.sport}
+                        wins={0}
+                        losses={0}
+                        winRate="0%"
+                      />
+                    )}
+                  />
+                ) : (
+                  <>
+                    {isAdminOrOrganizer &&
+                      !event.teamsCreated &&
+                      event.status !== 'COMPLETED' &&
+                      onCreateTeams && (
+                        <View style={styles.centerButton}>
+                          <AppButton
+                            title="Create Teams"
+                            onPress={onCreateTeams}
+                            disabled={event.registeredTeams < event.totalTeams}
+                          />
+                        </View>
+                      )}
+
+                    {!isAdminOrOrganizer && (
+                      <Text style={styles.emptyText}>
+                        {APP_STRINGS.eventScreen.teamNotCreated}
+                      </Text>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+
+            {activeTab === 'SCHEDULES' && (
+              <>
+                {isAdminOrOrganizer && !event.teamsCreated && (
+                  <Text style={styles.emptyText}>
+                    {APP_STRINGS.eventScreen.createTeamFirst}
+                  </Text>
+                )}
+
+                {event.fixtures && event.fixtures.length > 0 ? (
+                  <FlatList
+                    data={event.fixtures}
+                    keyExtractor={(item) => item.id}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                      <LiveMatchesCard
+                        gameName={getRoundName(item.round, event.teams.length)}
+                        firstTeam={item.teamA}
+                        secondTeam={item.teamB}
+                        firstTeamPoints={item.scoreA}
+                        secondTeamPoints={item.scoreB}
+                        status={item.status}
+                        firstTeamLogo={<User color={colors.appBackground} />}
+                        secondTeamLogo={<User color={colors.appBackground} />}
+                        venue={event.venue}
+                        statusIcon={
+                          <Calendar size={16} color={colors.textSecondary} />
+                        }
+                        venueIcon={
+                          <MapPin size={16} color={colors.textSecondary} />
+                        }
+                      />
+                    )}
+                  />
+                ) : (
+                  <>
+                    {isAdminOrOrganizer &&
+                      event.teamsCreated &&
+                      !event.fixturesCreated &&
+                      event.status !== 'COMPLETED' &&
+                      onCreateFixtures && (
+                        <View style={styles.centerButton}>
+                          <AppButton
+                            title="Create Fixtures"
+                            onPress={onCreateFixtures}
+                          />
+                        </View>
+                      )}
+
+                    {!isAdminOrOrganizer && (
+                      <Text style={styles.emptyText}>
+                        {APP_STRINGS.eventScreen.fixtureNotCreated}
+                      </Text>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+
+            {activeTab === 'PRIZES' && (
+              <View style={styles.prizeList}>
+                {event.prizes.map((prize, index) => {
+                  const title =
+                    index === 0
+                      ? '1st Place'
+                      : index === 1
+                      ? '2nd Place'
+                      : '3rd Place';
+
+                  return (
+                    <View key={index} style={styles.prizeCard}>
+                      <View style={styles.prizeIcon}>
+                        <Text style={styles.prizeEmoji}>
+                          {index === 0 ? '🏆' : index === 1 ? '🥈' : '🥉'}
+                        </Text>
+                      </View>
+
+                      <View>
+                        <Text style={styles.prizeTitle}>{title}</Text>
+                        <Text style={styles.prizeValue}>{prize}</Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+
+          <View style={styles.footer}>
+            {role === 'participant' && (
+              <AppButton
+                title={
+                  canRegister
+                    ? APP_STRINGS.eventScreen.register
+                    : APP_STRINGS.eventScreen.registrationClosed
+                }
+                disabled={!canRegister}
+                onPress={() => onRegister('Test', 'Male')}
+              />
+            )}
+
+            {isAdminOrOrganizer && (
+              <View style={styles.row}>
+                <View style={styles.buttonContainer}>
+                  <AppButton
+                    title="Edit"
+                    onPress={onEdit}
+                    disabled={event.status === 'COMPLETED'}
+                  />
+                </View>
+                <View style={styles.buttonContainer}>
+                  <AppButton
+                    title="Delete"
+                    onPress={onDelete}
+                    disabled={event.status === 'COMPLETED'}
+                  />
+                </View>
+              </View>
+            )}
+          </View>
         </View>
       </View>
     </Modal>

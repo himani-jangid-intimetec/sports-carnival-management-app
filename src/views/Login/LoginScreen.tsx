@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
 import { Eye, EyeOff, Lock, Mail, Trophy } from 'lucide-react-native';
-import { useLoginViewModel } from '../../viewModels/LoginViewModel';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
@@ -10,63 +9,33 @@ import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './LoginScreenStyles';
 import { APP_STRINGS } from '../../constants/appStrings';
-import { useAuthStore } from '../../store/AuthStore';
 import { RootStackParamList } from '../../navigation/AppNavigator';
+import { useLoginViewModel } from '../../viewModels/LoginViewModel';
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const LoginScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
+
   const {
     email,
     password,
     emailError,
+    passwordError,
     setEmail,
     setPassword,
-    onLogin,
     validateEmail,
-    isFormValid,
-    passwordError,
     validatePassword,
-  } = useLoginViewModel();
-
-  const { user } = useAuthStore();
-
-  type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
-
-  const navigation = useNavigation<NavigationProp>();
-
-  const handleLogin = async () => {
-    const success = await onLogin();
-
-    if (!success) return;
-    if (!user) return;
-
-    switch (user.role) {
-      case 'admin':
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'AdminTabs' }],
-        });
-        break;
-
-      case 'organizer':
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'OrganizerTabs' }],
-        });
-        break;
-
-      case 'participant':
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'ParticipantTabs' }],
-        });
-        break;
-    }
-  };
+    handleLogin,
+    isFormValid,
+    goToRegister,
+    goToForgotPassword,
+  } = useLoginViewModel(navigation);
 
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <ScreenWrapper scrollable={true}>
+    <ScreenWrapper scrollable>
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <View style={styles.trophyContainer}>
@@ -121,11 +90,7 @@ const LoginScreen = () => {
             }
           />
 
-          <Pressable
-            onPress={() =>
-              navigation.navigate('Auth', { screen: 'ForgotPassword' })
-            }
-          >
+          <Pressable onPress={goToForgotPassword}>
             <Text style={styles.forgotPasswordText}>
               {APP_STRINGS.buttons.forgotPassword}
             </Text>
@@ -141,11 +106,7 @@ const LoginScreen = () => {
             <Text style={styles.footerText}>
               {APP_STRINGS.footer.noAccount}
             </Text>
-            <Pressable
-              onPress={() =>
-                navigation.navigate('Auth', { screen: 'Register' })
-              }
-            >
+            <Pressable onPress={goToRegister}>
               <Text style={styles.footerButtonText}>
                 {APP_STRINGS.buttons.signUp}
               </Text>

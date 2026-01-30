@@ -7,8 +7,12 @@ import {
 import { validationMessages } from '../constants/validationMessages';
 import { useAuthStore } from '../store/AuthStore';
 import { StoredUser } from '../utils/authStorage';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '../navigation/AuthNavigator';
 
-export const useRegisterViewModel = () => {
+export const useRegisterViewModel = (
+  navigation: NativeStackNavigationProp<AuthStackParamList>,
+) => {
   const { register } = useAuthStore();
 
   const [name, setName] = useState('');
@@ -55,10 +59,9 @@ export const useRegisterViewModel = () => {
     return true;
   };
 
-  const onRegister = async (): Promise<boolean> => {
+  const handleRegister = async () => {
     const valid = validateName() && validateEmail() && validatePassword();
-
-    if (!valid) return false;
+    if (!valid) return;
 
     const newUser: StoredUser = {
       name,
@@ -68,7 +71,16 @@ export const useRegisterViewModel = () => {
     };
 
     await register(newUser);
-    return true;
+
+    navigation.navigate('RoleSelection', {
+      name,
+      email,
+      password,
+    });
+  };
+
+  const goToLogin = () => {
+    navigation.navigate('Login');
   };
 
   const isFormValid =
@@ -92,7 +104,8 @@ export const useRegisterViewModel = () => {
     validateName,
     validateEmail,
     validatePassword,
-    onRegister,
+    handleRegister,
+    goToLogin,
     isFormValid,
   };
 };
