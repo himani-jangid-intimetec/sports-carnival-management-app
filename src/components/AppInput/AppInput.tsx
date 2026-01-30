@@ -13,6 +13,7 @@ type EntryInputProps = {
   error?: string;
   keyboardType?: KeyboardTypeOptions;
   optionalEyeIcon?: React.ReactNode;
+  editable?: boolean;
 };
 
 const AppInput = ({
@@ -25,6 +26,7 @@ const AppInput = ({
   error,
   keyboardType,
   optionalEyeIcon,
+  editable,
 }: EntryInputProps) => {
   return (
     <View>
@@ -39,6 +41,8 @@ const AppInput = ({
           onBlur={onBlur}
           style={styles.input}
           keyboardType={keyboardType}
+          editable={editable}
+          pointerEvents={editable === false ? 'none' : 'auto'}
         />
         {optionalEyeIcon}
       </View>

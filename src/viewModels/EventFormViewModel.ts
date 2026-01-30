@@ -4,6 +4,7 @@ import { validationMessages } from '../constants/validationMessages';
 import { useEventStore } from '../store/EventStore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 type Mode = 'create' | 'edit';
 
@@ -65,6 +66,33 @@ export const useEventFormViewModel = ({
   );
 
   const [errors, setErrors] = useState<EventFormErrors>({});
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [pickerDate, setPickerDate] = useState(new Date());
+
+  const openDatePicker = () => setShowDatePicker(true);
+  const openTimePicker = () => setShowTimePicker(true);
+
+  const onDateChange = (event: DateTimePickerEvent, selected?: Date) => {
+    setShowDatePicker(false);
+    if (event.type === 'set' && selected) {
+      setPickerDate(selected);
+      setDate(selected.toISOString().split('T')[0]);
+    }
+  };
+
+  const onTimeChange = (event: DateTimePickerEvent, selected?: Date) => {
+    setShowTimePicker(false);
+    if (event.type === 'set' && selected) {
+      setPickerDate(selected);
+      const hours = selected.getHours();
+      const minutes = selected.getMinutes();
+      const formatted = `${hours.toString().padStart(2, '0')}:${minutes
+        .toString()
+        .padStart(2, '0')}`;
+      setTime(formatted);
+    }
+  };
 
   const validate = () => {
     const newErrors: EventFormErrors = {};
@@ -165,6 +193,14 @@ export const useEventFormViewModel = ({
     setFirstPrize,
     setSecondPrize,
     setThirdPrize,
+
+    openDatePicker,
+    openTimePicker,
+    showDatePicker,
+    showTimePicker,
+    pickerDate,
+    onDateChange,
+    onTimeChange,
 
     errors,
     onSubmit,

@@ -10,6 +10,7 @@ import { RootStackParamList } from '../../navigation/AppNavigator';
 import { ArrowLeft } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { useEventFormViewModel } from '../../viewModels/EventFormViewModel';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 type EventFormScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -69,7 +70,9 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
             <AppInput
               placeholder={APP_STRINGS.placeHolders.format}
               value={viewModel.format}
-              onChangeText={(v) => viewModel.setFormat(v as '1v1' | '2v2')}
+              onChangeText={(view) =>
+                viewModel.setFormat(view as '1v1' | '2v2')
+              }
               error={viewModel.errors.format}
             />
           </View>
@@ -80,24 +83,56 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
             <Text style={styles.inputLabels}>
               {APP_STRINGS.eventScreen.date}
             </Text>
-            <AppInput
-              placeholder={APP_STRINGS.eventScreen.date}
-              value={viewModel.date}
-              onChangeText={viewModel.setDate}
-              error={viewModel.errors.date}
-            />
+            <Pressable onPress={viewModel.openDatePicker}>
+              <AppInput
+                placeholder="Select date"
+                value={viewModel.date}
+                error={viewModel.errors.date}
+                editable={false}
+                onChangeText={() => {}}
+              />
+            </Pressable>
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabels}>
               {APP_STRINGS.eventScreen.time}
             </Text>
-            <AppInput
-              placeholder={APP_STRINGS.eventScreen.time}
-              value={viewModel.time}
-              onChangeText={viewModel.setTime}
-              error={viewModel.errors.time}
-            />
+            <Pressable onPress={viewModel.openTimePicker}>
+              <AppInput
+                placeholder="Select time"
+                value={viewModel.time}
+                error={viewModel.errors.time}
+                editable={false}
+                onChangeText={() => {}}
+              />
+            </Pressable>
+          </View>
+        </View>
+
+        <View style={styles.inputRow}>
+          <View style={[styles.inputContainer, styles.dateTime]}>
+            {viewModel.showDatePicker && (
+              <DateTimePicker
+                value={viewModel.pickerDate}
+                mode="date"
+                display="default"
+                onChange={viewModel.onDateChange}
+                themeVariant="dark"
+              />
+            )}
+          </View>
+
+          <View style={[styles.inputContainer, styles.dateTime]}>
+            {viewModel.showTimePicker && (
+              <DateTimePicker
+                value={viewModel.pickerDate}
+                mode="time"
+                display="default"
+                onChange={viewModel.onTimeChange}
+                themeVariant="dark"
+              />
+            )}
           </View>
         </View>
 

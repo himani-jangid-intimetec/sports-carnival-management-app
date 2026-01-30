@@ -8,6 +8,10 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 
+  dateTime: {
+    marginTop: 10,
+  },
+
   headerRow: {
     alignItems: 'center',
     marginBottom: 10,
