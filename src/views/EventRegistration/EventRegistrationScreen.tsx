@@ -17,8 +17,11 @@ type EventRegistrationProps = NativeStackScreenProps<
 
 const FORMATS = ['1v1', '2v2'] as const;
 
-const EventRegistrationScreen = ({ navigation }: EventRegistrationProps) => {
-  const viewModel = useEventRegistrationViewModel(navigation);
+const EventRegistrationScreen = ({
+  navigation,
+  route,
+}: EventRegistrationProps) => {
+  const viewModel = useEventRegistrationViewModel(navigation, route);
 
   return (
     <ScreenWrapper>

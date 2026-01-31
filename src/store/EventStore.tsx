@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Event } from '../models/Event';
+import { Event, Fixture, Team, GenderType } from '../models/Event';
 import { MOCK_EVENTS } from '../constants/mockEvents';
-import { generateRoundRobinFixtures } from '../utils/fixturesGenerator';
 
 type EventContextType = {
   events: Event[];
@@ -10,7 +9,12 @@ type EventContextType = {
   updateEvent: (event: Event) => void;
   deleteEvent: (eventId: string) => void;
 
-  registerTeam: (eventId: string) => void;
+  registerParticipant: (
+    eventId: string,
+    name: string,
+    gender: GenderType,
+  ) => void;
+
   closeRegistration: (eventId: string) => void;
   extendRegistration: (eventId: string, newDeadline: string) => void;
 
@@ -26,11 +30,11 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
 
   const createEvent = (event: Event) => {
-    setEvents((prev: Event[]) => [...prev, event]);
+    setEvents((prev) => [...prev, event]);
   };
 
   const updateEvent = (updatedEvent: Event) => {
-    setEvents((prev: Event[]) =>
+    setEvents((prev) =>
       prev.map((event) =>
         event.id === updatedEvent.id ? updatedEvent : event,
       ),
@@ -38,18 +42,25 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const deleteEvent = (eventId: string) => {
-    setEvents((prev: Event[]) => prev.filter((event) => event.id !== eventId));
+    setEvents((prev) => prev.filter((event) => event.id !== eventId));
   };
 
-  const registerTeam = (eventId: string) => {
-    setEvents((prev: Event[]) =>
+  const registerParticipant = (
+    eventId: string,
+    name: string,
+    gender: GenderType,
+  ) => {
+    setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
-
-        if (event.registeredTeams >= event.totalTeams) return event;
+        if (event.registrations.length >= event.totalTeams) return event;
 
         return {
           ...event,
+          registrations: [
+            ...event.registrations,
+            { id: Date.now().toString(), name, gender },
+          ],
           registeredTeams: event.registeredTeams + 1,
         };
       }),
@@ -57,11 +68,11 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const closeRegistration = (eventId: string) => {
-    setEvents((prev: Event[]) =>
+    setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        const participationRate = event.registeredTeams / event.totalTeams;
+        const participationRate = event.registrations.length / event.totalTeams;
 
         if (participationRate < 0.2) {
           return { ...event, status: 'CANCELLED' };
@@ -73,7 +84,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const extendRegistration = (eventId: string, newDeadline: string) => {
-    setEvents((prev: Event[]) =>
+    setEvents((prev) =>
       prev.map((event) =>
         event.id === eventId
           ? { ...event, registrationDeadline: newDeadline }
@@ -87,27 +98,37 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        if (event.registeredTeams < 2) return event;
+        const playersPerTeam = event.format === '2v2' ? 2 : 1;
 
-        if (event.format === '1v1') {
-          return {
-            ...event,
-            teamsCreated: true,
-          };
+        const totalPossibleTeams = Math.floor(
+          event.registrations.length / playersPerTeam,
+        );
+
+        if (totalPossibleTeams < 2) return event;
+
+        const shuffled = [...event.registrations].sort(
+          () => Math.random() - 0.5,
+        );
+
+        const teams: Team[] = [];
+
+        for (let index = 0; index < totalPossibleTeams; index++) {
+          const players = shuffled.slice(
+            index * playersPerTeam,
+            index * playersPerTeam + playersPerTeam,
+          );
+
+          teams.push({
+            id: `team-${index + 1}`,
+            name: `Team ${index + 1}`,
+            players,
+            gender: players[0].gender,
+          });
         }
-
-        const teamCount = Math.floor(event.registeredTeams / 2);
-
-        const newTeams = Array.from({ length: teamCount }).map((_, index) => ({
-          id: `team-${Date.now()}-${index}`,
-          name: `Team ${index + 1}`,
-          players: [`Player ${index * 2 + 1}`, `Player ${index * 2 + 2}`],
-          gender: 'Male' as const,
-        }));
 
         return {
           ...event,
-          teams: newTeams,
+          teams,
           teamsCreated: true,
         };
       }),
@@ -118,20 +139,24 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
+        if (!event.teamsCreated || event.teams.length < 2) return event;
 
-        let participants: string[] = [];
+        const fixtures: Fixture[] = [];
 
-        if (event.format === '1v1') {
-          participants = event.teams.flatMap((team) => team.players);
+        for (let index = 0; index < event.teams.length; index += 2) {
+          if (!event.teams[index + 1]) break;
+
+          fixtures.push({
+            id: `fix-${Date.now()}-${index}`,
+            teamA: event.teams[index].name,
+            teamB: event.teams[index + 1].name,
+            scoreA: 0,
+            scoreB: 0,
+            round: 1,
+            time: new Date().toISOString(),
+            status: 'UPCOMING',
+          });
         }
-
-        if (event.format === '2v2') {
-          participants = event.teams.map((team) => team.name);
-        }
-
-        if (participants.length < 2) return event;
-
-        const fixtures = generateRoundRobinFixtures(participants);
 
         return {
           ...event,
@@ -149,7 +174,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
         createEvent,
         updateEvent,
         deleteEvent,
-        registerTeam,
+        registerParticipant,
         closeRegistration,
         extendRegistration,
         createTeams,

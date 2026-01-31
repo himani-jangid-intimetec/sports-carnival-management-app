@@ -23,7 +23,6 @@ type Props = {
   onDelete: () => void;
   onCreateTeams?: () => void;
   onCreateFixtures?: () => void;
-  onRegister: (name: string, gender: 'Male' | 'Female') => void;
   getRoundName: (round: number, totalTeams: number) => string;
 };
 

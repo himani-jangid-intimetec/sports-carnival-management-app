@@ -9,17 +9,17 @@ export type EventStatus =
 
 export type GenderType = 'Male' | 'Female';
 
+export interface Registration {
+  id: string;
+  name: string;
+  gender: GenderType;
+}
+
 export interface Team {
   id: string;
   name: string;
   players: Registration[];
   gender: GenderType;
-}
-
-interface Registration {
-  id: string;
-  name: string;
-  gender: 'Male' | 'Female';
 }
 
 export type MatchStatus = 'UPCOMING' | 'LIVE' | 'COMPLETED';

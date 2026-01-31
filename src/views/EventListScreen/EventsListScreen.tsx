@@ -80,7 +80,6 @@ const EventsListScreen = ({ role }: EventListScreenProps) => {
           onClose={viewModel.onCloseModal}
           onEdit={viewModel.onEditEvent}
           onDelete={viewModel.onDeleteEvent}
-          onRegister={viewModel.onRegister}
           onCreateTeams={viewModel.handleCreateTeams}
           onCreateFixtures={viewModel.handleCreateFixtures}
         />
