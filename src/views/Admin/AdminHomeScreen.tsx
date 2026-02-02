@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import { styles } from './AdminHomeScreenStyles';
 import AnalyticsCard from '../../components/AnalyticsCard/AnalyticsCard';
 import {
@@ -21,7 +21,7 @@ import LiveMatchesCard from '../../components/MatchesCard/LiveMatchesCard';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { MOCK_MATCHES } from '../../constants/mockMatches';
+import { MOCK_MATCHES } from '../../constants/MockMatches';
 import { useAdminHomeViewModel } from '../../viewModels/AdminHomeScreenViewModel';
 
 const AdminHomeScreen = () => {

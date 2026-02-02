@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Event, Fixture, Team, GenderType } from '../models/Event';
-import { MOCK_EVENTS } from '../constants/mockEvents';
+import {
+  Event,
+  Fixture,
+  Team,
+  GenderType,
+  Registration,
+} from '../models/Event';
+import { MOCK_EVENTS } from '../constants/MockEvents';
 
 type EventContextType = {
   events: Event[];
@@ -53,7 +59,11 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
-        if (event.registrations.length >= event.totalTeams) return event;
+
+        const maxParticipants =
+          event.format === '1v1' ? event.totalTeams : event.totalTeams * 2;
+
+        if (event.registrations.length >= maxParticipants) return event;
 
         return {
           ...event,
@@ -61,7 +71,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
             ...event.registrations,
             { id: Date.now().toString(), name, gender },
           ],
-          registeredTeams: event.registeredTeams + 1,
+          registeredTeams: event.registrations.length + 1,
         };
       }),
     );
@@ -74,7 +84,9 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 
         const participationRate = event.registrations.length / event.totalTeams;
 
-        if (participationRate < 0.2) {
+        const minParticipationRate = 0.2;
+
+        if (participationRate < minParticipationRate) {
           return { ...event, status: 'CANCELLED' };
         }
 
@@ -97,40 +109,40 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
+        if (event.format === '1v1') return event;
 
-        const playersPerTeam = event.format === '2v2' ? 2 : 1;
+        const requiredPlayers = event.totalTeams * 2;
+        if (event.registrations.length < requiredPlayers) return event;
 
-        const totalPossibleTeams = Math.floor(
-          event.registrations.length / playersPerTeam,
+        const males = event.registrations.filter(
+          (player) => player.gender === 'Male',
         );
-
-        if (totalPossibleTeams < 2) return event;
-
-        const shuffled = [...event.registrations].sort(
-          () => Math.random() - 0.5,
+        const females = event.registrations.filter(
+          (player) => player.gender === 'Female',
         );
 
         const teams: Team[] = [];
+        let teamIndex = 1;
 
-        for (let index = 0; index < totalPossibleTeams; index++) {
-          const players = shuffled.slice(
-            index * playersPerTeam,
-            index * playersPerTeam + playersPerTeam,
-          );
-
-          teams.push({
-            id: `team-${index + 1}`,
-            name: `Team ${index + 1}`,
-            players,
-            gender: players[0].gender,
-          });
-        }
-
-        return {
-          ...event,
-          teams,
-          teamsCreated: true,
+        const buildTeams = (players: Registration[]) => {
+          for (let index = 0; index + 1 < players.length; index += 2) {
+            if (teams.length >= event.totalTeams) break;
+            teams.push({
+              id: teamIndex.toString(),
+              name: `Team ${teamIndex}`,
+              players: players.slice(index, index + 2),
+              gender: players[index].gender,
+            });
+            teamIndex++;
+          }
         };
+
+        buildTeams(males);
+        buildTeams(females);
+
+        if (teams.length < event.totalTeams) return event;
+
+        return { ...event, teams, teamsCreated: true };
       }),
     );
   };
@@ -139,29 +151,60 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
-        if (!event.teamsCreated || event.teams.length < 2) return event;
 
         const fixtures: Fixture[] = [];
+        const round = 1;
+        let matchIndex = 1;
 
-        for (let index = 0; index < event.teams.length; index += 2) {
-          if (!event.teams[index + 1]) break;
+        if (event.format === '1v1') {
+          const males = event.registrations.filter(
+            (player) => player.gender === 'Male',
+          );
+          const females = event.registrations.filter(
+            (player) => player.gender === 'Female',
+          );
 
-          fixtures.push({
-            id: `fix-${Date.now()}-${index}`,
-            teamA: event.teams[index].name,
-            teamB: event.teams[index + 1].name,
-            scoreA: 0,
-            scoreB: 0,
-            round: 1,
-            time: new Date().toISOString(),
-            status: 'UPCOMING',
-          });
+          const build = (players: Registration[]) => {
+            for (let index = 0; index + 1 < players.length; index += 2) {
+              fixtures.push({
+                id: `R${round}-M${matchIndex}`,
+                teamA: players[index].name,
+                teamB: players[index + 1].name,
+                scoreA: 0,
+                scoreB: 0,
+                time: new Date().toISOString(),
+                round,
+                status: 'UPCOMING',
+              });
+              matchIndex++;
+            }
+          };
+
+          build(males);
+          build(females);
+        }
+
+        if (event.format === '2v2' && event.teamsCreated) {
+          for (let index = 0; index + 1 < event.teams.length; index += 2) {
+            fixtures.push({
+              id: `R${round}-M${matchIndex}`,
+              teamA: event.teams[index].name,
+              teamB: event.teams[index + 1].name,
+              scoreA: 0,
+              scoreB: 0,
+              time: new Date().toISOString(),
+              round,
+              status: 'UPCOMING',
+            });
+            matchIndex++;
+          }
         }
 
         return {
           ...event,
           fixtures,
           fixturesCreated: true,
+          status: 'LIVE',
         };
       }),
     );

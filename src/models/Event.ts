@@ -1,5 +1,3 @@
-import { GameFormat } from '../constants/games';
-
 export type EventStatus =
   | 'OPEN'
   | 'UPCOMING'
@@ -40,12 +38,13 @@ export interface Event {
   id: string;
   name: string;
   sport: string;
-  format: GameFormat;
   date: string;
   time: string;
   venue: string;
 
   status: EventStatus;
+
+  format: '1v1' | '2v2';
 
   registeredTeams: number;
   totalTeams: number;

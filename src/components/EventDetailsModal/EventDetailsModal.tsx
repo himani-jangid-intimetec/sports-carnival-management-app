@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { Modal, Text, View, Pressable, FlatList } from 'react-native';
-import { RoleType } from '../../constants/roles';
+import { RoleType } from '../../constants/Roles';
 import AppButton from '../AppButton/AppButton';
 import { styles } from './EventDetailsModalStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import { Calendar, MapPin, User, Users, X } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import MyTeamCard from '../MyTeamCard/MyTeamCard';
@@ -53,11 +53,20 @@ const EventDetailsModal = ({
 
   if (!event) return null;
 
-  const isAdminOrOrganizer = role === 'admin' || role === 'organizer';
+  const isAdmin = role === 'admin';
+  const isOrganizer = role === 'organizer';
+  const isAdminOrOrganizer = isAdmin || isOrganizer;
+
+  const playersPerTeam = event.format === '2v2' ? 2 : 1;
+  const maxRegistrations = event.totalTeams * playersPerTeam;
+
+  const disableCreateTeamsButton =
+    isOrganizer && event.registrations.length < maxRegistrations;
+
   const canRegister =
     role === 'participant' &&
     event.status === 'OPEN' &&
-    event.registeredTeams < event.totalTeams;
+    event.registrations.length < maxRegistrations;
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
@@ -130,7 +139,11 @@ const EventDetailsModal = ({
 
             {activeTab === 'TEAMS' && (
               <>
-                {event.teams?.length ? (
+                {event.format === '1v1' ? (
+                  <Text style={styles.emptyText}>
+                    {APP_STRINGS.eventScreen.noTeamsRequired}
+                  </Text>
+                ) : event.teams.length ? (
                   <FlatList
                     data={event.teams}
                     keyExtractor={(item) => item.id}
@@ -155,9 +168,9 @@ const EventDetailsModal = ({
                       onCreateTeams && (
                         <View style={styles.centerButton}>
                           <AppButton
-                            title="Create Teams"
+                            title={APP_STRINGS.eventScreen.createTeam}
                             onPress={onCreateTeams}
-                            disabled={event.registeredTeams < event.totalTeams}
+                            disabled={disableCreateTeamsButton}
                           />
                         </View>
                       )}
@@ -174,20 +187,14 @@ const EventDetailsModal = ({
 
             {activeTab === 'SCHEDULES' && (
               <>
-                {isAdminOrOrganizer && !event.teamsCreated && (
-                  <Text style={styles.emptyText}>
-                    {APP_STRINGS.eventScreen.createTeamFirst}
-                  </Text>
-                )}
-
-                {event.fixtures?.length ? (
+                {event.fixtures.length ? (
                   <FlatList
                     data={event.fixtures}
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => (
                       <LiveMatchesCard
-                        gameName={getRoundName(item.round, event.teams.length)}
+                        gameName={getRoundName(item.round, event.totalTeams)}
                         firstTeam={item.teamA}
                         secondTeam={item.teamB}
                         firstTeamPoints={item.scoreA}
@@ -208,14 +215,16 @@ const EventDetailsModal = ({
                 ) : (
                   <>
                     {isAdminOrOrganizer &&
-                      event.teamsCreated &&
                       !event.fixturesCreated &&
                       event.status !== 'COMPLETED' &&
                       onCreateFixtures && (
                         <View style={styles.centerButton}>
                           <AppButton
-                            title="Create Fixtures"
+                            title={APP_STRINGS.eventScreen.createFixtures}
                             onPress={onCreateFixtures}
+                            disabled={
+                              event.format === '2v2' && !event.teamsCreated
+                            }
                           />
                         </View>
                       )}
@@ -270,6 +279,7 @@ const EventDetailsModal = ({
                 disabled={!canRegister}
                 onPress={() => {
                   if (!eventId) return;
+                  onClose();
                   navigation.navigate('EventRegister', { eventId });
                 }}
               />
@@ -279,14 +289,14 @@ const EventDetailsModal = ({
               <View style={styles.row}>
                 <View style={styles.buttonContainer}>
                   <AppButton
-                    title="Edit"
+                    title={APP_STRINGS.eventScreen.edit}
                     onPress={onEdit}
                     disabled={event.status === 'COMPLETED'}
                   />
                 </View>
                 <View style={styles.buttonContainer}>
                   <AppButton
-                    title="Delete"
+                    title={APP_STRINGS.eventScreen.delete}
                     onPress={onDelete}
                     disabled={event.status === 'COMPLETED'}
                   />

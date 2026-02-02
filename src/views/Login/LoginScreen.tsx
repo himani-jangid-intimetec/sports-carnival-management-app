@@ -8,7 +8,7 @@ import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './LoginScreenStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useLoginViewModel } from '../../viewModels/LoginViewModel';
 
@@ -65,6 +65,9 @@ const LoginScreen = () => {
             onBlur={validateEmail}
             onChangeText={setEmail}
             error={emailError}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
 
           <Text style={styles.inputLabels}>{APP_STRINGS.labels.password}</Text>

@@ -1,20 +1,17 @@
 import { useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { RouteProp } from '@react-navigation/native';
 import { useEventStore } from '../store/EventStore';
-
-type RegisterRouteProp = RouteProp<RootStackParamList, 'EventRegister'>;
 
 export const useEventRegistrationViewModel = (
   navigation: NativeStackNavigationProp<RootStackParamList>,
-  route: RegisterRouteProp,
+  route: RouteProp<RootStackParamList, 'EventRegister'>,
 ) => {
-  const { registerParticipant } = useEventStore();
   const { eventId } = route.params;
+  const { registerParticipant } = useEventStore();
 
   const [playerName, setPlayerName] = useState('');
-  const [format, setFormat] = useState<'1v1' | '2v2' | ''>('');
   const [gender, setGender] = useState<'Male' | 'Female' | ''>('');
 
   const onBack = () => {
@@ -22,21 +19,18 @@ export const useEventRegistrationViewModel = (
   };
 
   const onRegister = () => {
-    if (!playerName || !format || !gender) return;
+    if (!playerName || !gender) return;
 
     registerParticipant(eventId, playerName, gender);
-
     navigation.goBack();
   };
 
-  const isFormValid = playerName.length > 0 && format !== '' && gender !== '';
+  const isFormValid = playerName.length > 0 && gender !== '';
 
   return {
     playerName,
-    format,
     gender,
     setPlayerName,
-    setFormat,
     setGender,
     onBack,
     onRegister,

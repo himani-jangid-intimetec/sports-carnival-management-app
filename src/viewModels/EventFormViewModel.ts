@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Event } from '../models/Event';
-import { validationMessages } from '../constants/validationMessages';
+import { validationMessages } from '../constants/ValidationMessages';
 import { useEventStore } from '../store/EventStore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';

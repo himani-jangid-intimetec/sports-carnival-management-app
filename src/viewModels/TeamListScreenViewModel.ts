@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { mockTeams } from '../constants/mockTeams';
+import { mockTeams } from '../constants/MockTeams';
 import { Team } from '../models/Team';
 import { SportTabType } from '../components/TeamStatusTabs/TeamStatusTabs';
 

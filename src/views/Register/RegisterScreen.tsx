@@ -10,7 +10,7 @@ import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './RegisterScreenStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
 
@@ -78,6 +78,9 @@ const RegisterScreen = () => {
             onChangeText={setEmail}
             onBlur={validateEmail}
             error={emailError}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
 
           <Text style={styles.inputLabels}>{APP_STRINGS.labels.password}</Text>

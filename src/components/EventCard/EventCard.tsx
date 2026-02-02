@@ -3,7 +3,7 @@ import { Event } from '../../models/Event';
 import { styles } from './EventCardStyles';
 import { colors } from '../../theme/colors';
 import { Calendar, MapPin, Users } from 'lucide-react-native';
-import { RoleType } from '../../constants/roles';
+import { RoleType } from '../../constants/Roles';
 import { useState } from 'react';
 
 type EventCardProps = {

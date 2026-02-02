@@ -5,9 +5,9 @@ import { colors } from '../../theme/colors';
 import AppButton from '../../components/AppButton/AppButton';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
-import { validationMessages } from '../../constants/validationMessages';
+import { validationMessages } from '../../constants/ValidationMessages';
 import { styles } from './ForgotPasswordScreenStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import { useEffect } from 'react';
 
 const ForgotPasswordScreen = () => {
@@ -62,6 +62,9 @@ const ForgotPasswordScreen = () => {
           onChangeText={setEmail}
           onBlur={validateEmail}
           error={emailError}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
 
         <Text style={styles.inputLabel}>{APP_STRINGS.labels.newPassword}</Text>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuthStore } from '../store/AuthStore';
 import { StoredUser } from '../utils/authStorage';
-import { RoleType } from '../constants/roles';
+import { RoleType } from '../constants/Roles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 

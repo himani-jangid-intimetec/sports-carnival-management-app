@@ -15,6 +15,8 @@ type EntryInputProps = {
   optionalEyeIcon?: React.ReactNode;
   editable?: boolean;
   onPressIn?: () => void;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  autoCorrect?: boolean;
 };
 
 const AppInput = ({
@@ -29,6 +31,8 @@ const AppInput = ({
   optionalEyeIcon,
   editable,
   onPressIn,
+  autoCapitalize,
+  autoCorrect,
 }: EntryInputProps) => {
   return (
     <View>
@@ -46,6 +50,8 @@ const AppInput = ({
           editable={editable}
           pointerEvents={editable === false ? 'none' : 'auto'}
           onPressIn={onPressIn}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
         />
         {optionalEyeIcon}
       </View>

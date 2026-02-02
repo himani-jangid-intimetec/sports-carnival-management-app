@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { RoleType } from '../../constants/roles';
+import { RoleType } from '../../constants/Roles';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import EventCard from '../../components/EventCard/EventCard';
 import { styles } from './EventsListScreenStyles';
@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import AppButton from '../../components/AppButton/AppButton';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import { useEventsListViewModel } from '../../viewModels/EventListScreenViewModel';
 
 type EventListScreenProps = {

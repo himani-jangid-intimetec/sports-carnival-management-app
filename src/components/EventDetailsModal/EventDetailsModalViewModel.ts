@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useEventStore } from '../../store/EventStore';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import { Event } from '../../models/Event';
 
 export const useEventDetailsViewModel = (eventId: string) => {
