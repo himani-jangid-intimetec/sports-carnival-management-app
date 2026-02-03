@@ -10,6 +10,8 @@ import { APP_STRINGS } from '../constants/AppStrings';
 const generateFixtureId = () =>
   `fix-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
+const nextPowerOfTwo = (n: number) => Math.pow(2, Math.ceil(Math.log2(n)));
+
 export const useEventsListViewModel = (
   navigation: NativeStackNavigationProp<RootStackParamList>,
 ) => {
@@ -66,8 +68,7 @@ export const useEventsListViewModel = (
       return;
     }
 
-    const playersPerTeam = 2;
-    const requiredPlayers = selectedEvent.totalTeams * playersPerTeam;
+    const requiredPlayers = selectedEvent.totalTeams * 2;
 
     if (selectedEvent.registrations.length < requiredPlayers) {
       Alert.alert(APP_STRINGS.eventScreen.noEnoughRegistrations);
@@ -84,7 +85,7 @@ export const useEventsListViewModel = (
     const teams: Team[] = [];
     let teamIndex = 1;
 
-    const createTeamsFromGroup = (players: typeof males) => {
+    const buildTeams = (players: typeof males) => {
       for (let index = 0; index + 1 < players.length; index += 2) {
         if (teams.length >= selectedEvent.totalTeams) break;
 
@@ -101,8 +102,8 @@ export const useEventsListViewModel = (
       }
     };
 
-    createTeamsFromGroup(males);
-    createTeamsFromGroup(females);
+    buildTeams(males);
+    buildTeams(females);
 
     if (teams.length < selectedEvent.totalTeams) {
       Alert.alert(APP_STRINGS.eventScreen.notEnoughSameGenderPairs);
@@ -116,73 +117,83 @@ export const useEventsListViewModel = (
     });
   };
 
+  const generateBracket = (names: string[]): Fixture[] => {
+    const fixtures: Fixture[] = [];
+
+    let teams = [...names].sort(() => Math.random() - 0.5);
+    const targetSize = nextPowerOfTwo(teams.length);
+
+    while (teams.length < targetSize) teams.push('');
+
+    let round = 1;
+
+    while (teams.length > 1) {
+      const nextRound: string[] = [];
+
+      for (let index = 0; index < teams.length; index += 2) {
+        fixtures.push({
+          id: generateFixtureId(),
+          teamA: teams[index] || '',
+          teamB: teams[index + 1] || '',
+          scoreA: 0,
+          scoreB: 0,
+          round,
+          time: new Date().toISOString(),
+          status: 'UPCOMING',
+        });
+
+        nextRound.push('TBD');
+      }
+
+      teams = nextRound;
+      round++;
+    }
+
+    return fixtures;
+  };
+
   const handleCreateFixtures = () => {
     if (!selectedEvent) return;
 
     const fixtures: Fixture[] = [];
-    const round = 1;
 
     if (selectedEvent.format === '1v1') {
-      const males = selectedEvent.registrations.filter(
-        (player) => player.gender === 'Male',
-      );
-      const females = selectedEvent.registrations.filter(
-        (player) => player.gender === 'Female',
-      );
+      const males = selectedEvent.registrations
+        .filter((player) => player.gender === 'Male')
+        .map((player) => player.name);
 
-      const createFixturesFromPlayers = (players: typeof males) => {
-        const shuffled = [...players].sort(() => Math.random() - 0.5);
+      const females = selectedEvent.registrations
+        .filter((player) => player.gender === 'Female')
+        .map((player) => player.name);
 
-        for (let index = 0; index + 1 < shuffled.length; index += 2) {
-          fixtures.push({
-            id: generateFixtureId(),
-            teamA: shuffled[index].name,
-            teamB: shuffled[index + 1].name,
-            scoreA: 0,
-            scoreB: 0,
-            round,
-            time: new Date().toISOString(),
-            status: 'UPCOMING',
-          });
-        }
-      };
+      if (males.length >= 2) fixtures.push(...generateBracket(males));
+      if (females.length >= 2) fixtures.push(...generateBracket(females));
 
-      createFixturesFromPlayers(males);
-      createFixturesFromPlayers(females);
-
-      if (fixtures.length === 0) {
+      if (!fixtures.length) {
         Alert.alert(APP_STRINGS.eventScreen.notEnoughSameGenderParticipants);
         return;
       }
+    } else {
+      if (!selectedEvent.teamsCreated) {
+        Alert.alert(APP_STRINGS.eventScreen.createTeamFirst);
+        return;
+      }
 
-      updateEvent({
-        ...selectedEvent,
-        fixtures,
-        fixturesCreated: true,
-        status: 'LIVE',
-      });
+      const males = selectedEvent.teams
+        .filter((team) => team.gender === 'Male')
+        .map((team) => team.name);
 
-      return;
-    }
+      const females = selectedEvent.teams
+        .filter((team) => team.gender === 'Female')
+        .map((team) => team.name);
 
-    if (!selectedEvent.teamsCreated || selectedEvent.teams.length < 2) {
-      Alert.alert(APP_STRINGS.eventScreen.createTeamFirst);
-      return;
-    }
+      if (males.length >= 2) fixtures.push(...generateBracket(males));
+      if (females.length >= 2) fixtures.push(...generateBracket(females));
 
-    const teams = [...selectedEvent.teams].sort(() => Math.random() - 0.5);
-
-    for (let index = 0; index + 1 < teams.length; index += 2) {
-      fixtures.push({
-        id: generateFixtureId(),
-        teamA: teams[index].name,
-        teamB: teams[index + 1].name,
-        scoreA: 0,
-        scoreB: 0,
-        round,
-        time: new Date().toISOString(),
-        status: 'UPCOMING',
-      });
+      if (!fixtures.length) {
+        Alert.alert(APP_STRINGS.eventScreen.notEnoughSameGenderParticipants);
+        return;
+      }
     }
 
     updateEvent({
@@ -196,68 +207,48 @@ export const useEventsListViewModel = (
   const completeMatch = (fixtureId: string) => {
     if (!selectedEvent) return;
 
-    const updatedFixtures: Fixture[] = selectedEvent.fixtures.map((fixture) => {
-      if (fixture.id !== fixtureId) return fixture;
+    const fixtures = [...selectedEvent.fixtures];
+    const index = fixtures.findIndex((fixture) => fixture.id === fixtureId);
+    if (index === -1) return;
 
-      const scoreA = Math.floor(Math.random() * 10);
-      const scoreB = Math.floor(Math.random() * 10);
+    const match = fixtures[index];
 
-      return {
-        ...fixture,
-        scoreA,
-        scoreB,
-        status: 'COMPLETED',
-        winner: scoreA > scoreB ? fixture.teamA : fixture.teamB,
-      };
-    });
+    const scoreA = Math.floor(Math.random() * 10);
+    const scoreB = Math.floor(Math.random() * 10);
 
-    updateEvent({
-      ...selectedEvent,
-      fixtures: updatedFixtures,
-    });
-  };
+    const winner = scoreA > scoreB ? match.teamA : match.teamB;
 
-  const createNextRound = () => {
-    if (!selectedEvent) return;
+    fixtures[index] = {
+      ...match,
+      scoreA,
+      scoreB,
+      status: 'COMPLETED',
+      winner,
+    };
 
-    const lastRound = Math.max(
-      ...selectedEvent.fixtures.map((fixture) => fixture.round),
+    const sameRound = fixtures.filter(
+      (fixture) => fixture.round === match.round,
+    );
+    const matchPos = sameRound.findIndex((fixture) => fixture.id === match.id);
+    const targetIndex = Math.floor(matchPos / 2);
+
+    const nextRoundMatches = fixtures.filter(
+      (fixture) => fixture.round === match.round + 1,
     );
 
-    const completed = selectedEvent.fixtures.filter(
-      (fixture) =>
-        fixture.round === lastRound && fixture.status === 'COMPLETED',
-    );
-
-    if (completed.length < 2) {
-      Alert.alert(APP_STRINGS.eventScreen.notEnoughCompletedMatches);
-      return;
-    }
-
-    const winners = completed.map((fixture) => fixture.winner!).filter(Boolean);
-    const nextRoundFixtures: Fixture[] = [];
-
-    for (let index = 0; index + 1 < winners.length; index += 2) {
-      nextRoundFixtures.push({
-        id: generateFixtureId(),
-        teamA: winners[index],
-        teamB: winners[index + 1],
-        scoreA: 0,
-        scoreB: 0,
-        round: lastRound + 1,
-        time: new Date().toISOString(),
-        status: 'UPCOMING',
-      });
+    if (nextRoundMatches[targetIndex]) {
+      if (matchPos % 2 === 0) nextRoundMatches[targetIndex].teamA = winner;
+      else nextRoundMatches[targetIndex].teamB = winner;
     }
 
     updateEvent({
       ...selectedEvent,
-      fixtures: [...selectedEvent.fixtures, ...nextRoundFixtures],
+      fixtures,
     });
   };
 
   const getRoundName = (round: number, totalTeams: number) => {
-    const totalRounds = Math.log2(totalTeams);
+    const totalRounds = Math.log2(nextPowerOfTwo(totalTeams));
 
     if (round === totalRounds) return APP_STRINGS.eventScreen.final;
     if (round === totalRounds - 1) return APP_STRINGS.eventScreen.semiFinal;
@@ -284,7 +275,6 @@ export const useEventsListViewModel = (
     handleCreateTeams,
     handleCreateFixtures,
     completeMatch,
-    createNextRound,
     getRoundName,
   };
 };
