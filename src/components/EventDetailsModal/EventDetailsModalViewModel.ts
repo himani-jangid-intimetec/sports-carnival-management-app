@@ -49,12 +49,15 @@ export const useEventDetailsViewModel = (eventId: string) => {
     return APP_STRINGS.eventScreen.registrationClosed;
   }, [event, isCompleted, registrationEnded]);
 
-  const getRoundName = (round: number, totalTeams: number) => {
-    const totalRounds = Math.log2(totalTeams);
+  const getRoundName = (round: number, totalPlayers: number) => {
+    const bracketSize = Math.pow(2, Math.ceil(Math.log2(totalPlayers)));
+    const totalRounds = Math.log2(bracketSize);
 
-    if (round === totalRounds) return APP_STRINGS.eventScreen.final;
-    if (round === totalRounds - 1) return APP_STRINGS.eventScreen.semiFinal;
-    if (round === totalRounds - 2) return APP_STRINGS.eventScreen.quarterFinal;
+    const roundsLeft = totalRounds - round + 1;
+
+    if (roundsLeft === 1) return APP_STRINGS.eventScreen.final;
+    if (roundsLeft === 2) return APP_STRINGS.eventScreen.semiFinal;
+    if (roundsLeft === 3) return APP_STRINGS.eventScreen.quarterFinal;
 
     return `Round ${round}`;
   };

@@ -155,5 +155,7 @@ export const APP_STRINGS = {
       'No teams required for 1v1 format. Players will compete individually.',
     notEnoughSameGenderParticipants: 'Not enough same-gender participants',
     notEnoughSameGenderPairs: 'Not enough same-gender pairs',
+    maleSlots: 'Male Slots',
+    femaleSlots: 'Female Slots',
   },
 };
