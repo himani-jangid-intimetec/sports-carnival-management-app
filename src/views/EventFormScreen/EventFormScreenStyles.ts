@@ -12,6 +12,48 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
 
+  errorText: {
+    color: colors.error,
+    fontSize: 12,
+    marginTop: 4,
+  },
+
+  formatOption: {
+    alignItems: 'center',
+    backgroundColor: colors.cardBackgroud,
+    borderColor: colors.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+
+  formatOptionActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+
+  formatOptionDisabled: {
+    opacity: 0.4,
+  },
+
+  formatOptionText: {
+    color: colors.textPrimary,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+
+  formatOptionTextActive: {
+    color: colors.primaryText,
+  },
+
+  formatOptions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+
   headerRow: {
     alignItems: 'center',
     marginBottom: 10,

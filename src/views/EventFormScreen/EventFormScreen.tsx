@@ -7,10 +7,11 @@ import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { ArrowLeft } from 'lucide-react-native';
+import { ArrowLeft, Check } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { useEventFormViewModel } from '../../viewModels/EventFormViewModel';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { FormatType } from '../../models/Event';
 
 type EventFormScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -50,33 +51,53 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
           error={viewModel.errors.name}
         />
 
-        <View style={styles.inputRow}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabels}>
-              {APP_STRINGS.eventScreen.sportName}
-            </Text>
-            <AppInput
-              placeholder={APP_STRINGS.eventScreen.sportName}
-              value={viewModel.sport}
-              onChangeText={viewModel.onSportChange}
-              error={viewModel.errors.sport}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabels}>
+            {APP_STRINGS.eventScreen.sportName}
+          </Text>
+          <AppInput
+            placeholder={APP_STRINGS.eventScreen.sportName}
+            value={viewModel.sport}
+            onChangeText={viewModel.onSportChange}
+            error={viewModel.errors.sport}
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabels}>
-              {APP_STRINGS.eventScreen.format}
-            </Text>
-            <AppInput
-              placeholder={APP_STRINGS.placeHolders.format}
-              value={viewModel.format}
-              onChangeText={(view) =>
-                viewModel.setFormat(view as '1v1' | '2v2')
-              }
-              error={viewModel.errors.format}
-              editable={viewModel.sport.toLowerCase() !== 'chess'}
-            />
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabels}>
+            {APP_STRINGS.eventScreen.format}
+          </Text>
+          <View style={styles.formatOptions}>
+            {(['Singles', 'Doubles'] as FormatType[]).map((fmt) => {
+              const isSelected = viewModel.selectedFormats.includes(fmt);
+              const isDisabled =
+                viewModel.sport.toLowerCase() === 'chess' && fmt === 'Doubles';
+              return (
+                <Pressable
+                  key={fmt}
+                  onPress={() => !isDisabled && viewModel.toggleFormat(fmt)}
+                  style={[
+                    styles.formatOption,
+                    isSelected && styles.formatOptionActive,
+                    isDisabled && styles.formatOptionDisabled,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.formatOptionText,
+                      isSelected && styles.formatOptionTextActive,
+                    ]}
+                  >
+                    {fmt}
+                  </Text>
+                  {isSelected && <Check size={14} color={colors.primaryText} />}
+                </Pressable>
+              );
+            })}
           </View>
+          {viewModel.errors.formats && (
+            <Text style={styles.errorText}>{viewModel.errors.formats}</Text>
+          )}
         </View>
 
         <View style={styles.inputRow}>

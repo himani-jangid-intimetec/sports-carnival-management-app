@@ -57,7 +57,8 @@ const EventDetailsModal = ({
   const isOrganizer = role === 'organizer';
   const isAdminOrOrganizer = isAdmin || isOrganizer;
 
-  const playersPerTeam = event.format === '2v2' ? 2 : 1;
+  const has2v2Format = event.formats?.includes('Doubles');
+  const playersPerTeam = has2v2Format ? 2 : 1;
   const maxRegistrations = event.totalTeams * playersPerTeam;
 
   const disableCreateTeamsButton =
@@ -111,7 +112,9 @@ const EventDetailsModal = ({
                 <Text style={styles.sectionTitle}>
                   {APP_STRINGS.eventScreen.format}
                 </Text>
-                <Text style={styles.text}>{event.format}</Text>
+                <Text style={styles.text}>
+                  {event.formats?.join(', ') ?? 'N/A'}
+                </Text>
 
                 <Text style={styles.sectionTitle}>
                   {APP_STRINGS.eventScreen.description}
@@ -139,7 +142,7 @@ const EventDetailsModal = ({
 
             {activeTab === 'TEAMS' && (
               <>
-                {event.format === '1v1' ? (
+                {!has2v2Format ? (
                   <Text style={styles.emptyText}>
                     {APP_STRINGS.eventScreen.noTeamsRequired}
                   </Text>
@@ -222,9 +225,7 @@ const EventDetailsModal = ({
                           <AppButton
                             title={APP_STRINGS.eventScreen.createFixtures}
                             onPress={onCreateFixtures}
-                            disabled={
-                              event.format === '2v2' && !event.teamsCreated
-                            }
+                            disabled={has2v2Format && !event.teamsCreated}
                           />
                         </View>
                       )}

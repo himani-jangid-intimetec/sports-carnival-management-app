@@ -6,11 +6,13 @@ export type EventStatus =
   | 'CANCELLED';
 
 export type GenderType = 'Male' | 'Female';
+export type FormatType = 'Singles' | 'Doubles';
 
 export interface Registration {
   id: string;
   name: string;
   gender: GenderType;
+  formats: FormatType[];
 }
 
 export interface Team {
@@ -18,6 +20,7 @@ export interface Team {
   name: string;
   players: Registration[];
   gender: GenderType;
+  format: FormatType;
 }
 
 export type MatchStatus = 'UPCOMING' | 'LIVE' | 'COMPLETED';
@@ -30,8 +33,12 @@ export interface Fixture {
   scoreB: number;
   time: string;
   round: number;
+  totalRounds: number;
   status: MatchStatus;
   winner?: string;
+  gender: GenderType;
+  format: FormatType;
+  bracketPosition: number;
 }
 
 export interface Event {
@@ -44,7 +51,7 @@ export interface Event {
 
   status: EventStatus;
 
-  format: '1v1' | '2v2';
+  formats: FormatType[];
 
   registeredTeams: number;
   totalTeams: number;

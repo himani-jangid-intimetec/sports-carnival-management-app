@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState } from 'react';
 import {
   Event,
-  Fixture,
-  Team,
   GenderType,
-  Registration,
+  FormatType,
+  MatchStatus,
+  Fixture,
 } from '../models/Event';
 import { MOCK_EVENTS } from '../constants/MockEvents';
 
@@ -19,6 +19,7 @@ type EventContextType = {
     eventId: string,
     name: string,
     gender: GenderType,
+    formats: FormatType[],
   ) => void;
 
   closeRegistration: (eventId: string) => void;
@@ -26,6 +27,26 @@ type EventContextType = {
 
   createTeams: (eventId: string) => void;
   createFixtures: (eventId: string) => void;
+
+  updateFixtureStatus: (
+    eventId: string,
+    fixtureId: string,
+    status: MatchStatus,
+  ) => void;
+
+  updateFixtureScore: (
+    eventId: string,
+    fixtureId: string,
+    scoreA: number,
+    scoreB: number,
+  ) => void;
+
+  completeFixture: (
+    eventId: string,
+    fixtureId: string,
+    scoreA: number,
+    scoreB: number,
+  ) => void;
 };
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -55,23 +76,24 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     eventId: string,
     name: string,
     gender: GenderType,
+    formats: FormatType[],
   ) => {
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        const maxParticipants =
-          event.format === '1v1' ? event.totalTeams : event.totalTeams * 2;
-
-        if (event.registrations.length >= maxParticipants) return event;
-
         return {
           ...event,
           registrations: [
             ...event.registrations,
-            { id: Date.now().toString(), name, gender },
+            {
+              id: Date.now().toString(),
+              name,
+              gender,
+              formats,
+            },
           ],
-          registeredTeams: event.registrations.length + 1,
+          registeredTeams: event.registeredTeams + 1,
         };
       }),
     );
@@ -81,15 +103,6 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
-
-        const participationRate = event.registrations.length / event.totalTeams;
-
-        const minParticipationRate = 0.2;
-
-        if (participationRate < minParticipationRate) {
-          return { ...event, status: 'CANCELLED' };
-        }
-
         return { ...event, status: 'UPCOMING' };
       }),
     );
@@ -105,106 +118,107 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
-  const createTeams = (eventId: string) => {
+  const createTeams = (_eventId: string) => {
+    console.warn('createTeams handled elsewhere');
+  };
+
+  const createFixtures = (_eventId: string) => {
+    console.warn('createFixtures handled elsewhere');
+  };
+
+  const updateFixtureStatus = (
+    eventId: string,
+    fixtureId: string,
+    status: MatchStatus,
+  ) => {
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
-        if (event.format === '1v1') return event;
 
-        const requiredPlayers = event.totalTeams * 2;
-        if (event.registrations.length < requiredPlayers) return event;
-
-        const males = event.registrations.filter(
-          (player) => player.gender === 'Male',
-        );
-        const females = event.registrations.filter(
-          (player) => player.gender === 'Female',
-        );
-
-        const teams: Team[] = [];
-        let teamIndex = 1;
-
-        const buildTeams = (players: Registration[]) => {
-          for (let index = 0; index + 1 < players.length; index += 2) {
-            if (teams.length >= event.totalTeams) break;
-            teams.push({
-              id: teamIndex.toString(),
-              name: `Team ${teamIndex}`,
-              players: players.slice(index, index + 2),
-              gender: players[index].gender,
-            });
-            teamIndex++;
-          }
+        return {
+          ...event,
+          fixtures: event.fixtures.map((fixture) =>
+            fixture.id === fixtureId ? { ...fixture, status } : fixture,
+          ),
         };
-
-        buildTeams(males);
-        buildTeams(females);
-
-        if (teams.length < event.totalTeams) return event;
-
-        return { ...event, teams, teamsCreated: true };
       }),
     );
   };
 
-  const createFixtures = (eventId: string) => {
+  const updateFixtureScore = (
+    eventId: string,
+    fixtureId: string,
+    scoreA: number,
+    scoreB: number,
+  ) => {
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        const fixtures: Fixture[] = [];
-        const round = 1;
-        let matchIndex = 1;
+        return {
+          ...event,
+          fixtures: event.fixtures.map((fixture) =>
+            fixture.id === fixtureId ? { ...fixture, scoreA, scoreB } : fixture,
+          ),
+        };
+      }),
+    );
+  };
 
-        if (event.format === '1v1') {
-          const males = event.registrations.filter(
-            (player) => player.gender === 'Male',
-          );
-          const females = event.registrations.filter(
-            (player) => player.gender === 'Female',
-          );
+  const completeFixture = (
+    eventId: string,
+    fixtureId: string,
+    scoreA: number,
+    scoreB: number,
+  ) => {
+    setEvents((prev) =>
+      prev.map((event) => {
+        if (event.id !== eventId) return event;
 
-          const build = (players: Registration[]) => {
-            for (let index = 0; index + 1 < players.length; index += 2) {
-              fixtures.push({
-                id: `R${round}-M${matchIndex}`,
-                teamA: players[index].name,
-                teamB: players[index + 1].name,
-                scoreA: 0,
-                scoreB: 0,
-                time: new Date().toISOString(),
-                round,
-                status: 'UPCOMING',
-              });
-              matchIndex++;
-            }
+        const fixture = event.fixtures.find(
+          (fixture) => fixture.id === fixtureId,
+        );
+        if (!fixture) return event;
+
+        const winner = scoreA > scoreB ? fixture.teamA : fixture.teamB;
+
+        const updatedFixtures: Fixture[] = event.fixtures.map((fixture) =>
+          fixture.id === fixtureId
+            ? {
+                ...fixture,
+                scoreA,
+                scoreB,
+                status: 'COMPLETED' as MatchStatus,
+                winner,
+              }
+            : fixture,
+        );
+
+        const nextRound = fixture.round + 1;
+        const nextBracketPosition = Math.floor(fixture.bracketPosition / 2);
+        const isTeamA = fixture.bracketPosition % 2 === 0;
+
+        const nextFixtureIndex = updatedFixtures.findIndex(
+          (fixture) =>
+            fixture.round === nextRound &&
+            fixture.bracketPosition === nextBracketPosition &&
+            fixture.gender === fixture.gender &&
+            fixture.format === fixture.format,
+        );
+
+        if (nextFixtureIndex !== -1) {
+          const nextFixture = updatedFixtures[nextFixtureIndex];
+
+          updatedFixtures[nextFixtureIndex] = {
+            ...nextFixture,
+            teamA: isTeamA ? winner : nextFixture.teamA,
+            teamB: !isTeamA ? winner : nextFixture.teamB,
           };
-
-          build(males);
-          build(females);
-        }
-
-        if (event.format === '2v2' && event.teamsCreated) {
-          for (let index = 0; index + 1 < event.teams.length; index += 2) {
-            fixtures.push({
-              id: `R${round}-M${matchIndex}`,
-              teamA: event.teams[index].name,
-              teamB: event.teams[index + 1].name,
-              scoreA: 0,
-              scoreB: 0,
-              time: new Date().toISOString(),
-              round,
-              status: 'UPCOMING',
-            });
-            matchIndex++;
-          }
         }
 
         return {
           ...event,
-          fixtures,
-          fixturesCreated: true,
-          status: 'LIVE',
+          fixtures: updatedFixtures,
         };
       }),
     );
@@ -222,6 +236,9 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
         extendRegistration,
         createTeams,
         createFixtures,
+        updateFixtureStatus,
+        updateFixtureScore,
+        completeFixture,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-export type GameFormat = '1v1' | '2v2';
+export type GameFormat = 'Singles' | 'Doubles';
 
 export type Game = {
   id: string;
@@ -10,31 +10,31 @@ export const GAMES: Game[] = [
   {
     id: 'badminton',
     name: 'Badminton',
-    formats: ['1v1', '2v2'],
+    formats: ['Singles', 'Doubles'],
   },
   {
     id: 'table_tennis',
     name: 'Table Tennis',
-    formats: ['1v1', '2v2'],
+    formats: ['Singles', 'Doubles'],
   },
   {
     id: 'carrom',
     name: 'Carrom',
-    formats: ['1v1', '2v2'],
+    formats: ['Singles', 'Doubles'],
   },
   {
     id: 'pool',
     name: 'Pool',
-    formats: ['1v1'],
+    formats: ['Singles'],
   },
   {
     id: 'foosball',
     name: 'Foosball',
-    formats: ['2v2'],
+    formats: ['Doubles'],
   },
   {
     id: 'chess',
     name: 'Chess',
-    formats: ['1v1'],
+    formats: ['Singles'],
   },
 ];

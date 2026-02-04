@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Event } from '../models/Event';
+import { Event, FormatType } from '../models/Event';
 import { validationMessages } from '../constants/ValidationMessages';
 import { useEventStore } from '../store/EventStore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -16,7 +16,7 @@ type EventFormParams = {
 type EventFormErrors = {
   name?: string;
   sport?: string;
-  format?: string;
+  formats?: string;
   date?: string;
   time?: string;
   venue?: string;
@@ -61,8 +61,8 @@ export const useEventFormViewModel = ({
 
   const [name, setName] = useState(isEdit ? event!.name : '');
   const [sport, setSport] = useState(isEdit ? event!.sport : '');
-  const [format, setFormat] = useState<'1v1' | '2v2'>(
-    isEdit ? event!.format : '1v1',
+  const [selectedFormats, setSelectedFormats] = useState<FormatType[]>(
+    isEdit ? event!.formats : ['Singles'],
   );
   const [date, setDate] = useState(isEdit ? event!.date : '');
   const [time, setTime] = useState(isEdit ? event!.time : '');
@@ -94,8 +94,16 @@ export const useEventFormViewModel = ({
     setSport(value);
 
     if (value.toLowerCase() === 'chess') {
-      setFormat('1v1');
+      setSelectedFormats(['Singles']);
     }
+  };
+
+  const toggleFormat = (format: FormatType) => {
+    setSelectedFormats((prev) =>
+      prev.includes(format)
+        ? prev.filter((fixture) => fixture !== format)
+        : [...prev, format],
+    );
   };
 
   const validate = () => {
@@ -103,9 +111,13 @@ export const useEventFormViewModel = ({
 
     if (!name.trim()) newErrors.name = validationMessages.REQUIRED_EVENT_NAME;
     if (!sport.trim()) newErrors.sport = validationMessages.REQUIRED_SPORT;
-    if (!format) newErrors.format = validationMessages.REQUIRED_FORMAT;
-    if (sport.toLowerCase() === 'chess' && format == '2v2') {
-      newErrors.format = validationMessages.INVALID_CHESS_FORMAT;
+    if (selectedFormats.length === 0)
+      newErrors.formats = validationMessages.REQUIRED_FORMAT;
+    if (
+      sport.toLowerCase() === 'chess' &&
+      selectedFormats.includes('Doubles')
+    ) {
+      newErrors.formats = validationMessages.INVALID_CHESS_FORMAT;
     }
     if (!date.trim()) newErrors.date = validationMessages.REQUIRED_DATE;
     if (!time.trim()) newErrors.time = validationMessages.REQUIRED_TIME;
@@ -138,7 +150,7 @@ export const useEventFormViewModel = ({
       id: event?.id ?? Date.now().toString(),
       name,
       sport,
-      format,
+      formats: selectedFormats,
       date,
       time,
       venue,
@@ -177,7 +189,7 @@ export const useEventFormViewModel = ({
 
     name,
     sport,
-    format,
+    selectedFormats,
     date,
     time,
     venue,
@@ -192,7 +204,7 @@ export const useEventFormViewModel = ({
 
     setName,
     setSport,
-    setFormat,
+    toggleFormat,
     setDate,
     setTime,
     setVenue,

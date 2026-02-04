@@ -2,13 +2,14 @@ import { View, Text, Pressable } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
-import { ArrowLeft } from 'lucide-react-native';
+import { ArrowLeft, Check } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { APP_STRINGS } from '../../constants/AppStrings';
 import { styles } from './EventRegistrationScreenStyles';
 import { useEventRegistrationViewModel } from '../../viewModels/EventRegistrationViewModel';
+import { FormatType } from '../../models/Event';
 
 type EventRegistrationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -21,8 +22,10 @@ const EventRegistrationScreen = ({
 }: EventRegistrationProps) => {
   const viewModel = useEventRegistrationViewModel(navigation, route);
 
+  const formatOptions: FormatType[] = viewModel.availableFormats;
+
   return (
-    <ScreenWrapper>
+    <ScreenWrapper scrollable>
       <View style={styles.container}>
         <View style={styles.headerRow}>
           <Pressable onPress={viewModel.onBack}>
@@ -63,11 +66,49 @@ const EventRegistrationScreen = ({
           })}
         </View>
 
-        <AppButton
-          title={APP_STRINGS.eventScreen.register}
-          onPress={viewModel.onRegister}
-          disabled={!viewModel.isFormValid}
-        />
+        <Text style={styles.label}>
+          {APP_STRINGS.eventScreen.selectFormats}
+        </Text>
+        <Text style={styles.subLabel}>
+          {APP_STRINGS.eventScreen.chooseFormat}
+        </Text>
+        <View style={styles.formatSelectionContainer}>
+          {formatOptions.map((format) => {
+            const isSelected = viewModel.selectedFormats.includes(format);
+            return (
+              <Pressable
+                key={format}
+                onPress={() => viewModel.toggleFormat(format)}
+                style={[
+                  styles.formatOptionCard,
+                  isSelected && styles.formatOptionCardActive,
+                ]}
+              >
+                <View style={styles.formatOptionContent}>
+                  <Text style={styles.formatOptionTitle}>{format}</Text>
+                  <Text style={styles.formatOptionDesc}>
+                    {format === 'Singles'
+                      ? 'Individual matches'
+                      : 'Team of 2 players'}
+                  </Text>
+                </View>
+                {isSelected && (
+                  <View style={styles.checkIcon}>
+                    <Check size={16} color={colors.primaryText} />
+                  </View>
+                )}
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <AppButton
+            title={APP_STRINGS.eventScreen.register}
+            onPress={viewModel.onRegister}
+            disabled={!viewModel.isFormValid}
+          />
+        </View>
       </View>
     </ScreenWrapper>
   );
