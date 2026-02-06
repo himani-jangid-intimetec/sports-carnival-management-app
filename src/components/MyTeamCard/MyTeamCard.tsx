@@ -1,17 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { styles } from './MyTeamCardStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
-import { Medal, Trophy } from 'lucide-react-native';
+import { Trophy, Medal } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 
 type MyTeamCardProps = {
   logo: React.ReactNode;
   name: string;
-  captain: string;
-  usersIcon: React.ReactNode;
-  currentPlayers: number;
-  totalPlayers: number;
+  members: string[];
   sport: string;
   wins: number;
   losses: number;
@@ -21,10 +17,7 @@ type MyTeamCardProps = {
 const MyTeamCard = ({
   logo,
   name,
-  captain,
-  usersIcon,
-  currentPlayers,
-  totalPlayers,
+  members,
   sport,
   wins,
   losses,
@@ -36,23 +29,19 @@ const MyTeamCard = ({
         <View style={styles.logoContainer}>{logo}</View>
 
         <View style={styles.teamInfo}>
-          <Text style={styles.teamName}>{name}</Text>
-          <Text style={styles.captainText}>
-            {APP_STRINGS.participantScreens.captain}: {captain}
-          </Text>
-
-          <View style={styles.metaRow}>
-            <View style={styles.playerCount}>
-              {usersIcon}
-              <Text style={styles.playerText}>
-                {currentPlayers}/{totalPlayers}
-              </Text>
-            </View>
+          <View style={styles.headerRow}>
+            <Text style={styles.teamName}>{name}</Text>
 
             <View style={styles.sportBadge}>
               <Text style={styles.sportText}>{sport}</Text>
             </View>
           </View>
+
+          {members.map((member, index) => (
+            <Text key={index} style={styles.memberText}>
+              • {member}
+            </Text>
+          ))}
         </View>
       </View>
 
@@ -70,9 +59,7 @@ const MyTeamCard = ({
           </View>
         </View>
 
-        <Text style={styles.winRateText}>
-          {winRate} {APP_STRINGS.eventScreen.winRate}
-        </Text>
+        <Text style={styles.winRateText}>{winRate} Win Rate</Text>
       </View>
     </View>
   );

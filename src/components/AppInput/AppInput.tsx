@@ -13,6 +13,10 @@ type EntryInputProps = {
   error?: string;
   keyboardType?: KeyboardTypeOptions;
   optionalEyeIcon?: React.ReactNode;
+  editable?: boolean;
+  onPressIn?: () => void;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
+  autoCorrect?: boolean;
 };
 
 const AppInput = ({
@@ -25,6 +29,10 @@ const AppInput = ({
   error,
   keyboardType,
   optionalEyeIcon,
+  editable,
+  onPressIn,
+  autoCapitalize,
+  autoCorrect,
 }: EntryInputProps) => {
   return (
     <View>
@@ -39,6 +47,11 @@ const AppInput = ({
           onBlur={onBlur}
           style={styles.input}
           keyboardType={keyboardType}
+          editable={editable}
+          pointerEvents={editable === false ? 'none' : 'auto'}
+          onPressIn={onPressIn}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
         />
         {optionalEyeIcon}
       </View>

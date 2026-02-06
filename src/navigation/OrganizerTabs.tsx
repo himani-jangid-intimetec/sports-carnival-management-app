@@ -6,6 +6,7 @@ import { colors } from '../theme/colors';
 import OrganizerHomeScreen from '../views/Organizer/OrganizerHomeScreen';
 import EventsListScreen from '../views/EventListScreen/EventsListScreen';
 import { fonts } from '../theme/fonts';
+// import TeamsListScreen from '../views/TeamsListScreen/TeamsListScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,6 +48,15 @@ const OrganizerTabs = () => {
             );
           }
 
+          // if (route.name === 'Teams') {
+          //   return (
+          //     <Users
+          //       size={22}
+          //       color={focused ? colors.primary : colors.textSecondary}
+          //     />
+          //   );
+          // }
+
           return null;
         },
       })}
@@ -55,6 +65,7 @@ const OrganizerTabs = () => {
       <Tab.Screen name="Events">
         {() => <EventsListScreen role="organizer" />}
       </Tab.Screen>
+      {/* <Tab.Screen name="Teams" component={TeamsListScreen} /> */}
     </Tab.Navigator>
   );
 };

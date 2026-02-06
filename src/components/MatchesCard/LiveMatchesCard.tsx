@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { styles } from './LiveMatchesCardStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 
 type LiveMatchesCardProps = {
   gameName: string;
@@ -33,9 +33,9 @@ const LiveMatchesCard = ({
   const isFirstTeamLeading = firstTeamPoints > secondTeamPoints;
   const isSecondTeamLeading = secondTeamPoints > firstTeamPoints;
 
-  const isLive = status === 'Live';
-  const isUpcoming = status === 'Upcoming';
-  const isCompleted = status === 'Completed';
+  const isLive = status === 'LIVE';
+  const isUpcoming = status === 'UPCOMING';
+  const isCompleted = status === 'COMPLETED';
 
   return (
     <View style={styles.container}>

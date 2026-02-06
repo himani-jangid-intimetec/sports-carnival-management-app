@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import AnalyticsCard from '../../components/AnalyticsCard/AnalyticsCard';
 import {
   Calendar,
@@ -16,25 +16,17 @@ import LiveMatchesCard from '../../components/MatchesCard/LiveMatchesCard';
 import UpcomingMatchesCard from '../../components/MatchesCard/UpcomingMatchesCard';
 import { styles } from './ParticipantHomeScreenStyles';
 import MyTeamCard from '../../components/MyTeamCard/MyTeamCard';
-import { useAuthStore } from '../../store/AuthStore';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { MOCK_MATCHES, UPCOMING_MATCHES } from '../../constants/mockMatches';
+import { useParticipantHomeViewModel } from '../../viewModels/ParticipantHomeScreenViewModel';
 
 const ParticipantHomeScreen = () => {
-  const { logout } = useAuthStore();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const handleLogout = async () => {
-    await logout();
+  const viewModel = useParticipantHomeViewModel(navigation);
 
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Auth', params: { screen: 'Login' } }],
-    });
-  };
   return (
     <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
@@ -43,7 +35,7 @@ const ParticipantHomeScreen = () => {
             {APP_STRINGS.participantScreens.greeting}
           </Text>
 
-          <TouchableOpacity onPress={handleLogout}>
+          <TouchableOpacity onPress={viewModel.onLogout}>
             <LogOut size={22} color={colors.error} />
           </TouchableOpacity>
         </View>
@@ -85,10 +77,7 @@ const ParticipantHomeScreen = () => {
           <MyTeamCard
             logo={<Text style={styles.logoStyle}>TH</Text>}
             name="Thunder Hawks"
-            captain="John Doe"
-            usersIcon={<Users size={18} color={colors.usersIconBackground} />}
-            currentPlayers={11}
-            totalPlayers={15}
+            members={[]}
             sport="Football"
             wins={5}
             losses={2}
@@ -101,7 +90,7 @@ const ParticipantHomeScreen = () => {
             {APP_STRINGS.eventScreen.todaysMatches}
           </Text>
 
-          {MOCK_MATCHES.map((match) => (
+          {viewModel.liveMatches.map((match) => (
             <LiveMatchesCard
               key={match.id}
               gameName={match.gameName}
@@ -138,7 +127,7 @@ const ParticipantHomeScreen = () => {
             {APP_STRINGS.organizerScreens.upcomingMatches}
           </Text>
 
-          {UPCOMING_MATCHES.map((match) => (
+          {viewModel.upcomingMatches.map((match) => (
             <UpcomingMatchesCard
               key={match.title}
               {...match}

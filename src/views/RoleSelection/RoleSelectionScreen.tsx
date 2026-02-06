@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Trophy } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
-import { roles, RoleType } from '../../constants/roles';
+import { roles, RoleType } from '../../constants/Roles';
 import { roleIcons } from '../../utils/roleIcons';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import RoleCard from '../../components/RoleCard/RoleCard';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './RoleSelectionScreenStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { useAuthStore } from '../../store/AuthStore';
-import { StoredUser } from '../../utils/authStorage';
+import { useRoleSelectionViewModel } from '../../viewModels/RoleSelectionViewModel';
 
 type RouteParams = {
   key: string;
@@ -29,49 +28,15 @@ const RoleSelectionScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteParams>();
-  const { register } = useAuthStore();
+
   const { name, email, password } = route.params;
 
-  const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);
-
-  const selectedRoleTitle =
-    roles.find((role) => role.key === selectedRole)?.title ?? '...';
-
-  const handleContinue = async () => {
-    if (!selectedRole) return;
-
-    const newUser: StoredUser = {
+  const { selectedRole, setSelectedRole, selectedRoleTitle, handleContinue } =
+    useRoleSelectionViewModel(navigation, {
       name,
       email,
       password,
-      role: selectedRole,
-    };
-
-    await register(newUser);
-
-    switch (selectedRole) {
-      case 'admin':
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'AdminTabs' }],
-        });
-        break;
-
-      case 'organizer':
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'OrganizerTabs' }],
-        });
-        break;
-
-      case 'participant':
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'ParticipantTabs' }],
-        });
-        break;
-    }
-  };
+    });
 
   return (
     <ScreenWrapper>

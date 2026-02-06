@@ -5,9 +5,10 @@ import { colors } from '../../theme/colors';
 import AppButton from '../../components/AppButton/AppButton';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
-import { validationMessages } from '../../constants/validationMessages';
+import { validationMessages } from '../../constants/ValidationMessages';
 import { styles } from './ForgotPasswordScreenStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
+import { useEffect } from 'react';
 
 const ForgotPasswordScreen = () => {
   const {
@@ -17,26 +18,25 @@ const ForgotPasswordScreen = () => {
     emailError,
     passwordError,
     confirmPasswordError,
+    successMessage,
     setEmail,
     setNewPassword,
     setConfirmPassword,
     validateEmail,
     validatePassword,
     validateConfirmPassword,
-    onSubmit,
+    onSubmitPress,
     isFormValid,
   } = useForgotPasswordViewModel();
 
-  const handleSubmit = () => {
-    const success = onSubmit();
-
-    if (success) {
+  useEffect(() => {
+    if (successMessage) {
       Alert.alert(
         validationMessages.PASSWORD_UPDATED,
         validationMessages.PASSWORD_UPDATED_DESCRIPTION,
       );
     }
-  };
+  }, [successMessage]);
 
   return (
     <ScreenWrapper scrollable={true}>
@@ -62,6 +62,9 @@ const ForgotPasswordScreen = () => {
           onChangeText={setEmail}
           onBlur={validateEmail}
           error={emailError}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
 
         <Text style={styles.inputLabel}>{APP_STRINGS.labels.newPassword}</Text>
@@ -90,7 +93,7 @@ const ForgotPasswordScreen = () => {
 
         <AppButton
           title={APP_STRINGS.buttons.updatePassword}
-          onPress={handleSubmit}
+          onPress={onSubmitPress}
           disabled={!isFormValid}
         />
       </View>

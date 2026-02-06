@@ -5,27 +5,22 @@ export const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
-
-  headerContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-
   heading: {
     color: colors.textPrimary,
     fontSize: 30,
     fontWeight: 'bold',
+    marginBottom: 20,
   },
-
-  headingParticipant: {
-    color: colors.textPrimary,
+  logo: {
+    color: colors.appBackground,
     fontSize: 30,
-    fontWeight: 'bold',
-    marginVertical: 20,
   },
-
-  noEventStyle: {
+  logoContainer: {
+    backgroundColor: colors.primary,
+    borderRadius: 40,
+    padding: 10,
+  },
+  noTeamStyle: {
     color: colors.textPrimary,
     fontSize: 30,
     fontWeight: 'bold',

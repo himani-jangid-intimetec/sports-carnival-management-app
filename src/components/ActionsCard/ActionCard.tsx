@@ -5,11 +5,12 @@ import { styles } from './ActionCardStyles';
 type ActionCardProps = {
   icon: React.ReactNode;
   title: string;
+  onPress?: () => void;
 };
 
-const ActionCard = ({ icon, title }: ActionCardProps) => {
+const ActionCard = ({ icon, title, onPress }: ActionCardProps) => {
   return (
-    <Pressable>
+    <Pressable onPress={onPress}>
       <View style={styles.container}>
         {icon}
         <Text style={styles.title}>{title}</Text>

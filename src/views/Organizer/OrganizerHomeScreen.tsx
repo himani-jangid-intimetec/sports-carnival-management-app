@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
 import AnalyticsCard from '../../components/AnalyticsCard/AnalyticsCard';
 import {
   Calendar,
@@ -17,25 +17,17 @@ import ActionCard from '../../components/ActionsCard/ActionCard';
 import LiveMatchesCard from '../../components/MatchesCard/LiveMatchesCard';
 import { styles } from './OrganizerHomeScreenStyles';
 import UpcomingMatchesCard from '../../components/MatchesCard/UpcomingMatchesCard';
-import { useAuthStore } from '../../store/AuthStore';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { MOCK_MATCHES, UPCOMING_MATCHES } from '../../constants/mockMatches';
+import { useOrganizerHomeViewModel } from '../../viewModels/OrganizerHomeScreenViewModel';
 
 const OrganizerHomeScreen = () => {
-  const { logout } = useAuthStore();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const handleLogout = async () => {
-    await logout();
+  const viewModel = useOrganizerHomeViewModel(navigation);
 
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Auth', params: { screen: 'Login' } }],
-    });
-  };
   return (
     <ScreenWrapper scrollable={true}>
       <View style={styles.container}>
@@ -44,7 +36,7 @@ const OrganizerHomeScreen = () => {
             {APP_STRINGS.organizerScreens.greeting}
           </Text>
 
-          <TouchableOpacity onPress={handleLogout}>
+          <TouchableOpacity onPress={viewModel.onLogout}>
             <LogOut size={22} color={colors.error} />
           </TouchableOpacity>
         </View>
@@ -88,6 +80,7 @@ const OrganizerHomeScreen = () => {
               <ActionCard
                 icon={<Plus size={20} color={colors.primary} />}
                 title={APP_STRINGS.organizerScreens.createEvent}
+                onPress={viewModel.onCreateEvent}
               />
             </View>
             <View style={styles.actionCardWrapper}>
@@ -108,7 +101,8 @@ const OrganizerHomeScreen = () => {
           <Text style={styles.heading}>
             {APP_STRINGS.eventScreen.todaysMatches}
           </Text>
-          {MOCK_MATCHES.map((match) => (
+
+          {viewModel.liveMatches.map((match) => (
             <LiveMatchesCard
               key={match.id}
               gameName={match.gameName}
@@ -145,7 +139,7 @@ const OrganizerHomeScreen = () => {
             {APP_STRINGS.organizerScreens.upcomingMatches}
           </Text>
 
-          {UPCOMING_MATCHES.map((match) => (
+          {viewModel.upcomingMatches.map((match) => (
             <UpcomingMatchesCard
               key={match.title}
               {...match}

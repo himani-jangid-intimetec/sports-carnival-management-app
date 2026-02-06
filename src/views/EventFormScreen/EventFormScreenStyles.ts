@@ -8,12 +8,37 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
   },
 
+  dateTime: {
+    marginTop: 10,
+  },
+
+  headerRow: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+
   heading: {
     color: colors.textPrimary,
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
     textAlign: 'center',
+  },
+
+  iconContainer: {
+    left: 0,
+    position: 'absolute',
+    top: 3,
+  },
+
+  input: {
+    backgroundColor: colors.appBackground,
+    borderColor: colors.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    color: colors.textPrimary,
+    fontSize: 14,
+    height: 48,
+    paddingHorizontal: 12,
   },
 
   inputContainer: {

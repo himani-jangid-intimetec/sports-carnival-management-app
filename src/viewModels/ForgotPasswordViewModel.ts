@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { isValidEmail, isValidPassword } from '../utils/validation';
-import { validationMessages } from '../constants/validationMessages';
+import { validationMessages } from '../constants/ValidationMessages';
 
 export const useForgotPasswordViewModel = () => {
   const [email, setEmail] = useState('');
@@ -11,49 +11,60 @@ export const useForgotPasswordViewModel = () => {
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
-  const validateEmail = () => {
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const validateEmail = (): boolean => {
     if (!email.trim()) {
       setEmailError(validationMessages.REQUIRED_EMAIL);
+      return false;
     } else if (!isValidEmail(email)) {
       setEmailError(validationMessages.INVALID_EMAIL);
-    } else {
-      setEmailError('');
+      return false;
     }
+    setEmailError('');
+    return true;
   };
 
-  const validatePassword = () => {
+  const validatePassword = (): boolean => {
     if (!newPassword) {
       setPasswordError(validationMessages.REQUIRED_PASSWORD);
+      return false;
     } else if (newPassword.length < 8) {
       setPasswordError(validationMessages.PASSWORD_MIN_LENGTH);
+      return false;
     } else if (!isValidPassword(newPassword)) {
       setPasswordError(validationMessages.INVALID_PASSWORD);
-    } else {
-      setPasswordError('');
+      return false;
     }
+    setPasswordError('');
+    return true;
   };
 
-  const validateConfirmPassword = () => {
+  const validateConfirmPassword = (): boolean => {
     if (!confirmPassword) {
       setConfirmPasswordError(validationMessages.CONFIRM_PASSWORD);
+      return false;
     } else if (confirmPassword !== newPassword) {
       setConfirmPasswordError(validationMessages.PASSWORD_MISMATCH);
+      return false;
     } else if (!isValidPassword(confirmPassword)) {
       setConfirmPasswordError(validationMessages.INVALID_PASSWORD);
-    } else {
-      setConfirmPasswordError('');
+      return false;
     }
+    setConfirmPasswordError('');
+    return true;
   };
 
-  const onSubmit = (): boolean => {
-    validateEmail();
-    validatePassword();
-    validateConfirmPassword();
+  const onSubmitPress = (): boolean => {
+    const isEmailValid = validateEmail();
+    const isPasswordValid = validatePassword();
+    const isConfirmValid = validateConfirmPassword();
 
-    if (emailError || passwordError || confirmPasswordError) {
+    if (!isEmailValid || !isPasswordValid || !isConfirmValid) {
       return false;
     }
 
+    setSuccessMessage(validationMessages.PASSWORD_UPDATED);
     return true;
   };
 
@@ -62,7 +73,6 @@ export const useForgotPasswordViewModel = () => {
     isValidEmail(email) &&
     newPassword.length >= 8 &&
     confirmPassword === newPassword &&
-    isValidEmail(email) &&
     isValidPassword(newPassword) &&
     isValidPassword(confirmPassword);
 
@@ -73,13 +83,14 @@ export const useForgotPasswordViewModel = () => {
     emailError,
     passwordError,
     confirmPasswordError,
+    successMessage,
     setEmail,
     setNewPassword,
     setConfirmPassword,
     validateEmail,
     validatePassword,
     validateConfirmPassword,
-    onSubmit,
+    onSubmitPress,
     isFormValid,
   };
 };

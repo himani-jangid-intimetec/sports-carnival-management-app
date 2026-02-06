@@ -32,4 +32,9 @@ export const GAMES: Game[] = [
     name: 'Foosball',
     formats: ['2v2'],
   },
+  {
+    id: 'chess',
+    name: 'Chess',
+    formats: ['1v1'],
+  },
 ];

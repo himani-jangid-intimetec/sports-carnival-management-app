@@ -10,9 +10,13 @@ import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppInput from '../../components/AppInput/AppInput';
 import AppButton from '../../components/AppButton/AppButton';
 import { styles } from './RegisterScreenStyles';
-import { APP_STRINGS } from '../../constants/appStrings';
+import { APP_STRINGS } from '../../constants/AppStrings';
+
+type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
 
 const RegisterScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
+
   const {
     name,
     email,
@@ -20,7 +24,7 @@ const RegisterScreen = () => {
     setName,
     setEmail,
     setPassword,
-    onRegister,
+    handleRegister,
     isFormValid,
     validateName,
     validateEmail,
@@ -28,27 +32,13 @@ const RegisterScreen = () => {
     emailError,
     nameError,
     passwordError,
-  } = useRegisterViewModel();
-
-  type NavigationProp = NativeStackNavigationProp<AuthStackParamList>;
-
-  const navigation = useNavigation<NavigationProp>();
-
-  const handleRegister = async () => {
-    const success = await onRegister();
-    if (!success) return;
-
-    navigation.navigate('RoleSelection', {
-      name,
-      email,
-      password,
-    });
-  };
+    goToLogin,
+  } = useRegisterViewModel(navigation);
 
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <ScreenWrapper scrollable={true}>
+    <ScreenWrapper scrollable>
       <View style={styles.container}>
         <View style={styles.headingContainer}>
           <View style={styles.trophyContainer}>
@@ -70,56 +60,51 @@ const RegisterScreen = () => {
             {APP_STRINGS.auth.signUpSubtitle}
           </Text>
 
-          <View>
-            <Text style={styles.inputLabels}>{APP_STRINGS.labels.name}</Text>
-            <AppInput
-              icon={<User size={20} color={colors.textSecondary} />}
-              placeholder={APP_STRINGS.placeHolders.fullName}
-              value={name}
-              onChangeText={setName}
-              onBlur={validateName}
-              error={nameError}
-            />
-          </View>
+          <Text style={styles.inputLabels}>{APP_STRINGS.labels.name}</Text>
+          <AppInput
+            icon={<User size={20} color={colors.textSecondary} />}
+            placeholder={APP_STRINGS.placeHolders.fullName}
+            value={name}
+            onChangeText={setName}
+            onBlur={validateName}
+            error={nameError}
+          />
 
-          <View>
-            <Text style={styles.inputLabels}>{APP_STRINGS.labels.email}</Text>
-            <AppInput
-              icon={<Mail size={20} color={colors.textSecondary} />}
-              placeholder={APP_STRINGS.placeHolders.email}
-              value={email}
-              onChangeText={setEmail}
-              onBlur={validateEmail}
-              error={emailError}
-            />
-          </View>
+          <Text style={styles.inputLabels}>{APP_STRINGS.labels.email}</Text>
+          <AppInput
+            icon={<Mail size={20} color={colors.textSecondary} />}
+            placeholder={APP_STRINGS.placeHolders.email}
+            value={email}
+            onChangeText={setEmail}
+            onBlur={validateEmail}
+            error={emailError}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
 
-          <View>
-            <Text style={styles.inputLabels}>
-              {APP_STRINGS.labels.password}
-            </Text>
-            <AppInput
-              icon={<Lock size={20} color={colors.textSecondary} />}
-              placeholder={APP_STRINGS.placeHolders.createPassword}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              onBlur={validatePassword}
-              error={passwordError}
-              optionalEyeIcon={
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
-                >
-                  {showPassword ? (
-                    <EyeOff size={20} color={colors.textSecondary} />
-                  ) : (
-                    <Eye size={20} color={colors.textSecondary} />
-                  )}
-                </TouchableOpacity>
-              }
-            />
-          </View>
+          <Text style={styles.inputLabels}>{APP_STRINGS.labels.password}</Text>
+          <AppInput
+            icon={<Lock size={20} color={colors.textSecondary} />}
+            placeholder={APP_STRINGS.placeHolders.createPassword}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            onBlur={validatePassword}
+            error={passwordError}
+            optionalEyeIcon={
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={styles.eyeIcon}
+              >
+                {showPassword ? (
+                  <EyeOff size={20} color={colors.textSecondary} />
+                ) : (
+                  <Eye size={20} color={colors.textSecondary} />
+                )}
+              </TouchableOpacity>
+            }
+          />
 
           <AppButton
             onPress={handleRegister}
@@ -131,7 +116,7 @@ const RegisterScreen = () => {
             <Text style={styles.footerText}>
               {APP_STRINGS.footer.accountAlready}
             </Text>
-            <Pressable onPress={() => navigation.navigate('Login')}>
+            <Pressable onPress={goToLogin}>
               <Text style={styles.footerButtonText}>
                 {APP_STRINGS.buttons.signIn}
               </Text>

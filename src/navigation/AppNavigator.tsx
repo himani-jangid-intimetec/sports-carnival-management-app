@@ -8,6 +8,7 @@ import ParticipantTabs from './ParticipantTabs';
 import EventFormScreen from '../views/EventFormScreen/EventFormScreen';
 import { Event } from '../models/Event';
 import { NavigatorScreenParams } from '@react-navigation/native';
+import EventRegistrationScreen from '../views/EventRegistration/EventRegistrationScreen';
 
 export type RootStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList>;
@@ -18,6 +19,9 @@ export type RootStackParamList = {
     mode: 'create' | 'edit';
     event?: Event;
     onSubmit?: (event: Event) => void;
+  };
+  EventRegister: {
+    eventId: string;
   };
 };
 
@@ -33,6 +37,7 @@ const AppNavigator = () => {
       <Stack.Screen name="ParticipantTabs" component={ParticipantTabs} />
 
       <Stack.Screen name="EventForm" component={EventFormScreen} />
+      <Stack.Screen name="EventRegister" component={EventRegistrationScreen} />
     </Stack.Navigator>
   );
 };

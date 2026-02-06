@@ -1,4 +1,4 @@
-export type MatchStatus = 'Live' | 'Upcoming' | 'Completed';
+export type MatchStatus = 'LIVE' | 'UPCOMING' | 'COMPLETED';
 
 export type Match = {
   id: string;

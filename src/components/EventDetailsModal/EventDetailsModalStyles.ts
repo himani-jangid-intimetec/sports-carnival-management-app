@@ -1,107 +1,116 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 
+const HALF_HEIGHT = Dimensions.get('window').height * 0.6;
+
 export const styles = StyleSheet.create({
-  actions: {
-    gap: 12,
-    marginTop: 20,
+  activeTab: {
+    backgroundColor: colors.primary,
   },
-
-  dangerBtn: {
-    alignItems: 'center',
-    backgroundColor: colors.error,
-    borderRadius: 10,
-    padding: 14,
-    paddingHorizontal: 30,
-  },
-
-  dangerText: {
-    color: colors.textPrimary,
+  activeTabText: {
+    color: colors.appBackground,
     fontWeight: '600',
   },
-
-  details: {
-    marginTop: 10,
+  buttonContainer: {
+    width: 120,
   },
-
-  editText: {
-    color: colors.appBackground,
-    fontWeight: 'bold',
+  centerButton: {
+    alignItems: 'center',
+    marginTop: 12,
   },
-
+  content: {
+    flex: 1,
+    marginVertical: 12,
+  },
+  emptyText: {
+    color: colors.textSecondary,
+    fontSize: 20,
+    marginTop: 20,
+    textAlign: 'center',
+  },
+  footer: {
+    gap: 8,
+    marginTop: 8,
+  },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: 10,
   },
-
-  meta: {
+  listItem: {
     color: colors.textPrimary,
-    fontSize: 20,
-    marginVertical: 10,
-  },
-
-  overlay: {
-    backgroundColor: colors.appBackground + '40',
-    flex: 1,
-  },
-
-  primaryBtn: {
-    alignSelf: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    padding: 14,
-  },
-
-  primaryText: {
-    color: colors.appBackground,
-    fontWeight: 'bold',
-  },
-
-  row: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    gap: 10,
-    marginVertical: 5,
-  },
-
-  rowActions: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-
-  secondaryBtn: {
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-    borderRadius: 10,
-    borderWidth: 1,
-    padding: 14,
-    paddingHorizontal: 30,
-  },
-
-  secondaryText: {
-    color: colors.appBackground,
     fontSize: 14,
+    paddingVertical: 6,
+  },
+  modalContainer: {
+    backgroundColor: colors.appBackground,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    height: HALF_HEIGHT,
+    padding: 16,
+  },
+  overlay: {
+    backgroundColor: colors.appBackground + '20',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  prizeCard: {
+    alignItems: 'center',
+    backgroundColor: colors.cardBackgroud,
+    borderRadius: 16,
+    flexDirection: 'row',
+    padding: 16,
+  },
+  prizeEmoji: {
+    fontSize: 22,
+  },
+  prizeIcon: {
+    alignItems: 'center',
+    backgroundColor: colors.disabled,
+    borderRadius: 24,
+    height: 48,
+    justifyContent: 'center',
+    marginRight: 12,
+    width: 48,
+  },
+  prizeList: {
+    gap: 12,
+  },
+  prizeTitle: {
+    color: colors.textPrimary,
+    fontSize: 16,
     fontWeight: '600',
   },
-
-  sheet: {
-    backgroundColor: colors.appBackground,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    bottom: 0,
-    padding: 20,
-    position: 'absolute',
-    width: '100%',
+  prizeValue: {
+    color: colors.textSecondary,
+    marginTop: 2,
   },
-
-  statusText: {
-    fontSize: 14,
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+  },
+  sectionTitle: {
+    color: colors.textPrimary,
+    fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  status: {
+    marginBottom: 10,
+  },
+  statusText: {
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  status_CANCELLED: {
+    backgroundColor: colors.error + '20',
+    borderRadius: 20,
+    color: colors.error,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
 
   status_COMPLETED: {
@@ -131,16 +140,37 @@ export const styles = StyleSheet.create({
   status_UPCOMING: {
     backgroundColor: colors.usersIconBackground + '20',
     borderRadius: 20,
-    color: colors.usersIconBackground,
+    color: colors.matchesIconBackgound,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
 
+  tabButton: {
+    alignItems: 'center',
+    backgroundColor: colors.inputField,
+    borderRadius: 20,
+    flex: 1,
+    marginHorizontal: 4,
+    paddingVertical: 8,
+  },
+  tabRow: {
+    flexDirection: 'row',
+    marginVertical: 12,
+  },
+  tabText: {
+    color: colors.textSecondary,
+    fontSize: 12,
+  },
+  text: {
+    color: colors.textSecondary,
+    fontSize: 15,
+    marginBottom: 12,
+  },
   title: {
     color: colors.textPrimary,
     fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 10,
+    fontWeight: '700',
+    marginBottom: 10,
     textAlign: 'center',
   },
 });
