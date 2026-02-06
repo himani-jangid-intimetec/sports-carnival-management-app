@@ -50,10 +50,12 @@ export const useLoginViewModel = (
 
     const success = await login(email, password);
 
-    if (!success || !user) {
+    if (!success) {
       setPasswordError(validationMessages.INVALID_CREDENTIALS);
       return;
     }
+
+    if (!user) return;
 
     switch (user.role) {
       case 'admin':

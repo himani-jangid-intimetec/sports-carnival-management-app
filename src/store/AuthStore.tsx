@@ -1,8 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getUser, saveUser, StoredUser } from '../utils/authStorage';
+import { RoleType } from '../constants/Roles';
 
 type AuthContextType = {
   user: StoredUser | null;
+  role: RoleType | null;
+  setRole: (role: RoleType) => void;
   register: (user: StoredUser) => Promise<void>;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
@@ -17,6 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [user, setUser] = useState<StoredUser | null>(null);
+  const [role, setRoleState] = useState<RoleType | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,9 +32,12 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     loadUser();
   }, []);
 
+  const setRole = (selectedRole: RoleType) => {
+    setRoleState(selectedRole);
+  };
+
   const register = async (newUser: StoredUser) => {
     await saveUser(newUser);
-    setUser(newUser);
   };
 
   const login = async (email: string, password: string) => {
@@ -38,18 +45,28 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (!storedUser) return false;
 
     if (storedUser.email === email && storedUser.password === password) {
-      setUser(storedUser);
+      const userWithRole: StoredUser = {
+        ...storedUser,
+        role: role ?? storedUser.role,
+      };
+
+      setUser(userWithRole);
+      await saveUser(userWithRole);
       return true;
     }
+
     return false;
   };
 
   const logout = async () => {
     setUser(null);
+    setRoleState(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{ user, role, setRole, register, login, logout, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
