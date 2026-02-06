@@ -8,8 +8,26 @@ export const styles = StyleSheet.create({
   bottomPadding: {
     height: 100,
   },
+  buttonFlex: {
+    flex: 1,
+  },
+  buttonRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+  },
   container: {
     flex: 1,
+  },
+  deleteButton: {
+    alignItems: 'center',
+    backgroundColor: colors.error + '15',
+    borderColor: colors.error,
+    borderRadius: 12,
+    borderWidth: 1,
+    height: 48,
+    justifyContent: 'center',
+    width: 48,
   },
   description: {
     color: colors.textSecondary,

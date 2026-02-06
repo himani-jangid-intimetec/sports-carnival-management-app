@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, View, Pressable, FlatList } from 'react-native';
-import { ArrowLeft, User, Users } from 'lucide-react-native';
+import { Text, View, Pressable, FlatList, TextInput } from 'react-native';
+import { ArrowLeft, User, Users, Search } from 'lucide-react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import AppButton from '../../components/AppButton/AppButton';
 import MyTeamCard from '../../components/MyTeamCard/MyTeamCard';
@@ -35,10 +35,17 @@ const CategoryDetailsScreen = () => {
     setActiveMainTab,
     activeFixtureTab,
     setActiveFixtureTab,
+    searchQuery,
+    setSearchQuery,
     participants,
     teams,
     filteredFixtures,
     isAdminOrOrganizer,
+    canManageEvent,
+    isAbandoned,
+    canCreateTeams,
+    canCreateFixtures,
+    minRequiredForTeams,
     hasTeamsForGender,
     hasFixturesForGender,
     getRoundName,
@@ -48,6 +55,9 @@ const CategoryDetailsScreen = () => {
     handleUpdateScore,
     handleCompleteFixture,
   } = viewModel;
+
+  const showSearchBar =
+    activeMainTab === 'TEAMS' || activeMainTab === 'FIXTURES';
 
   return (
     <ScreenWrapper scrollable={false}>
@@ -60,7 +70,13 @@ const CategoryDetailsScreen = () => {
             <ArrowLeft size={24} color={colors.textPrimary} />
           </Pressable>
           <Text style={styles.headerTitle}>
-            {gender} {format}
+            {gender === 'Male'
+              ? "Men's"
+              : gender === 'Female'
+              ? "Women's"
+              : 'Mixed'}{' '}
+            {format}
+            {isAbandoned && ' (Abandoned)'}
           </Text>
           <View style={styles.headerRight} />
         </View>
@@ -86,6 +102,23 @@ const CategoryDetailsScreen = () => {
             </Pressable>
           ))}
         </View>
+
+        {showSearchBar && (
+          <View style={styles.searchContainer}>
+            <Search size={20} color={colors.textSecondary} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder={
+                activeMainTab === 'TEAMS'
+                  ? APP_STRINGS.placeHolders.searchTeams
+                  : APP_STRINGS.placeHolders.searchFixtures
+              }
+              placeholderTextColor={colors.textSecondary}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+          </View>
+        )}
 
         <View style={styles.content}>
           {activeMainTab === 'PARTICIPANTS' && (
@@ -118,7 +151,7 @@ const CategoryDetailsScreen = () => {
                     <MyTeamCard
                       logo={<Users color={colors.appBackground} />}
                       name={item.name}
-                      members={item.players.map((p) => p.name)}
+                      members={item.players.map((player) => player.name)}
                       sport={event.sport}
                       wins={0}
                       losses={0}
@@ -127,12 +160,21 @@ const CategoryDetailsScreen = () => {
                   )}
                 />
               ) : (
-                <View style={styles.centerButton}>
-                  <AppButton
-                    title={APP_STRINGS.eventScreen.createTeam}
-                    onPress={handleCreateTeams}
-                  />
-                </View>
+                canManageEvent && (
+                  <View style={styles.centerButton}>
+                    {!canCreateTeams && (
+                      <Text style={styles.thresholdText}>
+                        Minimum {minRequiredForTeams} participants required (20%
+                        threshold)
+                      </Text>
+                    )}
+                    <AppButton
+                      title={APP_STRINGS.eventScreen.createTeam}
+                      onPress={handleCreateTeams}
+                      disabled={!canCreateTeams}
+                    />
+                  </View>
+                )
               )}
             </>
           )}
@@ -149,7 +191,14 @@ const CategoryDetailsScreen = () => {
                       activeFixtureTab === tab && styles.activeFixtureTab,
                     ]}
                   >
-                    <Text>{tab}</Text>
+                    <Text
+                      style={[
+                        styles.fixtureTabText,
+                        activeFixtureTab === tab && styles.activeFixtureTabText,
+                      ]}
+                    >
+                      {tab}
+                    </Text>
                   </Pressable>
                 ))}
               </View>
@@ -178,12 +227,20 @@ const CategoryDetailsScreen = () => {
                   )}
                 />
               ) : (
-                <View style={styles.centerButton}>
-                  <AppButton
-                    title={APP_STRINGS.eventScreen.createFixtures}
-                    onPress={handleCreateFixtures}
-                  />
-                </View>
+                canManageEvent && (
+                  <View style={styles.centerButton}>
+                    {!canCreateFixtures && format === 'Doubles' && (
+                      <Text style={styles.thresholdText}>
+                        {APP_STRINGS.eventScreen.createTeamFirst}
+                      </Text>
+                    )}
+                    <AppButton
+                      title={APP_STRINGS.eventScreen.createFixtures}
+                      onPress={handleCreateFixtures}
+                      disabled={!canCreateFixtures}
+                    />
+                  </View>
+                )
               )}
             </View>
           )}

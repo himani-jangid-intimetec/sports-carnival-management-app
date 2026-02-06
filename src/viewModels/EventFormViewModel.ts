@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Event, FormatType } from '../models/Event';
 import { validationMessages } from '../constants/ValidationMessages';
 import { useEventStore } from '../store/EventStore';
+import { useAuthStore } from '../store/AuthStore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
@@ -32,6 +33,7 @@ export const useEventFormViewModel = ({
   navigation,
 }: EventFormParams) => {
   const { createEvent, updateEvent } = useEventStore();
+  const { user } = useAuthStore();
 
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [isTimePickerVisible, setTimePickerVisible] = useState(false);
@@ -169,6 +171,7 @@ export const useEventFormViewModel = ({
       description,
       rules: formattedRules,
       prizes: [firstPrize, secondPrize, thirdPrize],
+      createdBy: event?.createdBy ?? user?.email,
     };
 
     if (isEdit) {

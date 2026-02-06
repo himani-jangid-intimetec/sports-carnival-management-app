@@ -2,13 +2,17 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './CategoryCardStyles';
 import { useCategoryCardViewModel } from './CategoryCardViewModel';
+import { colors } from '../../theme/colors';
+import { APP_STRINGS } from '../../constants/AppStrings';
 
 type CategoryCardProps = {
   title: string;
   format: 'Singles' | 'Doubles';
-  gender: 'Male' | 'Female';
+  gender: 'Male' | 'Female' | 'Mixed';
   participantCount: number;
+  totalParticipants: number;
   teamCount?: number;
+  isAbandoned?: boolean;
   onPress: () => void;
 };
 
@@ -17,7 +21,9 @@ const CategoryCard = ({
   format,
   gender,
   participantCount,
+  totalParticipants,
   teamCount,
+  isAbandoned = false,
   onPress,
 }: CategoryCardProps) => {
   const { iconColor, Icon, showTeams } = useCategoryCardViewModel({
@@ -25,6 +31,17 @@ const CategoryCard = ({
     gender,
     teamCount,
   });
+
+  const progress =
+    totalParticipants > 0 ? participantCount / totalParticipants : 0;
+  const progressWidth = `${Math.min(progress * 100, 100)}%` as `${number}%`;
+  const slotsFull = participantCount >= totalParticipants;
+
+  const getProgressColor = () => {
+    if (slotsFull) return colors.error;
+    if (progress >= 0.8) return colors.participantBackgroud;
+    return colors.matchesIconBackgound;
+  };
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -35,13 +52,34 @@ const CategoryCard = ({
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>{title}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>{title}</Text>
+          {isAbandoned && (
+            <Text style={styles.abandonedBadge}>
+              {APP_STRINGS.eventScreen.abandoned}
+            </Text>
+          )}
+          {slotsFull && !isAbandoned && (
+            <Text style={styles.slotsBadge}>
+              {APP_STRINGS.eventScreen.registrationClosed}
+            </Text>
+          )}
+        </View>
         <View style={styles.statsRow}>
-          <Text style={styles.statsText}>{participantCount} Participants</Text>
-
+          <Text style={styles.statsText}>
+            {participantCount} / {totalParticipants} Participants
+          </Text>
           {showTeams && (
             <Text style={styles.statsText}> • {teamCount} Teams</Text>
           )}
+        </View>
+        <View style={styles.progressBar}>
+          <View
+            style={[
+              styles.progressFill,
+              { width: progressWidth, backgroundColor: getProgressColor() },
+            ]}
+          />
         </View>
       </View>
 

@@ -5,7 +5,9 @@ export type EventStatus =
   | 'COMPLETED'
   | 'CANCELLED';
 
-export type GenderType = 'Male' | 'Female';
+export type CategoryStatus = 'ACTIVE' | 'ABANDONED';
+
+export type GenderType = 'Male' | 'Female' | 'Mixed';
 export type FormatType = 'Singles' | 'Doubles';
 
 export interface Registration {
@@ -68,4 +70,8 @@ export interface Event {
   description: string;
   rules: string[];
   prizes: string[];
+
+  createdBy?: string;
+
+  abandonedCategories?: string[];
 }

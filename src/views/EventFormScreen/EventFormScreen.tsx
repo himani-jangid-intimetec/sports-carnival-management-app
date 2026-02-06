@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import { styles } from './EventFormScreenStyles';
 import { APP_STRINGS } from '../../constants/AppStrings';
@@ -105,18 +105,22 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
             <Text style={styles.inputLabels}>
               {APP_STRINGS.eventScreen.date}
             </Text>
-            <TouchableOpacity onPress={viewModel.showDatePicker}>
-              <AppInput
-                placeholder={APP_STRINGS.eventScreen.date}
-                value={viewModel.date}
-                editable={false}
-                onChangeText={() => {}}
-              />
-            </TouchableOpacity>
+            <Pressable onPress={viewModel.showDatePicker}>
+              <View pointerEvents="none">
+                <AppInput
+                  placeholder={APP_STRINGS.eventScreen.date}
+                  value={viewModel.date}
+                  editable={false}
+                  onChangeText={() => {}}
+                />
+              </View>
+            </Pressable>
 
             <DateTimePickerModal
               isVisible={viewModel.isDatePickerVisible}
               mode="date"
+              display="inline"
+              date={viewModel.date ? new Date(viewModel.date) : new Date()}
               onConfirm={viewModel.handleConfirmDate}
               onCancel={viewModel.hideDatePicker}
             />
@@ -126,18 +130,22 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
             <Text style={styles.inputLabels}>
               {APP_STRINGS.eventScreen.time}
             </Text>
-            <TouchableOpacity onPress={viewModel.showTimePicker}>
-              <AppInput
-                placeholder={APP_STRINGS.eventScreen.time}
-                value={viewModel.time}
-                editable={false}
-                onChangeText={() => {}}
-              />
-            </TouchableOpacity>
+            <Pressable onPress={viewModel.showTimePicker}>
+              <View pointerEvents="none">
+                <AppInput
+                  placeholder={APP_STRINGS.eventScreen.time}
+                  value={viewModel.time}
+                  editable={false}
+                  onChangeText={() => {}}
+                />
+              </View>
+            </Pressable>
 
             <DateTimePickerModal
               isVisible={viewModel.isTimePickerVisible}
               mode="time"
+              date={new Date()}
+              display="spinner"
               onConfirm={viewModel.handleConfirmTime}
               onCancel={viewModel.hideTimePicker}
             />
@@ -159,10 +167,10 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
 
           <View style={styles.inputContainer}>
             <Text style={styles.inputLabels}>
-              {APP_STRINGS.eventScreen.totalTeams}
+              {APP_STRINGS.eventScreen.totalParticipants}
             </Text>
             <AppInput
-              placeholder={APP_STRINGS.eventScreen.totalTeams}
+              placeholder={APP_STRINGS.eventScreen.totalParticipants}
               value={viewModel.totalTeams}
               onChangeText={viewModel.setTotalTeams}
               keyboardType="number-pad"

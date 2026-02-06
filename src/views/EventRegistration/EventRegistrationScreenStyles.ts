@@ -46,6 +46,11 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primary + '15',
     borderColor: colors.primary,
   },
+  formatOptionCardDisabled: {
+    backgroundColor: colors.cardBackgroud,
+    borderColor: colors.border,
+    opacity: 0.6,
+  },
   formatOptionContent: {
     flex: 1,
   },
@@ -53,11 +58,17 @@ export const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontSize: 13,
   },
+  formatOptionDescDisabled: {
+    color: colors.disabled,
+  },
   formatOptionTitle: {
     color: colors.textPrimary,
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 4,
+  },
+  formatOptionTitleDisabled: {
+    color: colors.disabled,
   },
   formatSelectionContainer: {
     gap: 12,
@@ -71,6 +82,21 @@ export const styles = StyleSheet.create({
   },
   formatText: {
     color: colors.textPrimary,
+  },
+  formatTitleRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 4,
+  },
+  fullBadge: {
+    backgroundColor: colors.error,
+    borderRadius: 4,
+    color: colors.textPrimary,
+    fontSize: 10,
+    fontWeight: '700',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
   },
   headerRow: {
     alignItems: 'center',
@@ -88,6 +114,14 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 6,
     marginTop: 20,
+  },
+  slotsText: {
+    color: colors.textSecondary,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  slotsTextFull: {
+    color: colors.error,
   },
   subLabel: {
     color: colors.textSecondary,

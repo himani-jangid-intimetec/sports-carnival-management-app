@@ -41,6 +41,7 @@ const EventRegistrationScreen = ({
           placeholder={APP_STRINGS.placeHolders.fullName}
           value={viewModel.playerName}
           onChangeText={viewModel.setPlayerName}
+          editable={false}
         />
 
         <Text style={styles.label}>{APP_STRINGS.placeHolders.gender}</Text>
@@ -75,6 +76,20 @@ const EventRegistrationScreen = ({
         <View style={styles.formatSelectionContainer}>
           {formatOptions.map((format) => {
             const isSelected = viewModel.selectedFormats.includes(format);
+            const isFull =
+              viewModel.gender !== '' &&
+              viewModel.isCategoryFull(
+                viewModel.gender as 'Male' | 'Female',
+                format,
+              );
+            const count =
+              viewModel.gender !== ''
+                ? viewModel.getCategoryCount(
+                    viewModel.gender as 'Male' | 'Female',
+                    format,
+                  )
+                : 0;
+
             return (
               <Pressable
                 key={format}
@@ -82,17 +97,44 @@ const EventRegistrationScreen = ({
                 style={[
                   styles.formatOptionCard,
                   isSelected && styles.formatOptionCardActive,
+                  isFull && styles.formatOptionCardDisabled,
                 ]}
               >
                 <View style={styles.formatOptionContent}>
-                  <Text style={styles.formatOptionTitle}>{format}</Text>
-                  <Text style={styles.formatOptionDesc}>
+                  <View style={styles.formatTitleRow}>
+                    <Text
+                      style={[
+                        styles.formatOptionTitle,
+                        isFull && styles.formatOptionTitleDisabled,
+                      ]}
+                    >
+                      {format}
+                    </Text>
+                    {isFull && (
+                      <Text style={styles.fullBadge}>
+                        {APP_STRINGS.eventScreen.full}
+                      </Text>
+                    )}
+                  </View>
+                  <Text
+                    style={[
+                      styles.formatOptionDesc,
+                      isFull && styles.formatOptionDescDisabled,
+                    ]}
+                  >
                     {format === 'Singles'
-                      ? 'Individual matches'
-                      : 'Team of 2 players'}
+                      ? APP_STRINGS.eventScreen.individualMatches
+                      : APP_STRINGS.eventScreen.teamOfPlayers}
                   </Text>
+                  {viewModel.gender !== '' && (
+                    <Text
+                      style={[styles.slotsText, isFull && styles.slotsTextFull]}
+                    >
+                      {count}/{viewModel.totalSlotsPerCategory} slots filled
+                    </Text>
+                  )}
                 </View>
-                {isSelected && (
+                {isSelected && !isFull && (
                   <View style={styles.checkIcon}>
                     <Check size={16} color={colors.primaryText} />
                   </View>

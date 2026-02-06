@@ -1,9 +1,12 @@
 import { useMemo } from 'react';
+import { Alert } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { FormatType, GenderType } from '../models/Event';
 import { useEventStore } from '../store/EventStore';
+import { useAuthStore } from '../store/AuthStore';
+import { APP_STRINGS } from '../constants/AppStrings';
 
 type EventDetailsRouteProp = RouteProp<RootStackParamList, 'EventDetails'>;
 
@@ -13,7 +16,10 @@ type Category = {
   gender: GenderType;
   format: FormatType;
   participantCount: number;
+  totalParticipants: number;
   teamCount: number;
+  slotsFull: boolean;
+  isAbandoned: boolean;
 };
 
 export const useEventDetailsViewModel = () => {
@@ -22,49 +28,102 @@ export const useEventDetailsViewModel = () => {
   const route = useRoute<EventDetailsRouteProp>();
   const { eventId, role } = route.params;
 
-  const { events } = useEventStore();
+  const { events, deleteEvent } = useEventStore();
+  const { user } = useAuthStore();
 
   const event = useMemo(
     () => events.find((event) => event.id === eventId) ?? null,
     [events, eventId],
   );
 
+  const totalParticipantsPerCategory = event?.totalTeams ?? 0;
+  const isChess = event?.sport.toLowerCase() === 'chess';
+
   const categories: Category[] = useMemo(() => {
     if (!event) return [];
+
+    const abandonedCategories = event?.abandonedCategories ?? [];
 
     const cats: Category[] = [];
     const genders: GenderType[] = ['Male', 'Female'];
     const formats: FormatType[] = event.formats ?? ['Singles', 'Doubles'];
 
-    genders.forEach((gender) => {
-      formats.forEach((format) => {
-        const participants = event.registrations.filter(
-          (player) =>
-            player.gender === gender && player.formats?.includes(format),
-        );
+    if (isChess && formats.includes('Singles')) {
+      const allSinglesParticipants = event.registrations.filter((player) =>
+        player.formats?.includes('Singles'),
+      );
+      const mixedTeams = event.teams.filter(
+        (team) =>
+          team.format === 'Singles' && team.gender === ('Mixed' as GenderType),
+      );
+      const slotsFull =
+        allSinglesParticipants.length >= totalParticipantsPerCategory * 2;
+      const isAbandoned = abandonedCategories.includes('Mixed-Singles');
 
-        const teams = event.teams.filter(
-          (team) => team.gender === gender && team.format === format,
-        );
+      cats.push({
+        id: 'Mixed-Singles',
+        title: 'Mixed Singles',
+        gender: 'Mixed' as GenderType,
+        format: 'Singles',
+        participantCount: allSinglesParticipants.length,
+        totalParticipants: totalParticipantsPerCategory * 2,
+        teamCount: mixedTeams.length,
+        slotsFull,
+        isAbandoned,
+      });
+    } else {
+      genders.forEach((gender) => {
+        formats.forEach((format) => {
+          const participants = event.registrations.filter(
+            (player) =>
+              player.gender === gender && player.formats?.includes(format),
+          );
 
-        if (participants.length > 0) {
+          const teams = event.teams.filter(
+            (team) => team.gender === gender && team.format === format,
+          );
+
+          const slotsFull = participants.length >= totalParticipantsPerCategory;
+          const isAbandoned = abandonedCategories.includes(
+            `${gender}-${format}`,
+          );
+
+          const genderLabel = gender === 'Male' ? "Men's" : "Women's";
           cats.push({
             id: `${gender}-${format}`,
-            title: `${gender} ${format}`,
+            title: `${genderLabel} ${format}`,
             gender,
             format,
             participantCount: participants.length,
+            totalParticipants: totalParticipantsPerCategory,
             teamCount: teams.length,
+            slotsFull,
+            isAbandoned,
           });
-        }
+        });
       });
-    });
+    }
 
     return cats;
-  }, [event]);
+  }, [event, totalParticipantsPerCategory, isChess]);
 
   const isAdminOrOrganizer = role === 'admin' || role === 'organizer';
-  const canRegister = role === 'participant' && event?.status === 'OPEN';
+  const isOwner = event?.createdBy === user?.email;
+  const hasEventStarted =
+    event?.status === 'LIVE' || event?.status === 'COMPLETED';
+  const canEditOrDelete =
+    (role === 'admin' || (role === 'organizer' && isOwner)) && !hasEventStarted;
+  const areAllSlotsFull =
+    categories.length > 0 && categories.every((cat) => cat.slotsFull);
+  const canRegister =
+    role === 'participant' && event?.status === 'OPEN' && !areAllSlotsFull;
+
+  const getRegisterButtonText = () => {
+    if (areAllSlotsFull) return APP_STRINGS.eventScreen.slotsFull;
+    if (event?.status !== 'OPEN')
+      return APP_STRINGS.eventScreen.registrationClosed;
+    return APP_STRINGS.eventScreen.register;
+  };
 
   const handleCategoryPress = (category: Category) => {
     if (!event) return;
@@ -86,6 +145,26 @@ export const useEventDetailsViewModel = () => {
     });
   };
 
+  const handleDeleteEvent = () => {
+    if (!event) return;
+
+    Alert.alert(
+      APP_STRINGS.eventScreen.deleteEvent,
+      APP_STRINGS.eventScreen.deleteEventConfirmation,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: APP_STRINGS.eventScreen.delete,
+          style: 'destructive',
+          onPress: () => {
+            deleteEvent(event.id);
+            navigation.goBack();
+          },
+        },
+      ],
+    );
+  };
+
   const handleBack = () => {
     navigation.goBack();
   };
@@ -101,9 +180,12 @@ export const useEventDetailsViewModel = () => {
     role,
     categories,
     isAdminOrOrganizer,
+    canEditOrDelete,
     canRegister,
+    getRegisterButtonText,
     handleCategoryPress,
     handleEditEvent,
+    handleDeleteEvent,
     handleBack,
     handleRegister,
   };

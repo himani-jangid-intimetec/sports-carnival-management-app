@@ -48,7 +48,6 @@ const AppInput = ({
           style={styles.input}
           keyboardType={keyboardType}
           editable={editable}
-          pointerEvents={editable === false ? 'none' : 'auto'}
           onPressIn={onPressIn}
           autoCapitalize={autoCapitalize}
           autoCorrect={autoCorrect}

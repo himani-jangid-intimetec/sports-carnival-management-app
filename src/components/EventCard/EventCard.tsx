@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { Event } from '../../models/Event';
 import { styles } from './EventCardStyles';
 import { colors } from '../../theme/colors';
-import { Calendar, MapPin, Users } from 'lucide-react-native';
+import { Calendar, MapPin } from 'lucide-react-native';
 import { RoleType } from '../../constants/Roles';
 import { useState } from 'react';
 
@@ -14,25 +14,6 @@ type EventCardProps = {
 
 const EventCard = ({ event, onPress }: EventCardProps) => {
   const [pressed, setPressed] = useState(false);
-  const getProgressColor = () => {
-    switch (event.status) {
-      case 'LIVE':
-        return colors.participantBackgroud;
-      case 'COMPLETED':
-        return colors.error;
-      case 'OPEN':
-        return colors.matchesIconBackgound;
-      case 'UPCOMING':
-        return colors.usersIconBackground;
-      case 'CANCELLED':
-        return colors.error;
-    }
-  };
-
-  const progress =
-    event.totalTeams > 0 ? event.registeredTeams / event.totalTeams : 0;
-
-  const progressWidth = `${Math.min(progress * 100, 100)}%` as `${number}%`;
 
   return (
     <TouchableOpacity
@@ -58,26 +39,6 @@ const EventCard = ({ event, onPress }: EventCardProps) => {
             <View style={styles.details}>
               <MapPin color={colors.textSecondary} />
               <Text style={styles.detailsText}>{event.venue}</Text>
-            </View>
-          </View>
-
-          <View style={styles.teamRow}>
-            <View style={styles.teamDetails}>
-              <Users color={colors.primary} />
-              <Text style={styles.teamText}>
-                {event.registeredTeams} / {event.totalTeams} Teams
-              </Text>
-            </View>
-            <View style={styles.progressBar}>
-              <View
-                style={[
-                  styles.progressFill,
-                  {
-                    width: progressWidth,
-                    backgroundColor: getProgressColor(),
-                  },
-                ]}
-              />
             </View>
           </View>
         </View>

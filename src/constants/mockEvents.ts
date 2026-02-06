@@ -21,6 +21,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Inter college badminton tournament with singles and doubles.',
     rules: ['Knockout format', 'Each match best of 3'],
     prizes: ['₹5000', 'Trophy', '₹2000'],
+    createdBy: 'organizer@test.com',
   },
   {
     id: '2',
@@ -42,6 +43,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'TT finals tournament.',
     rules: ['Single elimination'],
     prizes: ['₹3000'],
+    createdBy: 'organizer@test.com',
   },
   {
     id: '3',
@@ -63,6 +65,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Carrom championship.',
     rules: ['League + finals'],
     prizes: ['₹2000'],
+    createdBy: 'admin@test.com',
   },
   {
     id: '4',
@@ -74,7 +77,7 @@ export const MOCK_EVENTS: Event[] = [
     venue: 'Room 4',
     status: 'OPEN',
     registeredTeams: 0,
-    totalTeams: 5,
+    totalTeams: 8,
     registrationDeadline: '2026-01-19',
     teamsCreated: false,
     fixturesCreated: false,
@@ -84,6 +87,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Pool tournament.',
     rules: ['Straight knockout'],
     prizes: ['₹1500'],
+    createdBy: 'organizer@test.com',
   },
   {
     id: '5',
@@ -105,6 +109,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Foosball fun event.',
     rules: ['Group stage'],
     prizes: ['₹2500'],
+    createdBy: 'organizer@test.com',
   },
   {
     id: '6',
@@ -126,6 +131,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Open chess tournament.',
     rules: ['Swiss system'],
     prizes: ['₹4000'],
+    createdBy: 'admin@test.com',
   },
   {
     id: '7',
@@ -147,6 +153,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Foosball tournament.',
     rules: ['Knockout'],
     prizes: ['₹7000'],
+    createdBy: 'organizer@test.com',
   },
   {
     id: '8',
@@ -168,6 +175,7 @@ export const MOCK_EVENTS: Event[] = [
     description: '1v1 chess blitz.',
     rules: ['Group + knockout'],
     prizes: ['₹6000'],
+    createdBy: 'admin@test.com',
   },
   {
     id: '9',
@@ -189,6 +197,7 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Pool league with singles and doubles.',
     rules: ['League format'],
     prizes: ['₹10000'],
+    createdBy: 'organizer@test.com',
   },
   {
     id: '10',
@@ -210,5 +219,6 @@ export const MOCK_EVENTS: Event[] = [
     description: 'Singles badminton.',
     rules: ['Knockout'],
     prizes: ['₹3000'],
+    createdBy: 'organizer@test.com',
   },
 ];

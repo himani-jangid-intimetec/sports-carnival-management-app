@@ -25,9 +25,6 @@ type EventContextType = {
   closeRegistration: (eventId: string) => void;
   extendRegistration: (eventId: string, newDeadline: string) => void;
 
-  createTeams: (eventId: string) => void;
-  createFixtures: (eventId: string) => void;
-
   updateFixtureStatus: (
     eventId: string,
     fixtureId: string,
@@ -103,7 +100,33 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
-        return { ...event, status: 'UPCOMING' };
+
+        const genders: ('Male' | 'Female')[] = ['Male', 'Female'];
+        const formats = event.formats ?? ['Singles', 'Doubles'];
+        const minRequired = Math.ceil(event.totalTeams * 0.2);
+        const abandonedCategories: string[] = [];
+
+        genders.forEach((gender) => {
+          formats.forEach((format) => {
+            const participantCount = event.registrations.filter(
+              (player) =>
+                player.gender === gender && player.formats?.includes(format),
+            ).length;
+
+            if (participantCount < minRequired) {
+              abandonedCategories.push(`${gender}-${format}`);
+            }
+          });
+        });
+
+        const totalCategories = genders.length * formats.length;
+        const allAbandoned = abandonedCategories.length === totalCategories;
+
+        return {
+          ...event,
+          status: allAbandoned ? 'CANCELLED' : 'UPCOMING',
+          abandonedCategories,
+        };
       }),
     );
   };
@@ -116,14 +139,6 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
           : event,
       ),
     );
-  };
-
-  const createTeams = (_eventId: string) => {
-    console.warn('createTeams handled elsewhere');
-  };
-
-  const createFixtures = (_eventId: string) => {
-    console.warn('createFixtures handled elsewhere');
   };
 
   const updateFixtureStatus = (
@@ -175,12 +190,13 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        const fixture = event.fixtures.find(
+        const currentFixture = event.fixtures.find(
           (fixture) => fixture.id === fixtureId,
         );
-        if (!fixture) return event;
+        if (!currentFixture) return event;
 
-        const winner = scoreA > scoreB ? fixture.teamA : fixture.teamB;
+        const winner =
+          scoreA > scoreB ? currentFixture.teamA : currentFixture.teamB;
 
         const updatedFixtures: Fixture[] = event.fixtures.map((fixture) =>
           fixture.id === fixtureId
@@ -194,16 +210,18 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
             : fixture,
         );
 
-        const nextRound = fixture.round + 1;
-        const nextBracketPosition = Math.floor(fixture.bracketPosition / 2);
-        const isTeamA = fixture.bracketPosition % 2 === 0;
+        const nextRound = currentFixture.round + 1;
+        const nextBracketPosition = Math.floor(
+          currentFixture.bracketPosition / 2,
+        );
+        const isTeamA = currentFixture.bracketPosition % 2 === 0;
 
         const nextFixtureIndex = updatedFixtures.findIndex(
           (fixture) =>
             fixture.round === nextRound &&
             fixture.bracketPosition === nextBracketPosition &&
-            fixture.gender === fixture.gender &&
-            fixture.format === fixture.format,
+            fixture.gender === currentFixture.gender &&
+            fixture.format === currentFixture.format,
         );
 
         if (nextFixtureIndex !== -1) {
@@ -234,8 +252,6 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
         registerParticipant,
         closeRegistration,
         extendRegistration,
-        createTeams,
-        createFixtures,
         updateFixtureStatus,
         updateFixtureScore,
         completeFixture,

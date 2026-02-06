@@ -1,9 +1,9 @@
-import { Users, User } from 'lucide-react-native';
+import { User, Users } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 
-type UseCategoryCardVMProps = {
+type CategoryCardViewModelProps = {
   format: 'Singles' | 'Doubles';
-  gender: 'Male' | 'Female';
+  gender: 'Male' | 'Female' | 'Mixed';
   teamCount?: number;
 };
 
@@ -11,8 +11,13 @@ export const useCategoryCardViewModel = ({
   format,
   gender,
   teamCount,
-}: UseCategoryCardVMProps) => {
-  const iconColor = gender === 'Male' ? colors.usersIconBackground : '#EC4899';
+}: CategoryCardViewModelProps) => {
+  const iconColor =
+    gender === 'Male'
+      ? colors.usersIconBackground
+      : gender === 'Mixed'
+      ? colors.primary
+      : colors.mixedBackground;
   const Icon = format === 'Doubles' ? Users : User;
 
   const showTeams = format === 'Doubles' && teamCount !== undefined;

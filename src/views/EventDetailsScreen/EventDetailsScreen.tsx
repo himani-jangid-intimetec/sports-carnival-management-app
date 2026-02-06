@@ -1,6 +1,12 @@
 import React from 'react';
 import { Text, View, ScrollView, Pressable } from 'react-native';
-import { ArrowLeft, Calendar, MapPin, Trophy } from 'lucide-react-native';
+import {
+  ArrowLeft,
+  Calendar,
+  MapPin,
+  Trophy,
+  Trash2,
+} from 'lucide-react-native';
 import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import CategoryCard from '../../components/CategoryCard/CategoryCard';
 import AppButton from '../../components/AppButton/AppButton';
@@ -14,10 +20,12 @@ const EventDetailsScreen = () => {
     event,
     role,
     categories,
-    isAdminOrOrganizer,
+    canEditOrDelete,
     canRegister,
+    getRegisterButtonText,
     handleCategoryPress,
     handleEditEvent,
+    handleDeleteEvent,
     handleBack,
     handleRegister,
   } = useEventDetailsViewModel();
@@ -91,7 +99,9 @@ const EventDetailsScreen = () => {
                   format={category.format}
                   gender={category.gender}
                   participantCount={category.participantCount}
+                  totalParticipants={category.totalParticipants}
                   teamCount={category.teamCount}
+                  isAbandoned={category.isAbandoned}
                   onPress={() => handleCategoryPress(category)}
                 />
               ))
@@ -134,22 +144,27 @@ const EventDetailsScreen = () => {
         <View style={styles.footer}>
           {role === 'participant' && (
             <AppButton
-              title={
-                canRegister
-                  ? APP_STRINGS.eventScreen.register
-                  : APP_STRINGS.eventScreen.registrationClosed
-              }
+              title={getRegisterButtonText()}
               disabled={!canRegister}
               onPress={handleRegister}
             />
           )}
 
-          {isAdminOrOrganizer && (
-            <AppButton
-              title={APP_STRINGS.eventScreen.edit}
-              onPress={handleEditEvent}
-              disabled={event.status === 'COMPLETED'}
-            />
+          {canEditOrDelete && (
+            <View style={styles.buttonRow}>
+              <View style={styles.buttonFlex}>
+                <AppButton
+                  title={APP_STRINGS.eventScreen.edit}
+                  onPress={handleEditEvent}
+                />
+              </View>
+              <Pressable
+                style={styles.deleteButton}
+                onPress={handleDeleteEvent}
+              >
+                <Trash2 size={24} color={colors.error} />
+              </Pressable>
+            </View>
           )}
         </View>
       </View>
