@@ -64,8 +64,8 @@ export interface Team {
 
 export interface Fixture {
   id: string;
-  teamA: string;
-  teamB: string;
+  teamA: string | null;
+  teamB: string | null;
   scoreA: number;
   scoreB: number;
   time: string;
@@ -87,8 +87,7 @@ export interface Event {
   venue: string;
 
   status: EventStatus;
-
-  formats: FormatType[];
+  format: '1v1' | '2v2';
 
   registeredTeams: number;
   totalTeams: number;

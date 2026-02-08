@@ -53,6 +53,13 @@ const EventDetailsModal = ({
 
   if (!event) return null;
 
+  const registrations = event.registrations ?? [];
+  const teams = event.teams ?? [];
+  const fixtures = (event.fixtures ?? []).filter(
+    (fixture): fixture is typeof fixture & { teamA: string; teamB: string } =>
+      fixture.teamA !== null && fixture.teamB !== null,
+  );
+
   const isAdmin = role === 'admin';
   const isOrganizer = role === 'organizer';
   const isAdminOrOrganizer = isAdmin || isOrganizer;
@@ -62,12 +69,20 @@ const EventDetailsModal = ({
   const maxRegistrations = event.totalTeams * playersPerTeam;
 
   const disableCreateTeamsButton =
-    isOrganizer && event.registrations.length < maxRegistrations;
+    isOrganizer && registrations.length < maxRegistrations;
 
   const canRegister =
     role === 'participant' &&
-    event.status === EventStatus.OPEN &&
-    event.registrations.length < maxRegistrations;
+    event.status === 'OPEN' &&
+    registrations.length < maxRegistrations;
+
+  const maleCount = event.registrations.filter(
+    (player) => player.gender === 'Male',
+  ).length;
+
+  const femaleCount = event.registrations.filter(
+    (player) => player.gender === 'Female',
+  ).length;
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
@@ -146,16 +161,16 @@ const EventDetailsModal = ({
                   <Text style={styles.emptyText}>
                     {APP_STRINGS.eventScreen.noTeamsRequired}
                   </Text>
-                ) : event.teams.length ? (
+                ) : teams.length ? (
                   <FlatList
-                    data={event.teams}
+                    data={teams}
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => (
                       <MyTeamCard
                         logo={<Users color={colors.appBackground} />}
                         name={item.name}
-                        members={item.players.map((player) => player.name)}
+                        members={item.players.map((p) => p.name)}
                         sport={event.sport}
                         wins={0}
                         losses={0}
@@ -190,14 +205,21 @@ const EventDetailsModal = ({
 
             {activeTab === 'SCHEDULES' && (
               <>
-                {event.fixtures.length ? (
+                {fixtures.length ? (
                   <FlatList
-                    data={event.fixtures}
+                    data={fixtures}
                     keyExtractor={(item) => item.id}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item }) => (
                       <LiveMatchesCard
-                        gameName={getRoundName(item.round, event.totalTeams)}
+                        gameName={getRoundName(
+                          item.round,
+                          event.registrations.find(
+                            (player) => player.name === item.teamA,
+                          )?.gender === 'Female'
+                            ? femaleCount
+                            : maleCount,
+                        )}
                         firstTeam={item.teamA}
                         secondTeam={item.teamB}
                         firstTeamPoints={item.scoreA}

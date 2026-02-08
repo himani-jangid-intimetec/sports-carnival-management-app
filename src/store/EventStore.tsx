@@ -11,7 +11,6 @@ import { MOCK_EVENTS } from '../constants/MockEvents';
 
 type EventContextType = {
   events: Event[];
-
   createEvent: (event: Event) => void;
   updateEvent: (event: Event) => void;
   deleteEvent: (eventId: string) => void;
@@ -23,31 +22,16 @@ type EventContextType = {
     formats: FormatType[],
   ) => void;
 
-  closeRegistration: (eventId: string) => void;
-  extendRegistration: (eventId: string, newDeadline: string) => void;
-
-  updateFixtureStatus: (
-    eventId: string,
-    fixtureId: string,
-    status: MatchStatus,
-  ) => void;
-
-  updateFixtureScore: (
-    eventId: string,
-    fixtureId: string,
-    scoreA: number,
-    scoreB: number,
-  ) => void;
-
-  completeFixture: (
-    eventId: string,
-    fixtureId: string,
-    scoreA: number,
-    scoreB: number,
-  ) => void;
+  createTeams: (eventId: string) => void;
+  createFixtures: (eventId: string) => void;
 };
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
+
+const generateFixtureId = () =>
+  `fix-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+
+const nextPowerOfTwo = (n: number) => Math.pow(2, Math.ceil(Math.log2(n)));
 
 export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -97,68 +81,27 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
-  const closeRegistration = (eventId: string) => {
+  const createTeams = (eventId: string) => {
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        const genders: GenderType[] = [GenderType.Male, GenderType.Female];
-        const formats = event.formats ?? [
-          FormatType.Singles,
-          FormatType.Doubles,
-        ];
-        const minRequired = Math.ceil(event.totalTeams * 0.2);
-        const abandonedCategories: string[] = [];
+        const teams: Team[] = [];
+        let teamIndex = 1;
 
-        genders.forEach((gender) => {
-          formats.forEach((format) => {
-            const participantCount = event.registrations.filter(
-              (player) =>
-                player.gender === gender && player.formats?.includes(format),
-            ).length;
+        const buildTeams = (players: Registration[]) => {
+          for (let index = 0; index + 1 < players.length; index += 2) {
+            if (teams.length >= event.totalTeams) break;
 
-            if (participantCount < minRequired) {
-              abandonedCategories.push(`${gender}-${format}`);
-            }
-          });
-        });
+            teams.push({
+              id: teamIndex.toString(),
+              name: `Team ${teamIndex}`,
+              players: players.slice(index, index + 2),
+              gender: players[index].gender,
+            });
 
-        const totalCategories = genders.length * formats.length;
-        const allAbandoned = abandonedCategories.length === totalCategories;
-
-        return {
-          ...event,
-          status: allAbandoned ? EventStatus.CANCELLED : EventStatus.UPCOMING,
-          abandonedCategories,
-        };
-      }),
-    );
-  };
-
-  const extendRegistration = (eventId: string, newDeadline: string) => {
-    setEvents((prev) =>
-      prev.map((event) =>
-        event.id === eventId
-          ? { ...event, registrationDeadline: newDeadline }
-          : event,
-      ),
-    );
-  };
-
-  const updateFixtureStatus = (
-    eventId: string,
-    fixtureId: string,
-    status: MatchStatus,
-  ) => {
-    setEvents((prev) =>
-      prev.map((event) => {
-        if (event.id !== eventId) return event;
-
-        return {
-          ...event,
-          fixtures: event.fixtures.map((fixture) =>
-            fixture.id === fixtureId ? { ...fixture, status } : fixture,
-          ),
+            teamIndex++;
+          }
         };
       }),
     );
@@ -184,59 +127,104 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
-  const completeFixture = (
-    eventId: string,
-    fixtureId: string,
-    scoreA: number,
-    scoreB: number,
-  ) => {
+  const generateBracket = (names: string[]): Fixture[] => {
+    const shuffled = [...names].sort(() => Math.random() - 0.5);
+    const fixtures: Fixture[] = [];
+
+    const targetSize = nextPowerOfTwo(shuffled.length);
+    const byes = targetSize - shuffled.length;
+
+    const players: (string | null)[] = [...shuffled];
+
+    for (let index = 0; index < byes; index++) {
+      players.push(null);
+    }
+
+    let round = 1;
+    let current = players;
+
+    while (current.length > 1) {
+      const nextRound: (string | null)[] = [];
+
+      for (let index = 0; index < current.length; index += 2) {
+        const a = current[index];
+        const b = current[index + 1];
+
+        if (a && !b) {
+          nextRound.push(a);
+          continue;
+        }
+        if (!a && b) {
+          nextRound.push(b);
+          continue;
+        }
+        if (!a && !b) continue;
+
+        fixtures.push({
+          id: generateFixtureId(),
+          teamA: a,
+          teamB: b,
+          scoreA: 0,
+          scoreB: 0,
+          round,
+          time: new Date().toISOString(),
+          status: 'UPCOMING',
+        });
+
+        nextRound.push(null);
+      }
+
+      current = nextRound;
+      round++;
+    }
+
+    return fixtures;
+  };
+
+  const createFixtures = (eventId: string) => {
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        const currentFixture = event.fixtures.find(
-          (fixture) => fixture.id === fixtureId,
-        );
-        if (!currentFixture) return event;
+        let fixtures: Fixture[] = [];
 
-        const winner =
-          scoreA > scoreB ? currentFixture.teamA : currentFixture.teamB;
+        if (event.format === '1v1') {
+          const males = event.registrations
+            .filter((player) => player.gender === 'Male')
+            .map((player) => player.name);
 
-        const updatedFixtures: Fixture[] = event.fixtures.map((fixture) =>
-          fixture.id === fixtureId
-            ? {
-                ...fixture,
-                scoreA,
-                scoreB,
-                status: MatchStatus.COMPLETED,
-                winner,
-              }
-            : fixture,
-        );
+          const females = event.registrations
+            .filter((player) => player.gender === 'Female')
+            .map((player) => player.name);
 
-        const nextRound = currentFixture.round + 1;
-        const nextBracketPosition = Math.floor(
-          currentFixture.bracketPosition / 2,
-        );
-        const isTeamA = currentFixture.bracketPosition % 2 === 0;
+          if (males.length >= 2) {
+            fixtures = fixtures.concat(generateBracket(males));
+          }
 
-        const nextFixtureIndex = updatedFixtures.findIndex(
-          (fixture) =>
-            fixture.round === nextRound &&
-            fixture.bracketPosition === nextBracketPosition &&
-            fixture.gender === currentFixture.gender &&
-            fixture.format === currentFixture.format,
-        );
+          if (females.length >= 2) {
+            fixtures = fixtures.concat(generateBracket(females));
+          }
+        } else {
+          if (!event.teamsCreated) return event;
 
-        if (nextFixtureIndex !== -1) {
-          const nextFixture = updatedFixtures[nextFixtureIndex];
+          const males = event.teams
+            .filter((team) => team.gender === 'Male')
+            .map((team) => team.name);
 
-          updatedFixtures[nextFixtureIndex] = {
-            ...nextFixture,
-            teamA: isTeamA ? winner : nextFixture.teamA,
-            teamB: !isTeamA ? winner : nextFixture.teamB,
-          };
+          const females = event.teams
+            .filter((team) => team.gender === 'Female')
+            .map((team) => team.name);
+
+          if (males.length >= 2) {
+            fixtures = fixtures.concat(generateBracket(males));
+          }
+
+          if (females.length >= 2) {
+            fixtures = fixtures.concat(generateBracket(females));
+          }
         }
+
+        if (!fixtures.length) return event;
 
         return {
           ...event,
@@ -254,11 +242,8 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
         updateEvent,
         deleteEvent,
         registerParticipant,
-        closeRegistration,
-        extendRegistration,
-        updateFixtureStatus,
-        updateFixtureScore,
-        completeFixture,
+        createTeams,
+        createFixtures,
       }}
     >
       {children}
@@ -268,8 +253,6 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useEventStore = () => {
   const ctx = useContext(EventContext);
-  if (!ctx) {
-    throw new Error('useEventStore must be used inside EventProvider');
-  }
+  if (!ctx) throw new Error('useEventStore must be used inside EventProvider');
   return ctx;
 };
