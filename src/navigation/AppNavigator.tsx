@@ -32,7 +32,7 @@ export type RootStackParamList = {
   };
   CategoryDetails: {
     eventId: string;
-    gender: GenderType | 'Mixed';
+    gender: GenderType;
     format: FormatType;
     role: RoleType;
   };

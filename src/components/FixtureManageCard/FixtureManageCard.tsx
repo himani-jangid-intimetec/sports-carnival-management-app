@@ -11,7 +11,7 @@ import {
 } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { styles } from './FixtureManageCardStyles';
-import { Fixture } from '../../models/Event';
+import { Fixture, FormatType } from '../../models/Event';
 import { APP_STRINGS } from '../../constants/AppStrings';
 import { useFixtureManageCardViewModel } from './FixtureManageCardViewModel';
 
@@ -39,7 +39,7 @@ const FixtureManageCard = ({
     onComplete,
   });
 
-  const TeamIcon = fixture.format === 'Doubles' ? Users : User;
+  const TeamIcon = fixture.format === FormatType.Doubles ? Users : User;
 
   return (
     <View style={styles.container}>

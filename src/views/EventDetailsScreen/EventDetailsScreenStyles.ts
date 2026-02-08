@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   backButton: {
@@ -31,7 +32,7 @@ export const styles = StyleSheet.create({
   },
   description: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     lineHeight: 20,
     marginTop: 8,
   },
@@ -45,11 +46,11 @@ export const styles = StyleSheet.create({
   },
   emptyText: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
   },
   errorText: {
     color: colors.error,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     marginTop: 40,
     textAlign: 'center',
   },
@@ -97,7 +98,7 @@ export const styles = StyleSheet.create({
   },
   infoText: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     marginLeft: 10,
   },
   prizeEmoji: {
@@ -118,7 +119,7 @@ export const styles = StyleSheet.create({
   },
   prizePosition: {
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontWeight: '600',
   },
   prizeValue: {

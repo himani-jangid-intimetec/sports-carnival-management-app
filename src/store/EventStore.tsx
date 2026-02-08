@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import {
   Event,
+  EventStatus,
   GenderType,
   FormatType,
   MatchStatus,
@@ -101,8 +102,11 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        const genders: ('Male' | 'Female')[] = ['Male', 'Female'];
-        const formats = event.formats ?? ['Singles', 'Doubles'];
+        const genders: GenderType[] = [GenderType.Male, GenderType.Female];
+        const formats = event.formats ?? [
+          FormatType.Singles,
+          FormatType.Doubles,
+        ];
         const minRequired = Math.ceil(event.totalTeams * 0.2);
         const abandonedCategories: string[] = [];
 
@@ -124,7 +128,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 
         return {
           ...event,
-          status: allAbandoned ? 'CANCELLED' : 'UPCOMING',
+          status: allAbandoned ? EventStatus.CANCELLED : EventStatus.UPCOMING,
           abandonedCategories,
         };
       }),
@@ -204,7 +208,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
                 ...fixture,
                 scoreA,
                 scoreB,
-                status: 'COMPLETED' as MatchStatus,
+                status: MatchStatus.COMPLETED,
                 winner,
               }
             : fixture,

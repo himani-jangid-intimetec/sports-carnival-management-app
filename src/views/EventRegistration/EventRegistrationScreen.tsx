@@ -9,7 +9,7 @@ import { RootStackParamList } from '../../navigation/AppNavigator';
 import { APP_STRINGS } from '../../constants/AppStrings';
 import { styles } from './EventRegistrationScreenStyles';
 import { useEventRegistrationViewModel } from '../../viewModels/EventRegistrationViewModel';
-import { FormatType } from '../../models/Event';
+import { FormatType, GenderType } from '../../models/Event';
 
 type EventRegistrationProps = NativeStackScreenProps<
   RootStackParamList,
@@ -46,12 +46,12 @@ const EventRegistrationScreen = ({
 
         <Text style={styles.label}>{APP_STRINGS.placeHolders.gender}</Text>
         <View style={styles.formatContainer}>
-          {['Male', 'Female'].map((item) => {
+          {[GenderType.Male, GenderType.Female].map((item) => {
             const isActive = viewModel.gender === item;
             return (
               <Pressable
                 key={item}
-                onPress={() => viewModel.setGender(item as 'Male' | 'Female')}
+                onPress={() => viewModel.setGender(item)}
                 style={[styles.formatTab, isActive && styles.activeFormatTab]}
               >
                 <Text
@@ -78,16 +78,10 @@ const EventRegistrationScreen = ({
             const isSelected = viewModel.selectedFormats.includes(format);
             const isFull =
               viewModel.gender !== '' &&
-              viewModel.isCategoryFull(
-                viewModel.gender as 'Male' | 'Female',
-                format,
-              );
+              viewModel.isCategoryFull(viewModel.gender, format);
             const count =
               viewModel.gender !== ''
-                ? viewModel.getCategoryCount(
-                    viewModel.gender as 'Male' | 'Female',
-                    format,
-                  )
+                ? viewModel.getCategoryCount(viewModel.gender, format)
                 : 0;
 
             return (
@@ -122,7 +116,7 @@ const EventRegistrationScreen = ({
                       isFull && styles.formatOptionDescDisabled,
                     ]}
                   >
-                    {format === 'Singles'
+                    {format === FormatType.Singles
                       ? APP_STRINGS.eventScreen.individualMatches
                       : APP_STRINGS.eventScreen.teamOfPlayers}
                   </Text>

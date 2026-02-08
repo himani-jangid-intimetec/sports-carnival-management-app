@@ -1,11 +1,17 @@
 import { View, Text, Pressable } from 'react-native';
 import { styles } from './EventStatusTabsStyle';
+import { EventStatusTab } from '../../models/Event';
 
-const TABS = ['ALL', 'LIVE', 'UPCOMING', 'OPEN'] as const;
+const TABS: EventStatusTab[] = [
+  EventStatusTab.ALL,
+  EventStatusTab.LIVE,
+  EventStatusTab.UPCOMING,
+  EventStatusTab.OPEN,
+];
 
 type EventStatusTabProps = {
-  activeTab: string;
-  onChange: (tab: string) => void;
+  activeTab: EventStatusTab;
+  onChange: (tab: EventStatusTab) => void;
 };
 
 const EventStatusTabs = ({ activeTab, onChange }: EventStatusTabProps) => {

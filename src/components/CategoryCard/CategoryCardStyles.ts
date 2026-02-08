@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   abandonedBadge: {
     backgroundColor: colors.textSecondary + '30',
     borderRadius: 8,
     color: colors.textSecondary,
-    fontSize: 11,
+    fontSize: fontsSize.small,
     fontWeight: '600',
     marginLeft: 8,
     overflow: 'hidden',
@@ -57,7 +58,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.error + '20',
     borderRadius: 8,
     color: colors.error,
-    fontSize: 11,
+    fontSize: fontsSize.small,
     fontWeight: '600',
     marginLeft: 8,
     overflow: 'hidden',
@@ -74,7 +75,7 @@ export const styles = StyleSheet.create({
   },
   title: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: '600',
   },
   titleRow: {

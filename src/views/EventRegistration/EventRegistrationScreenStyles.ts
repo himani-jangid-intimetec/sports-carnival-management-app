@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   activeFormatTab: {
@@ -63,7 +64,7 @@ export const styles = StyleSheet.create({
   },
   formatOptionTitle: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: '600',
     marginBottom: 4,
   },
@@ -106,18 +107,18 @@ export const styles = StyleSheet.create({
   },
   heading: {
     color: colors.textPrimary,
-    fontSize: 20,
+    fontSize: fontsSize.large,
     fontWeight: 'bold',
   },
   label: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     marginBottom: 6,
     marginTop: 20,
   },
   slotsText: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: fontsSize.primary,
     marginTop: 4,
   },
   slotsTextFull: {

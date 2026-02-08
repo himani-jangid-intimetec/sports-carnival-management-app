@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Event, FormatType } from '../models/Event';
+import { Event, EventStatus, FormatType } from '../models/Event';
 import { validationMessages } from '../constants/ValidationMessages';
 import { useEventStore } from '../store/EventStore';
 import { useAuthStore } from '../store/AuthStore';
@@ -64,7 +64,7 @@ export const useEventFormViewModel = ({
   const [name, setName] = useState(isEdit ? event!.name : '');
   const [sport, setSport] = useState(isEdit ? event!.sport : '');
   const [selectedFormats, setSelectedFormats] = useState<FormatType[]>(
-    isEdit ? event!.formats : ['Singles'],
+    isEdit ? event!.formats : [FormatType.Singles],
   );
   const [date, setDate] = useState(isEdit ? event!.date : '');
   const [time, setTime] = useState(isEdit ? event!.time : '');
@@ -96,7 +96,7 @@ export const useEventFormViewModel = ({
     setSport(value);
 
     if (value.toLowerCase() === 'chess') {
-      setSelectedFormats(['Singles']);
+      setSelectedFormats([FormatType.Singles]);
     }
   };
 
@@ -117,7 +117,7 @@ export const useEventFormViewModel = ({
       newErrors.formats = validationMessages.REQUIRED_FORMAT;
     if (
       sport.toLowerCase() === 'chess' &&
-      selectedFormats.includes('Doubles')
+      selectedFormats.includes(FormatType.Doubles)
     ) {
       newErrors.formats = validationMessages.INVALID_CHESS_FORMAT;
     }
@@ -158,7 +158,7 @@ export const useEventFormViewModel = ({
       venue,
       totalTeams: Number(totalTeams),
 
-      status: event?.status ?? 'OPEN',
+      status: event?.status ?? EventStatus.OPEN,
       registeredTeams: event?.registeredTeams ?? 0,
       registrationDeadline: event?.registrationDeadline ?? '',
 

@@ -1,17 +1,17 @@
 import { Platform, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
-import { fonts } from '../../theme/fonts';
+import { fonts, fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   cardHeadingSubText: {
     color: colors.textSecondary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     marginTop: 5,
     textAlign: 'center',
   },
   cardHeadingText: {
     color: colors.textPrimary,
-    fontSize: 30,
+    fontSize: fontsSize.extraLarge,
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -41,12 +41,12 @@ export const styles = StyleSheet.create({
   },
   footerButtonText: {
     color: colors.primary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: 'bold',
   },
   footerText: {
     color: colors.textSecondary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
   },
   headingContainer: {
     alignItems: 'center',
@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   headingSubText: {
     color: colors.textSecondary,
     fontFamily: fonts.subHeading,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     marginTop: 3,
   },
   headingText: {

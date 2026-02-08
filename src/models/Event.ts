@@ -1,14 +1,51 @@
-export type EventStatus =
-  | 'OPEN'
-  | 'UPCOMING'
-  | 'LIVE'
-  | 'COMPLETED'
-  | 'CANCELLED';
+export enum EventStatus {
+  OPEN = 'OPEN',
+  UPCOMING = 'UPCOMING',
+  LIVE = 'LIVE',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
 
-export type CategoryStatus = 'ACTIVE' | 'ABANDONED';
+export enum CategoryStatus {
+  ACTIVE = 'ACTIVE',
+  ABANDONED = 'ABANDONED',
+}
 
-export type GenderType = 'Male' | 'Female' | 'Mixed';
-export type FormatType = 'Singles' | 'Doubles';
+export enum GenderType {
+  Male = 'Male',
+  Female = 'Female',
+  Mixed = 'Mixed',
+}
+
+export enum FormatType {
+  Singles = 'Singles',
+  Doubles = 'Doubles',
+}
+
+export enum MatchStatus {
+  UPCOMING = 'UPCOMING',
+  LIVE = 'LIVE',
+  COMPLETED = 'COMPLETED',
+}
+
+export enum UpcomingMatchStatus {
+  UPCOMING = 'UPCOMING',
+  REGISTRATION_OPEN = 'REGISTRATION_OPEN',
+}
+
+export enum FixtureTabType {
+  ALL = 'ALL',
+  LIVE = 'LIVE',
+  UPCOMING = 'UPCOMING',
+  COMPLETED = 'COMPLETED',
+}
+
+export enum EventStatusTab {
+  ALL = 'ALL',
+  LIVE = 'LIVE',
+  UPCOMING = 'UPCOMING',
+  OPEN = 'OPEN',
+}
 
 export interface Registration {
   id: string;
@@ -24,8 +61,6 @@ export interface Team {
   gender: GenderType;
   format: FormatType;
 }
-
-export type MatchStatus = 'UPCOMING' | 'LIVE' | 'COMPLETED';
 
 export interface Fixture {
   id: string;

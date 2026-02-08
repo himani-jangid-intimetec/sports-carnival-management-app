@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Fixture } from '../../models/Event';
+import { Fixture, MatchStatus } from '../../models/Event';
 
 type UseFixtureManageCardVMProps = {
   fixture: Fixture;
@@ -18,9 +18,9 @@ export const useFixtureManageCardViewModel = ({
   const [tempScoreA, setTempScoreA] = useState(fixture.scoreA);
   const [tempScoreB, setTempScoreB] = useState(fixture.scoreB);
 
-  const isLive = fixture.status === 'LIVE';
-  const isUpcoming = fixture.status === 'UPCOMING';
-  const isCompleted = fixture.status === 'COMPLETED';
+  const isLive = fixture.status === MatchStatus.LIVE;
+  const isUpcoming = fixture.status === MatchStatus.UPCOMING;
+  const isCompleted = fixture.status === MatchStatus.COMPLETED;
 
   const isTBD = fixture.teamA === 'TBD' || fixture.teamB === 'TBD';
 

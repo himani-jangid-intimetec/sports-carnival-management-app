@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 const ACTION_CARD_GAP = 12;
 const HORIZONTAL_PADDING = 16;
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
   },
   greeting: {
     color: colors.textPrimary,
-    fontSize: 30,
+    fontSize: fontsSize.extraLarge,
     fontWeight: 'bold',
     paddingTop: 5,
   },

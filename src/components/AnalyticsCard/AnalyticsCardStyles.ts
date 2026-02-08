@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 const CARD_GAP = 12;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
   },
   data: {
     color: colors.textPrimary,
-    fontSize: 30,
+    fontSize: fontsSize.extraLarge,
     fontWeight: 'bold',
   },
   iconContainer: {
@@ -30,6 +31,6 @@ export const styles = StyleSheet.create({
   },
   title: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
   },
 });

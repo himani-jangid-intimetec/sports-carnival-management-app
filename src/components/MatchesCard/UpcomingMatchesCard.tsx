@@ -4,8 +4,7 @@ import { Calendar, MapPin, Users } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { styles } from './UpcomingMatchesCardStyles';
 import { APP_STRINGS } from '../../constants/AppStrings';
-
-type UpcomingMatchStatus = 'UPCOMING' | 'REGISTRATION_OPEN';
+import { UpcomingMatchStatus } from '../../models/Event';
 
 type UpcomingMatchesCardProps = {
   sport: string;
@@ -38,16 +37,20 @@ const UpcomingMatchesCard = ({
         <View
           style={[
             styles.statusBadge,
-            status === 'UPCOMING' ? styles.liveBadge : styles.registrationBadge,
+            status === UpcomingMatchStatus.UPCOMING
+              ? styles.liveBadge
+              : styles.registrationBadge,
           ]}
         >
           <Text
             style={[
               styles.statusText,
-              status === 'UPCOMING' ? styles.liveText : styles.registrationText,
+              status === UpcomingMatchStatus.UPCOMING
+                ? styles.liveText
+                : styles.registrationText,
             ]}
           >
-            {status === 'UPCOMING'
+            {status === UpcomingMatchStatus.UPCOMING
               ? APP_STRINGS.eventScreen.upcoming
               : APP_STRINGS.eventScreen.registrationOpen}
           </Text>

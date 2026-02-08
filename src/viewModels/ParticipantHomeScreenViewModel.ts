@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/AuthStore';
 import { useEventStore } from '../store/EventStore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { Team, Fixture } from '../models/Event';
+import { Team, Fixture, MatchStatus } from '../models/Event';
 
 type MyTeamData = {
   team: Team;
@@ -61,7 +61,7 @@ export const useParticipantHomeViewModel = (
           fixture.teamA.toLowerCase() === user.name.toLowerCase() ||
           fixture.teamB.toLowerCase() === user.name.toLowerCase();
 
-        if (isUserInvolved && fixture.status !== 'COMPLETED') {
+        if (isUserInvolved && fixture.status !== MatchStatus.COMPLETED) {
           matches.push({
             fixture,
             eventName: event.name,
@@ -96,7 +96,7 @@ export const useParticipantHomeViewModel = (
           fixture.teamA.toLowerCase() === user.name.toLowerCase() ||
           fixture.teamB.toLowerCase() === user.name.toLowerCase();
 
-        if (isUserInvolved && fixture.status === 'COMPLETED') {
+        if (isUserInvolved && fixture.status === MatchStatus.COMPLETED) {
           count++;
         }
       });
@@ -111,7 +111,7 @@ export const useParticipantHomeViewModel = (
 
     events.forEach((event) => {
       event.fixtures.forEach((fixture) => {
-        if (fixture.status !== 'COMPLETED' || !fixture.winner) return;
+        if (fixture.status !== MatchStatus.COMPLETED || !fixture.winner) return;
 
         const isWinner =
           userTeamNames.includes(fixture.winner) ||

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   container: {
@@ -14,20 +15,20 @@ export const styles = StyleSheet.create({
 
   heading: {
     color: colors.textPrimary,
-    fontSize: 30,
+    fontSize: fontsSize.extraLarge,
     fontWeight: 'bold',
   },
 
   headingParticipant: {
     color: colors.textPrimary,
-    fontSize: 30,
+    fontSize: fontsSize.extraLarge,
     fontWeight: 'bold',
     marginVertical: 20,
   },
 
   noEventStyle: {
     color: colors.textPrimary,
-    fontSize: 30,
+    fontSize: fontsSize.extraLarge,
     fontWeight: 'bold',
     marginVertical: 20,
     textAlign: 'center',

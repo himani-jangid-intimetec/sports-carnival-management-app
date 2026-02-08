@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   activeFixtureTab: {
@@ -40,13 +41,13 @@ export const styles = StyleSheet.create({
   },
   emptyText: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     marginBottom: 16,
     textAlign: 'center',
   },
   errorText: {
     color: colors.error,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     marginTop: 40,
     textAlign: 'center',
   },
@@ -68,7 +69,7 @@ export const styles = StyleSheet.create({
   },
   fixtureTabText: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: fontsSize.primary,
     fontWeight: '500',
   },
   fixturesContainer: {

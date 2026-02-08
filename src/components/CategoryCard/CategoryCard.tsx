@@ -4,11 +4,12 @@ import { styles } from './CategoryCardStyles';
 import { useCategoryCardViewModel } from './CategoryCardViewModel';
 import { colors } from '../../theme/colors';
 import { APP_STRINGS } from '../../constants/AppStrings';
+import { FormatType, GenderType } from '../../models/Event';
 
 type CategoryCardProps = {
   title: string;
-  format: 'Singles' | 'Doubles';
-  gender: 'Male' | 'Female' | 'Mixed';
+  format: FormatType;
+  gender: GenderType;
   participantCount: number;
   totalParticipants: number;
   teamCount?: number;

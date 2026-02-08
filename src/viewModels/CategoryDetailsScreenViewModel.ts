@@ -6,14 +6,20 @@ import { RootStackParamList } from '../navigation/AppNavigator';
 import { useEventStore } from '../store/EventStore';
 import { useAuthStore } from '../store/AuthStore';
 import { APP_STRINGS } from '../constants/AppStrings';
-import { Fixture, FormatType, GenderType, Team } from '../models/Event';
+import {
+  EventStatus,
+  Fixture,
+  FixtureTabType,
+  FormatType,
+  GenderType,
+  MatchStatus,
+  Team,
+} from '../models/Event';
 
 type CategoryDetailsRouteProp = RouteProp<
   RootStackParamList,
   'CategoryDetails'
 >;
-
-export type FixtureTabType = 'ALL' | 'LIVE' | 'UPCOMING' | 'COMPLETED';
 
 const nextPowerOfTwo = (n: number) => Math.pow(2, Math.ceil(Math.log2(n)));
 const generateFixtureId = () =>
@@ -42,14 +48,15 @@ export const useCategoryDetailsViewModel = () => {
     if (role !== 'participant') {
       tabs.push('PARTICIPANTS');
     }
-    if (format === 'Doubles') tabs.push('TEAMS');
+    if (format === FormatType.Doubles) tabs.push('TEAMS');
     tabs.push('FIXTURES');
     return tabs;
   })();
 
   const [activeMainTab, setActiveMainTab] = useState(mainTabs[0]);
-  const [activeFixtureTab, setActiveFixtureTab] =
-    useState<FixtureTabType>('ALL');
+  const [activeFixtureTab, setActiveFixtureTab] = useState<FixtureTabType>(
+    FixtureTabType.ALL,
+  );
   const [searchQuery, setSearchQuery] = useState('');
 
   const isAdminOrOrganizer = role === 'admin' || role === 'organizer';
@@ -58,7 +65,7 @@ export const useCategoryDetailsViewModel = () => {
     role === 'admin' ||
     (role === 'organizer' && event?.createdBy === user?.email);
 
-  const isMixedCategory = gender === 'Mixed';
+  const isMixedCategory = gender === GenderType.Mixed;
 
   const participants = (() => {
     if (!event) return [];
@@ -90,7 +97,8 @@ export const useCategoryDetailsViewModel = () => {
     if (!event) return [];
     if (isMixedCategory) {
       return event.fixtures.filter(
-        (fixture) => fixture.gender === 'Mixed' && fixture.format === format,
+        (fixture) =>
+          fixture.gender === GenderType.Mixed && fixture.format === format,
       );
     }
     return event.fixtures.filter(
@@ -100,8 +108,11 @@ export const useCategoryDetailsViewModel = () => {
 
   const filteredFixtures = (() => {
     let result = fixtures;
-    if (activeFixtureTab !== 'ALL') {
-      result = result.filter((fixture) => fixture.status === activeFixtureTab);
+    if (activeFixtureTab !== FixtureTabType.ALL) {
+      result = result.filter(
+        (fixture) =>
+          fixture.status === (activeFixtureTab as unknown as MatchStatus),
+      );
     }
     if (searchQuery.trim()) {
       result = result.filter(
@@ -131,7 +142,9 @@ export const useCategoryDetailsViewModel = () => {
     participants.length >= minRequiredForTeams && !isAbandoned;
 
   const canCreateFixtures =
-    format === 'Singles' ? participants.length >= 2 : teams.length >= 2;
+    format === FormatType.Singles
+      ? participants.length >= 2
+      : teams.length >= 2;
 
   const generateBracket = (
     names: string[],
@@ -167,7 +180,10 @@ export const useCategoryDetailsViewModel = () => {
         round: 1,
         totalRounds,
         time: new Date().toISOString(),
-        status: teamA === 'BYE' || teamB === 'BYE' ? 'COMPLETED' : 'UPCOMING',
+        status:
+          teamA === 'BYE' || teamB === 'BYE'
+            ? MatchStatus.COMPLETED
+            : MatchStatus.UPCOMING,
         winner: teamA === 'BYE' ? teamB : teamB === 'BYE' ? teamA : undefined,
         gender: bracketGender,
         format: bracketFormat,
@@ -195,10 +211,10 @@ export const useCategoryDetailsViewModel = () => {
         let teamA = 'TBD';
         let teamB = 'TBD';
 
-        if (prevMatch1?.status === 'COMPLETED' && prevMatch1.winner) {
+        if (prevMatch1?.status === MatchStatus.COMPLETED && prevMatch1.winner) {
           teamA = prevMatch1.winner;
         }
-        if (prevMatch2?.status === 'COMPLETED' && prevMatch2.winner) {
+        if (prevMatch2?.status === MatchStatus.COMPLETED && prevMatch2.winner) {
           teamB = prevMatch2.winner;
         }
 
@@ -211,7 +227,7 @@ export const useCategoryDetailsViewModel = () => {
           round,
           totalRounds,
           time: new Date().toISOString(),
-          status: 'UPCOMING',
+          status: MatchStatus.UPCOMING,
           gender: bracketGender,
           format: bracketFormat,
           bracketPosition: index,
@@ -262,7 +278,7 @@ export const useCategoryDetailsViewModel = () => {
   const handleCreateTeams = () => {
     if (!event) return;
 
-    if (format === 'Singles') {
+    if (format === FormatType.Singles) {
       Alert.alert(APP_STRINGS.eventScreen.noTeamsRequired);
       return;
     }
@@ -305,7 +321,7 @@ export const useCategoryDetailsViewModel = () => {
     }
 
     const names =
-      format === 'Singles'
+      format === FormatType.Singles
         ? participants.map((player) => player.name)
         : teams.map((team) => team.name);
 
@@ -324,7 +340,7 @@ export const useCategoryDetailsViewModel = () => {
       ...event,
       fixtures: [...otherFixtures, ...newFixtures],
       fixturesCreated: true,
-      status: 'LIVE',
+      status: EventStatus.LIVE,
     });
   };
 
@@ -355,7 +371,8 @@ export const useCategoryDetailsViewModel = () => {
     getRoundName,
     handleCreateTeams,
     handleCreateFixtures,
-    handleSetLive: (id: string) => updateFixtureStatus(eventId, id, 'LIVE'),
+    handleSetLive: (id: string) =>
+      updateFixtureStatus(eventId, id, MatchStatus.LIVE),
     handleUpdateScore: (id: string, a: number, b: number) =>
       updateFixtureScore(eventId, id, a, b),
     handleCompleteFixture: (id: string, a: number, b: number) =>

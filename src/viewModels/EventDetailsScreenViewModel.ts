@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { FormatType, GenderType } from '../models/Event';
+import { EventStatus, FormatType, GenderType } from '../models/Event';
 import { useEventStore } from '../store/EventStore';
 import { useAuthStore } from '../store/AuthStore';
 import { APP_STRINGS } from '../constants/AppStrings';
@@ -45,16 +45,20 @@ export const useEventDetailsViewModel = () => {
     const abandonedCategories = event?.abandonedCategories ?? [];
 
     const cats: Category[] = [];
-    const genders: GenderType[] = ['Male', 'Female'];
-    const formats: FormatType[] = event.formats ?? ['Singles', 'Doubles'];
+    const genders: GenderType[] = [GenderType.Male, GenderType.Female];
+    const formats: FormatType[] = event.formats ?? [
+      FormatType.Singles,
+      FormatType.Doubles,
+    ];
 
-    if (isChess && formats.includes('Singles')) {
+    if (isChess && formats.includes(FormatType.Singles)) {
       const allSinglesParticipants = event.registrations.filter((player) =>
-        player.formats?.includes('Singles'),
+        player.formats?.includes(FormatType.Singles),
       );
       const mixedTeams = event.teams.filter(
         (team) =>
-          team.format === 'Singles' && team.gender === ('Mixed' as GenderType),
+          team.format === FormatType.Singles &&
+          team.gender === GenderType.Mixed,
       );
       const slotsFull =
         allSinglesParticipants.length >= totalParticipantsPerCategory * 2;
@@ -63,8 +67,8 @@ export const useEventDetailsViewModel = () => {
       cats.push({
         id: 'Mixed-Singles',
         title: 'Mixed Singles',
-        gender: 'Mixed' as GenderType,
-        format: 'Singles',
+        gender: GenderType.Mixed,
+        format: FormatType.Singles,
         participantCount: allSinglesParticipants.length,
         totalParticipants: totalParticipantsPerCategory * 2,
         teamCount: mixedTeams.length,
@@ -88,7 +92,7 @@ export const useEventDetailsViewModel = () => {
             `${gender}-${format}`,
           );
 
-          const genderLabel = gender === 'Male' ? "Men's" : "Women's";
+          const genderLabel = gender === GenderType.Male ? "Men's" : "Women's";
           cats.push({
             id: `${gender}-${format}`,
             title: `${genderLabel} ${format}`,
@@ -110,17 +114,20 @@ export const useEventDetailsViewModel = () => {
   const isAdminOrOrganizer = role === 'admin' || role === 'organizer';
   const isOwner = event?.createdBy === user?.email;
   const hasEventStarted =
-    event?.status === 'LIVE' || event?.status === 'COMPLETED';
+    event?.status === EventStatus.LIVE ||
+    event?.status === EventStatus.COMPLETED;
   const canEditOrDelete =
     (role === 'admin' || (role === 'organizer' && isOwner)) && !hasEventStarted;
   const areAllSlotsFull =
     categories.length > 0 && categories.every((cat) => cat.slotsFull);
   const canRegister =
-    role === 'participant' && event?.status === 'OPEN' && !areAllSlotsFull;
+    role === 'participant' &&
+    event?.status === EventStatus.OPEN &&
+    !areAllSlotsFull;
 
   const getRegisterButtonText = () => {
     if (areAllSlotsFull) return APP_STRINGS.eventScreen.slotsFull;
-    if (event?.status !== 'OPEN')
+    if (event?.status !== EventStatus.OPEN)
       return APP_STRINGS.eventScreen.registrationClosed;
     return APP_STRINGS.eventScreen.register;
   };

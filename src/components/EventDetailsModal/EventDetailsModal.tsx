@@ -9,7 +9,7 @@ import { colors } from '../../theme/colors';
 import MyTeamCard from '../MyTeamCard/MyTeamCard';
 import LiveMatchesCard from '../MatchesCard/LiveMatchesCard';
 import { useEventStore } from '../../store/EventStore';
-import { Event } from '../../models/Event';
+import { Event, EventStatus, FormatType } from '../../models/Event';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
@@ -57,7 +57,7 @@ const EventDetailsModal = ({
   const isOrganizer = role === 'organizer';
   const isAdminOrOrganizer = isAdmin || isOrganizer;
 
-  const has2v2Format = event.formats?.includes('Doubles');
+  const has2v2Format = event.formats?.includes(FormatType.Doubles);
   const playersPerTeam = has2v2Format ? 2 : 1;
   const maxRegistrations = event.totalTeams * playersPerTeam;
 
@@ -66,7 +66,7 @@ const EventDetailsModal = ({
 
   const canRegister =
     role === 'participant' &&
-    event.status === 'OPEN' &&
+    event.status === EventStatus.OPEN &&
     event.registrations.length < maxRegistrations;
 
   return (
@@ -167,7 +167,7 @@ const EventDetailsModal = ({
                   <>
                     {isAdminOrOrganizer &&
                       !event.teamsCreated &&
-                      event.status !== 'COMPLETED' &&
+                      event.status !== EventStatus.COMPLETED &&
                       onCreateTeams && (
                         <View style={styles.centerButton}>
                           <AppButton
@@ -219,7 +219,7 @@ const EventDetailsModal = ({
                   <>
                     {isAdminOrOrganizer &&
                       !event.fixturesCreated &&
-                      event.status !== 'COMPLETED' &&
+                      event.status !== EventStatus.COMPLETED &&
                       onCreateFixtures && (
                         <View style={styles.centerButton}>
                           <AppButton
@@ -292,14 +292,14 @@ const EventDetailsModal = ({
                   <AppButton
                     title={APP_STRINGS.eventScreen.edit}
                     onPress={onEdit}
-                    disabled={event.status === 'COMPLETED'}
+                    disabled={event.status === EventStatus.COMPLETED}
                   />
                 </View>
                 <View style={styles.buttonContainer}>
                   <AppButton
                     title={APP_STRINGS.eventScreen.delete}
                     onPress={onDelete}
-                    disabled={event.status === 'COMPLETED'}
+                    disabled={event.status === EventStatus.COMPLETED}
                   />
                 </View>
               </View>

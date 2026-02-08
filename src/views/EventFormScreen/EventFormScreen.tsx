@@ -68,10 +68,11 @@ const EventFormScreen = ({ route, navigation }: EventFormScreenProps) => {
             {APP_STRINGS.eventScreen.format}
           </Text>
           <View style={styles.formatOptions}>
-            {(['Singles', 'Doubles'] as FormatType[]).map((fmt) => {
+            {[FormatType.Singles, FormatType.Doubles].map((fmt) => {
               const isSelected = viewModel.selectedFormats.includes(fmt);
               const isDisabled =
-                viewModel.sport.toLowerCase() === 'chess' && fmt === 'Doubles';
+                viewModel.sport.toLowerCase() === 'chess' &&
+                fmt === FormatType.Doubles;
               return (
                 <Pressable
                   key={fmt}

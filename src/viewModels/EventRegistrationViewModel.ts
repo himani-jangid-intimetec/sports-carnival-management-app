@@ -22,12 +22,12 @@ export const useEventRegistrationViewModel = (
   );
 
   const [playerName, setPlayerName] = useState(user?.name ?? '');
-  const [gender, setGender] = useState<'Male' | 'Female' | ''>('');
+  const [gender, setGender] = useState<GenderType | ''>('');
   const [selectedFormats, setSelectedFormats] = useState<FormatType[]>([]);
 
   const availableFormats: FormatType[] = event?.formats ?? [
-    'Singles',
-    'Doubles',
+    FormatType.Singles,
+    FormatType.Doubles,
   ];
 
   const totalSlotsPerCategory = event?.totalTeams ?? 0;
@@ -55,8 +55,8 @@ export const useEventRegistrationViewModel = (
 
   const toggleFormat = (format: FormatType) => {
     if (gender && !selectedFormats.includes(format)) {
-      if (isCategoryFull(gender as GenderType, format)) {
-        const genderLabel = gender === 'Male' ? "Men's" : "Women's";
+      if (isCategoryFull(gender, format)) {
+        const genderLabel = gender === GenderType.Male ? "Men's" : "Women's";
         Alert.alert(
           APP_STRINGS.eventScreen.registrationClosed,
           `${genderLabel} ${format} category is full. Please choose another category.`,
@@ -72,7 +72,7 @@ export const useEventRegistrationViewModel = (
     );
   };
 
-  const handleGenderChange = (newGender: 'Male' | 'Female') => {
+  const handleGenderChange = (newGender: GenderType) => {
     setGender(newGender);
     setSelectedFormats((prev) =>
       prev.filter((format) => !isCategoryFull(newGender, format)),
@@ -87,11 +87,11 @@ export const useEventRegistrationViewModel = (
     if (!playerName || !gender || selectedFormats.length === 0) return;
 
     const fullCategories = selectedFormats.filter((format) =>
-      isCategoryFull(gender as GenderType, format),
+      isCategoryFull(gender, format),
     );
 
     if (fullCategories.length > 0) {
-      const genderLabel = gender === 'Male' ? "Men's" : "Women's";
+      const genderLabel = gender === GenderType.Male ? "Men's" : "Women's";
       Alert.alert(
         APP_STRINGS.eventScreen.registrationFailed,
         `${genderLabel} ${fullCategories.join(

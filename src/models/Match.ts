@@ -1,4 +1,6 @@
-export type MatchStatus = 'LIVE' | 'UPCOMING' | 'COMPLETED';
+import { MatchStatus } from './Event';
+
+export { MatchStatus };
 
 export type Match = {
   id: string;

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
-import { fonts } from '../../theme/fonts';
+import { fonts, fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   container: {
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
 
   errorText: {
     color: colors.error,
-    fontSize: 12,
+    fontSize: fontsSize.primary,
     marginTop: 4,
   },
 
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
 
   formatOptionText: {
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontWeight: '500',
   },
 
@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
 
   heading: {
     color: colors.textPrimary,
-    fontSize: 20,
+    fontSize: fontsSize.large,
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     height: 48,
     paddingHorizontal: 12,
   },
@@ -112,7 +112,7 @@ export const styles = StyleSheet.create({
 
   primaryText: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: '600',
   },
 });

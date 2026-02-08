@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   actionText: {
@@ -85,7 +86,7 @@ export const styles = StyleSheet.create({
 
   primaryBtnText: {
     color: colors.appBackground,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontWeight: 'bold',
   },
 
@@ -116,7 +117,7 @@ export const styles = StyleSheet.create({
   },
 
   statusText: {
-    fontSize: 11,
+    fontSize: fontsSize.small,
     fontWeight: 'bold',
   },
 
@@ -183,12 +184,12 @@ export const styles = StyleSheet.create({
 
   teamText: {
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
   },
 
   title: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: 'bold',
     marginTop: 10,
   },

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useEventStore } from '../../store/EventStore';
 import { APP_STRINGS } from '../../constants/AppStrings';
-import { Event } from '../../models/Event';
+import { Event, EventStatus } from '../../models/Event';
 
 export const useEventDetailsViewModel = (eventId: string) => {
   const { events } = useEventStore();
@@ -15,7 +15,7 @@ export const useEventDetailsViewModel = (eventId: string) => {
     return new Date(event.registrationDeadline) < new Date();
   }, [event]);
 
-  const isCompleted = event?.status === 'COMPLETED';
+  const isCompleted = event?.status === EventStatus.COMPLETED;
 
   const canRegister = useMemo(() => {
     if (!event) return false;

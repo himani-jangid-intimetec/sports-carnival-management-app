@@ -9,8 +9,14 @@ import { colors } from '../../theme/colors';
 import { styles } from './CategoryDetailsScreenStyles';
 import { APP_STRINGS } from '../../constants/AppStrings';
 import { useCategoryDetailsViewModel } from '../../viewModels/CategoryDetailsScreenViewModel';
+import { FixtureTabType, FormatType, GenderType } from '../../models/Event';
 
-export const FIXTURE_TABS = ['ALL', 'LIVE', 'UPCOMING', 'COMPLETED'] as const;
+const FIXTURE_TABS: FixtureTabType[] = [
+  FixtureTabType.ALL,
+  FixtureTabType.LIVE,
+  FixtureTabType.UPCOMING,
+  FixtureTabType.COMPLETED,
+];
 
 const CategoryDetailsScreen = () => {
   const viewModel = useCategoryDetailsViewModel();
@@ -70,9 +76,9 @@ const CategoryDetailsScreen = () => {
             <ArrowLeft size={24} color={colors.textPrimary} />
           </Pressable>
           <Text style={styles.headerTitle}>
-            {gender === 'Male'
+            {gender === GenderType.Male
               ? "Men's"
-              : gender === 'Female'
+              : gender === GenderType.Female
               ? "Women's"
               : 'Mixed'}{' '}
             {format}
@@ -213,7 +219,7 @@ const CategoryDetailsScreen = () => {
                       fixture={item}
                       roundName={getRoundName(
                         item.round,
-                        format === 'Singles'
+                        format === FormatType.Singles
                           ? participants.length
                           : teams.length,
                       )}
@@ -229,7 +235,7 @@ const CategoryDetailsScreen = () => {
               ) : (
                 canManageEvent && (
                   <View style={styles.centerButton}>
-                    {!canCreateFixtures && format === 'Doubles' && (
+                    {!canCreateFixtures && format === FormatType.Doubles && (
                       <Text style={styles.thresholdText}>
                         {APP_STRINGS.eventScreen.createTeamFirst}
                       </Text>

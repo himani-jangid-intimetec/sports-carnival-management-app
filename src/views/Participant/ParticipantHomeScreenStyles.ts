@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 const ACTION_CARD_GAP = 12;
 const HORIZONTAL_PADDING = 16;
@@ -35,11 +36,11 @@ export const styles = StyleSheet.create({
   },
   emptyText: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
   },
   greeting: {
     color: colors.textPrimary,
-    fontSize: 30,
+    fontSize: fontsSize.extraLarge,
     fontWeight: 'bold',
     marginLeft: 10,
     paddingTop: 5,
@@ -59,7 +60,7 @@ export const styles = StyleSheet.create({
   },
   logoStyle: {
     color: colors.appBackground,
-    fontSize: 20,
+    fontSize: fontsSize.large,
     fontWeight: 'bold',
   },
   matchCard: {
@@ -78,19 +79,19 @@ export const styles = StyleSheet.create({
   },
   matchInfoText: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: fontsSize.primary,
     marginLeft: 4,
   },
   matchSport: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: fontsSize.primary,
     fontWeight: '600',
     marginBottom: 8,
     textTransform: 'uppercase',
   },
   matchTeamName: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: '600',
   },
   matchTeams: {
@@ -112,7 +113,7 @@ export const styles = StyleSheet.create({
   },
   vsText: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     marginHorizontal: 12,
   },
 });

@@ -1,4 +1,5 @@
 import { Match } from '../models/Match';
+import { MatchStatus, UpcomingMatchStatus } from '../models/Event';
 
 export const MOCK_MATCHES: Match[] = [
   {
@@ -6,7 +7,7 @@ export const MOCK_MATCHES: Match[] = [
     gameName: 'Football',
     firstTeam: 'Thunder Hawks',
     secondTeam: 'Storm Riders',
-    status: 'LIVE',
+    status: MatchStatus.LIVE,
     firstTeamPoints: 2,
     secondTeamPoints: 1,
     venue: 'Court A',
@@ -16,7 +17,7 @@ export const MOCK_MATCHES: Match[] = [
     gameName: 'Badminton',
     firstTeam: 'Smashers',
     secondTeam: 'Drop Shots',
-    status: 'UPCOMING',
+    status: MatchStatus.UPCOMING,
     firstTeamPoints: 0,
     secondTeamPoints: 0,
     venue: 'Court B',
@@ -26,14 +27,12 @@ export const MOCK_MATCHES: Match[] = [
     gameName: 'Table Tennis',
     firstTeam: 'Spin Masters',
     secondTeam: 'Top Spinners',
-    status: 'COMPLETED',
+    status: MatchStatus.COMPLETED,
     firstTeamPoints: 3,
     secondTeamPoints: 2,
     venue: 'Hall 2',
   },
 ];
-
-export type UpcomingMatchStatus = 'UPCOMING' | 'REGISTRATION_OPEN';
 
 export type UpcomingMatch = {
   sport: string;
@@ -53,7 +52,7 @@ export const UPCOMING_MATCHES: UpcomingMatch[] = [
     location: 'Central Stadium',
     currentTeams: 12,
     maxTeams: 16,
-    status: 'REGISTRATION_OPEN',
+    status: UpcomingMatchStatus.REGISTRATION_OPEN,
   },
   {
     sport: 'Carrom',
@@ -62,6 +61,6 @@ export const UPCOMING_MATCHES: UpcomingMatch[] = [
     location: 'Central Stadium',
     currentTeams: 5,
     maxTeams: 10,
-    status: 'UPCOMING',
+    status: UpcomingMatchStatus.UPCOMING,
   },
 ];

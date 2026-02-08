@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   completeButton: {
@@ -41,12 +42,12 @@ export const styles = StyleSheet.create({
   },
   controlButtonText: {
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontWeight: '500',
   },
   controlButtonTextPrimary: {
     color: colors.primaryText,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontWeight: '600',
   },
   controlsContainer: {
@@ -94,13 +95,13 @@ export const styles = StyleSheet.create({
   },
   modalVs: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontWeight: '600',
     marginHorizontal: 8,
   },
   roundName: {
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontWeight: '600',
   },
   saveButton: {
@@ -144,7 +145,7 @@ export const styles = StyleSheet.create({
   },
   scoreTeamName: {
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontWeight: '500',
     marginBottom: 12,
     textAlign: 'center',
@@ -168,7 +169,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.participantBackgroud + '20',
   },
   statusText: {
-    fontSize: 11,
+    fontSize: fontsSize.small,
     fontWeight: '600',
   },
   statusTextCompleted: {
@@ -222,7 +223,7 @@ export const styles = StyleSheet.create({
   },
   vsText: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: fontsSize.primary,
     fontWeight: '600',
   },
   winnerBanner: {

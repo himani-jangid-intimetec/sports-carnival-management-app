@@ -1,9 +1,9 @@
-import { Fixture, GenderType, FormatType } from '../models/Event';
+import { Fixture, GenderType, FormatType, MatchStatus } from '../models/Event';
 
 export const generateRoundRobinFixtures = (
   participants: string[],
-  gender: GenderType = 'Male',
-  format: FormatType = 'Singles',
+  gender: GenderType = GenderType.Male,
+  format: FormatType = FormatType.Singles,
 ): Fixture[] => {
   const fixtures: Fixture[] = [];
   let matchNumber = 1;
@@ -20,7 +20,7 @@ export const generateRoundRobinFixtures = (
         time: new Date().toISOString(),
         round: matchNumber,
         totalRounds,
-        status: 'UPCOMING',
+        status: MatchStatus.UPCOMING,
         gender,
         format,
         bracketPosition: matchNumber - 1,

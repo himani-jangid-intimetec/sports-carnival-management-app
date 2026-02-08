@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   bullet: {
     color: colors.primary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     marginRight: 6,
   },
   card: {
@@ -26,7 +27,7 @@ export const styles = StyleSheet.create({
   },
   description: {
     color: colors.textSecondary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
   },
   featureItem: {
     alignItems: 'flex-start',
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
   featureText: {
     color: colors.textSecondary,
     flex: 1,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
   },
   features: {
     marginTop: 8,

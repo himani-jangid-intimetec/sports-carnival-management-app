@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { Event } from '../models/Event';
+import { Event, EventStatusTab } from '../models/Event';
 import { useEventStore } from '../store/EventStore';
 import { RoleType } from '../constants/Roles';
 
@@ -12,13 +12,17 @@ export const useEventsListViewModel = (
 ) => {
   const { events } = useEventStore();
 
-  const [activeTab, setActiveTab] = useState('ALL');
+  const [activeTab, setActiveTab] = useState<EventStatusTab>(
+    EventStatusTab.ALL,
+  );
 
   const tabBarHeight = useBottomTabBarHeight();
 
   const filteredEvents = useMemo(() => {
-    if (activeTab === 'ALL') return events;
-    return events.filter((event) => event.status === activeTab);
+    if (activeTab === EventStatusTab.ALL) return events;
+    return events.filter(
+      (event) => event.status === (activeTab as unknown as Event['status']),
+    );
   }, [activeTab, events]);
 
   const onEventPress = (event: Event) => {
