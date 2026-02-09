@@ -6,9 +6,12 @@ import AdminTabs from './AdminTabs';
 import OrganizerTabs from './OrganizerTabs';
 import ParticipantTabs from './ParticipantTabs';
 import EventFormScreen from '../views/EventFormScreen/EventFormScreen';
-import { Event } from '../models/Event';
+import { Event, GenderType, FormatType } from '../models/Event';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import EventRegistrationScreen from '../views/EventRegistration/EventRegistrationScreen';
+import EventDetailsScreen from '../views/EventDetailsScreen/EventDetailsScreen';
+import CategoryDetailsScreen from '../views/CategoryDetailsScreen/CategoryDetailsScreen';
+import { RoleType } from '../constants/Roles';
 
 export type RootStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList>;
@@ -22,6 +25,16 @@ export type RootStackParamList = {
   };
   EventRegister: {
     eventId: string;
+  };
+  EventDetails: {
+    eventId: string;
+    role: RoleType;
+  };
+  CategoryDetails: {
+    eventId: string;
+    gender: GenderType;
+    format: FormatType;
+    role: RoleType;
   };
 };
 
@@ -38,6 +51,8 @@ const AppNavigator = () => {
 
       <Stack.Screen name="EventForm" component={EventFormScreen} />
       <Stack.Screen name="EventRegister" component={EventRegistrationScreen} />
+      <Stack.Screen name="EventDetails" component={EventDetailsScreen} />
+      <Stack.Screen name="CategoryDetails" component={CategoryDetailsScreen} />
     </Stack.Navigator>
   );
 };

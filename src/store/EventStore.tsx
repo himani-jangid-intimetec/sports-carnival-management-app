@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
 import {
   Event,
-  Fixture,
-  Team,
+  EventStatus,
   GenderType,
-  Registration,
+  FormatType,
+  MatchStatus,
+  Fixture,
 } from '../models/Event';
 import { MOCK_EVENTS } from '../constants/MockEvents';
 
@@ -18,6 +19,7 @@ type EventContextType = {
     eventId: string,
     name: string,
     gender: GenderType,
+    formats: FormatType[],
   ) => void;
 
   createTeams: (eventId: string) => void;
@@ -56,23 +58,24 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     eventId: string,
     name: string,
     gender: GenderType,
+    formats: FormatType[],
   ) => {
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
 
-        const maxParticipants =
-          event.format === '1v1' ? event.totalTeams : event.totalTeams * 2;
-
-        if (event.registrations.length >= maxParticipants) return event;
-
         return {
           ...event,
           registrations: [
             ...event.registrations,
-            { id: Date.now().toString(), name, gender },
+            {
+              id: Date.now().toString(),
+              name,
+              gender,
+              formats,
+            },
           ],
-          registeredTeams: event.registrations.length + 1,
+          registeredTeams: event.registeredTeams + 1,
         };
       }),
     );
@@ -82,17 +85,6 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
     setEvents((prev) =>
       prev.map((event) => {
         if (event.id !== eventId) return event;
-        if (event.format === '1v1') return event;
-
-        const requiredPlayers = event.totalTeams * 2;
-        if (event.registrations.length < requiredPlayers) return event;
-
-        const males = event.registrations.filter(
-          (player) => player.gender === 'Male',
-        );
-        const females = event.registrations.filter(
-          (player) => player.gender === 'Female',
-        );
 
         const teams: Team[] = [];
         let teamIndex = 1;
@@ -111,13 +103,26 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
             teamIndex++;
           }
         };
+      }),
+    );
+  };
 
-        buildTeams(males);
-        buildTeams(females);
+  const updateFixtureScore = (
+    eventId: string,
+    fixtureId: string,
+    scoreA: number,
+    scoreB: number,
+  ) => {
+    setEvents((prev) =>
+      prev.map((event) => {
+        if (event.id !== eventId) return event;
 
-        if (teams.length < event.totalTeams) return event;
-
-        return { ...event, teams, teamsCreated: true };
+        return {
+          ...event,
+          fixtures: event.fixtures.map((fixture) =>
+            fixture.id === fixtureId ? { ...fixture, scoreA, scoreB } : fixture,
+          ),
+        };
       }),
     );
   };
@@ -223,9 +228,7 @@ export const EventProvider: React.FC<{ children: React.ReactNode }> = ({
 
         return {
           ...event,
-          fixtures,
-          fixturesCreated: true,
-          status: 'LIVE',
+          fixtures: updatedFixtures,
         };
       }),
     );

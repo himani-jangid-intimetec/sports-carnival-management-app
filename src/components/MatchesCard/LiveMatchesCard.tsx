@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { styles } from './LiveMatchesCardStyles';
 import { APP_STRINGS } from '../../constants/AppStrings';
+import { MatchStatus } from '../../models/Event';
 
 type LiveMatchesCardProps = {
   gameName: string;
@@ -33,9 +34,9 @@ const LiveMatchesCard = ({
   const isFirstTeamLeading = firstTeamPoints > secondTeamPoints;
   const isSecondTeamLeading = secondTeamPoints > firstTeamPoints;
 
-  const isLive = status === 'LIVE';
-  const isUpcoming = status === 'UPCOMING';
-  const isCompleted = status === 'COMPLETED';
+  const isLive = status === MatchStatus.LIVE;
+  const isUpcoming = status === MatchStatus.UPCOMING;
+  const isCompleted = status === MatchStatus.COMPLETED;
 
   return (
     <View style={styles.container}>
@@ -69,7 +70,7 @@ const LiveMatchesCard = ({
 
         <View style={styles.teamContainer}>
           <Text style={styles.textStyle}>{APP_STRINGS.eventScreen.vs}</Text>
-          {status === 'Live' ? (
+          {status === MatchStatus.LIVE ? (
             <Text style={styles.statusStyle}>{status}</Text>
           ) : (
             ''

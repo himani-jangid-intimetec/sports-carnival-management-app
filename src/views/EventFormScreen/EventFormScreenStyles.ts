@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
-import { fonts } from '../../theme/fonts';
+import { fonts, fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   container: {
@@ -12,6 +12,48 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
 
+  errorText: {
+    color: colors.error,
+    fontSize: fontsSize.primary,
+    marginTop: 4,
+  },
+
+  formatOption: {
+    alignItems: 'center',
+    backgroundColor: colors.cardBackgroud,
+    borderColor: colors.border,
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+
+  formatOptionActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+
+  formatOptionDisabled: {
+    opacity: 0.4,
+  },
+
+  formatOptionText: {
+    color: colors.textPrimary,
+    fontSize: fontsSize.medium,
+    fontWeight: '500',
+  },
+
+  formatOptionTextActive: {
+    color: colors.primaryText,
+  },
+
+  formatOptions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+
   headerRow: {
     alignItems: 'center',
     marginBottom: 10,
@@ -19,7 +61,7 @@ export const styles = StyleSheet.create({
 
   heading: {
     color: colors.textPrimary,
-    fontSize: 20,
+    fontSize: fontsSize.large,
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -36,7 +78,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     height: 48,
     paddingHorizontal: 12,
   },
@@ -70,7 +112,7 @@ export const styles = StyleSheet.create({
 
   primaryText: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: '600',
   },
 });

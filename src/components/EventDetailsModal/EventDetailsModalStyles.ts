@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 const HALF_HEIGHT = Dimensions.get('window').height * 0.6;
 
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
   },
   emptyText: {
     color: colors.textSecondary,
-    fontSize: 20,
+    fontSize: fontsSize.large,
     marginTop: 20,
     textAlign: 'center',
   },
@@ -40,7 +41,7 @@ export const styles = StyleSheet.create({
   },
   listItem: {
     color: colors.textPrimary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     paddingVertical: 6,
   },
   modalContainer: {
@@ -79,7 +80,7 @@ export const styles = StyleSheet.create({
   },
   prizeTitle: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: '600',
   },
   prizeValue: {
@@ -94,7 +95,7 @@ export const styles = StyleSheet.create({
   },
   sectionTitle: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: 'bold',
     marginBottom: 8,
   },
@@ -102,7 +103,7 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   statusText: {
-    fontSize: 11,
+    fontSize: fontsSize.small,
     fontWeight: 'bold',
   },
   status_CANCELLED: {
@@ -159,7 +160,7 @@ export const styles = StyleSheet.create({
   },
   tabText: {
     color: colors.textSecondary,
-    fontSize: 12,
+    fontSize: fontsSize.primary,
   },
   text: {
     color: colors.textSecondary,
@@ -168,7 +169,7 @@ export const styles = StyleSheet.create({
   },
   title: {
     color: colors.textPrimary,
-    fontSize: 20,
+    fontSize: fontsSize.large,
     fontWeight: '700',
     marginBottom: 10,
     textAlign: 'center',

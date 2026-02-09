@@ -1,40 +1,40 @@
-export type GameFormat = '1v1' | '2v2';
+import { FormatType } from '../models/Event';
 
 export type Game = {
   id: string;
   name: string;
-  formats: GameFormat[];
+  formats: FormatType[];
 };
 
 export const GAMES: Game[] = [
   {
     id: 'badminton',
     name: 'Badminton',
-    formats: ['1v1', '2v2'],
+    formats: [FormatType.Singles, FormatType.Doubles],
   },
   {
     id: 'table_tennis',
     name: 'Table Tennis',
-    formats: ['1v1', '2v2'],
+    formats: [FormatType.Singles, FormatType.Doubles],
   },
   {
     id: 'carrom',
     name: 'Carrom',
-    formats: ['1v1', '2v2'],
+    formats: [FormatType.Singles, FormatType.Doubles],
   },
   {
     id: 'pool',
     name: 'Pool',
-    formats: ['1v1'],
+    formats: [FormatType.Singles],
   },
   {
     id: 'foosball',
     name: 'Foosball',
-    formats: ['2v2'],
+    formats: [FormatType.Doubles],
   },
   {
     id: 'chess',
     name: 'Chess',
-    formats: ['1v1'],
+    formats: [FormatType.Singles],
   },
 ];

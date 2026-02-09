@@ -5,7 +5,6 @@ import ScreenWrapper from '../../components/ScreenWrapper/ScreenWrapper';
 import EventCard from '../../components/EventCard/EventCard';
 import { styles } from './EventsListScreenStyles';
 import EventStatusTabs from '../../components/EventStatusTabs/EventStatusTabs';
-import EventDetailsModal from '../../components/EventDetailsModal/EventDetailsModal';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
@@ -21,7 +20,7 @@ const EventsListScreen = ({ role }: EventListScreenProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const viewModel = useEventsListViewModel(navigation);
+  const viewModel = useEventsListViewModel(navigation, role);
 
   return (
     <ScreenWrapper scrollable={false}>
@@ -71,18 +70,6 @@ const EventsListScreen = ({ role }: EventListScreenProps) => {
             }}
           />
         )}
-
-        <EventDetailsModal
-          getRoundName={viewModel.getRoundName}
-          visible={viewModel.showModal}
-          eventId={viewModel.selectedEventId}
-          role={role}
-          onClose={viewModel.onCloseModal}
-          onEdit={viewModel.onEditEvent}
-          onDelete={viewModel.onDeleteEvent}
-          onCreateTeams={viewModel.handleCreateTeams}
-          onCreateFixtures={viewModel.handleCreateFixtures}
-        />
       </View>
     </ScreenWrapper>
   );

@@ -1,5 +1,6 @@
 import { Platform, StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   container: {
@@ -18,12 +19,12 @@ export const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.error,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     marginTop: 4,
   },
   input: {
     color: colors.textPrimary,
     flex: 1,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
   },
 });

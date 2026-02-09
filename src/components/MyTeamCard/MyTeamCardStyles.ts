@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
+import { fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   bottomRow: {
@@ -40,7 +41,7 @@ export const styles = StyleSheet.create({
 
   lossText: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: '700',
   },
 
@@ -52,7 +53,7 @@ export const styles = StyleSheet.create({
 
   memberTextMuted: {
     color: colors.textSecondary,
-    fontSize: 14,
+    fontSize: fontsSize.medium,
     fontStyle: 'italic',
     marginTop: 4,
   },
@@ -95,7 +96,7 @@ export const styles = StyleSheet.create({
 
   teamName: {
     color: colors.textPrimary,
-    fontSize: 20,
+    fontSize: fontsSize.large,
     fontWeight: '700',
   },
 
@@ -106,13 +107,13 @@ export const styles = StyleSheet.create({
 
   winRateText: {
     color: colors.participantBackgroud,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: 'bold',
   },
 
   winText: {
     color: colors.textPrimary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     fontWeight: '700',
   },
 });

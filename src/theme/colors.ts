@@ -18,4 +18,6 @@ export const colors = {
 
   usersIconBackground: '#0ea2e8',
   matchesIconBackgound: '#ffc007',
+
+  mixedBackground: '#EC4899',
 } as const;

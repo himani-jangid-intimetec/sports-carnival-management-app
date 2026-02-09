@@ -1,10 +1,13 @@
-import { Fixture } from '../models/Event';
+import { Fixture, GenderType, FormatType, MatchStatus } from '../models/Event';
 
 export const generateRoundRobinFixtures = (
   participants: string[],
+  gender: GenderType = GenderType.Male,
+  format: FormatType = FormatType.Singles,
 ): Fixture[] => {
   const fixtures: Fixture[] = [];
   let matchNumber = 1;
+  const totalRounds = participants.length - 1;
 
   for (let index = 0; index < participants.length; index++) {
     for (let iterator = index + 1; iterator < participants.length; iterator++) {
@@ -16,7 +19,11 @@ export const generateRoundRobinFixtures = (
         scoreB: 0,
         time: new Date().toISOString(),
         round: matchNumber,
-        status: 'UPCOMING',
+        totalRounds,
+        status: MatchStatus.UPCOMING,
+        gender,
+        format,
+        bracketPosition: matchNumber - 1,
       });
       matchNumber++;
     }

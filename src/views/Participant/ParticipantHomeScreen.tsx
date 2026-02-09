@@ -6,14 +6,11 @@ import {
   Calendar,
   Clock,
   LogOut,
-  MapPin,
   TrendingUp,
   Trophy,
   Users,
 } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
-import LiveMatchesCard from '../../components/MatchesCard/LiveMatchesCard';
-import UpcomingMatchesCard from '../../components/MatchesCard/UpcomingMatchesCard';
 import { styles } from './ParticipantHomeScreenStyles';
 import MyTeamCard from '../../components/MyTeamCard/MyTeamCard';
 import { useNavigation } from '@react-navigation/native';
@@ -32,7 +29,7 @@ const ParticipantHomeScreen = () => {
       <View style={styles.container}>
         <View style={styles.headerRow}>
           <Text style={styles.greeting}>
-            {APP_STRINGS.participantScreens.greeting}
+            Hello, {viewModel.user?.name ?? 'Participant'}! 👋
           </Text>
 
           <TouchableOpacity onPress={viewModel.onLogout}>
@@ -45,26 +42,26 @@ const ParticipantHomeScreen = () => {
             <AnalyticsCard
               icon={<Calendar size={24} color={colors.primary} />}
               title={APP_STRINGS.participantScreens.myEvents}
-              data={3}
+              data={viewModel.myEventsCount}
             />
             <AnalyticsCard
               icon={<Users size={24} color={colors.usersIconBackground} />}
               title={APP_STRINGS.participantScreens.myTeam}
-              data={1}
+              data={viewModel.myTeamsCount}
             />
           </View>
           <View style={styles.row}>
             <AnalyticsCard
               icon={<Trophy size={24} color={colors.participantBackgroud} />}
               title={APP_STRINGS.participantScreens.matchesPlayed}
-              data={7}
+              data={viewModel.matchesPlayedCount}
             />
             <AnalyticsCard
               icon={
                 <TrendingUp size={24} color={colors.matchesIconBackgound} />
               }
               title={APP_STRINGS.participantScreens.wins}
-              data={5}
+              data={viewModel.winsCount}
             />
           </View>
         </View>
@@ -74,15 +71,30 @@ const ParticipantHomeScreen = () => {
             {APP_STRINGS.participantScreens.myTeam}
           </Text>
 
-          <MyTeamCard
-            logo={<Text style={styles.logoStyle}>TH</Text>}
-            name="Thunder Hawks"
-            members={[]}
-            sport="Football"
-            wins={5}
-            losses={2}
-            winRate="71%"
-          />
+          {viewModel.myTeams.length > 0 ? (
+            viewModel.myTeams.map((teamData) => (
+              <MyTeamCard
+                key={teamData.team.id}
+                logo={
+                  <Text style={styles.logoStyle}>
+                    {teamData.team.name.substring(0, 2).toUpperCase()}
+                  </Text>
+                }
+                name={teamData.team.name}
+                members={teamData.team.players.map((player) => player.name)}
+                sport={teamData.sport}
+                wins={0}
+                losses={0}
+                winRate="0%"
+              />
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>
+                {APP_STRINGS.eventScreen.noTeamsYet}
+              </Text>
+            </View>
+          )}
         </View>
 
         <View>
@@ -90,50 +102,34 @@ const ParticipantHomeScreen = () => {
             {APP_STRINGS.eventScreen.todaysMatches}
           </Text>
 
-          {viewModel.liveMatches.map((match) => (
-            <LiveMatchesCard
-              key={match.id}
-              gameName={match.gameName}
-              firstTeam={match.firstTeam}
-              secondTeam={match.secondTeam}
-              status={match.status}
-              firstTeamPoints={match.firstTeamPoints}
-              secondTeamPoints={match.secondTeamPoints}
-              venue={match.venue}
-              venueIcon={<MapPin color={colors.textSecondary} />}
-              statusIcon={<Clock color={colors.textSecondary} />}
-              firstTeamLogo={
-                <View>
-                  <Text>
-                    {match.firstTeam[0]}
-                    {match.firstTeam[1].toUpperCase()}
+          {viewModel.todaysMatches.length > 0 ? (
+            viewModel.todaysMatches.map((matchData) => (
+              <View key={matchData.fixture.id} style={styles.matchCard}>
+                <Text style={styles.matchSport}>{matchData.sport}</Text>
+                <View style={styles.matchTeams}>
+                  <Text style={styles.matchTeamName}>
+                    {matchData.fixture.teamA}
+                  </Text>
+                  <Text style={styles.vsText}>vs</Text>
+                  <Text style={styles.matchTeamName}>
+                    {matchData.fixture.teamB}
                   </Text>
                 </View>
-              }
-              secondTeamLogo={
-                <View>
-                  <Text>
-                    {match.secondTeam[0]}
-                    {match.secondTeam[1].toUpperCase()}
+                <View style={styles.matchInfo}>
+                  <Clock size={14} color={colors.textSecondary} />
+                  <Text style={styles.matchInfoText}>
+                    {matchData.fixture.status}
                   </Text>
                 </View>
-              }
-            />
-          ))}
-        </View>
-
-        <View>
-          <Text style={styles.heading}>
-            {APP_STRINGS.organizerScreens.upcomingMatches}
-          </Text>
-
-          {viewModel.upcomingMatches.map((match) => (
-            <UpcomingMatchesCard
-              key={match.title}
-              {...match}
-              sportIcon={<Trophy size={64} color={colors.textSecondary} />}
-            />
-          ))}
+              </View>
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>
+                {APP_STRINGS.eventScreen.noMatchesToday}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </ScreenWrapper>

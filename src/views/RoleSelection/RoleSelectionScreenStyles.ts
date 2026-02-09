@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
-import { fonts } from '../../theme/fonts';
+import { fonts, fontsSize } from '../../theme/fonts';
 
 export const styles = StyleSheet.create({
   container: {
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   headingSubText: {
     color: colors.textSecondary,
     fontFamily: fonts.subHeading,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     marginTop: 3,
   },
   headingText: {
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   subHeadingSubText: {
     color: colors.textSecondary,
-    fontSize: 16,
+    fontSize: fontsSize.regular,
     marginBottom: 20,
     marginTop: 10,
     textAlign: 'center',

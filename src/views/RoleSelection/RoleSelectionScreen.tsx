@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Trophy } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import { roles, RoleType } from '../../constants/Roles';
@@ -14,29 +14,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useRoleSelectionViewModel } from '../../viewModels/RoleSelectionViewModel';
 
-type RouteParams = {
-  key: string;
-  name: 'RoleSelection';
-  params: {
-    name: string;
-    email: string;
-    password: string;
-  };
-};
-
 const RoleSelectionScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteParams>();
-
-  const { name, email, password } = route.params;
 
   const { selectedRole, setSelectedRole, selectedRoleTitle, handleContinue } =
-    useRoleSelectionViewModel(navigation, {
-      name,
-      email,
-      password,
-    });
+    useRoleSelectionViewModel(navigation);
 
   return (
     <ScreenWrapper>

@@ -25,5 +25,5 @@ export const validationMessages = {
   REQUIRED_DESCRIPTION: 'Description is required',
   REQUIRED_RULES: 'Rules are required',
   REQUIRED_PRIZES: 'Prizes are required',
-  INVALID_CHESS_FORMAT: 'Chess can only be played in 1v1 format',
+  INVALID_CHESS_FORMAT: 'Chess can only be played in Singles format',
 };
